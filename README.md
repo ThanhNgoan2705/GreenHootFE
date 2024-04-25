@@ -1,6 +1,5 @@
-<<<<<<< HEAD
+
 # GreenHootFE
-=======
 # green_hoot
 
 This template should help get you started developing with Vue 3 in Vite.
@@ -30,4 +29,4 @@ npm run dev
 ```sh
 npm run build
 ```
->>>>>>> e0f8355 (design pages for public)
+

@@ -3,7 +3,11 @@ import {nextTick, onMounted, ref} from "vue";
 import {MDBIcon} from "mdb-vue-ui-kit";
 import TheHeaderCreative
   from "@/components/single-instance-components/create-greenhoot-components/TheHeaderCreative.vue";
+<<<<<<< HEAD
 import ListCardAnswers from "@/public-page/user-create-greenhot-page/components/ListCardAnswers.vue";
+=======
+import CardAnswer from "@/public-page/user-create-greenhot-page/components/CardAnwser.vue";
+>>>>>>> e0f835529b469a12deccc45ded005fc81a86cbc9
 
 const openPopup = ref(false);
 const togglePopup = () => {
@@ -19,11 +23,17 @@ const makeEditable = () => {
   const question = document.getElementById('guild-content');
   if (question.innerText === 'Start typing your question') {
     question.innerText = '';
+<<<<<<< HEAD
     guildText.value.contentEditable = true;
     savedText.value = question.innerText;
     guildText.value.focus();
   }
 
+=======
+  }
+    guildText.value.contentEditable = true;
+    guildText.value.focus();
+>>>>>>> e0f835529b469a12deccc45ded005fc81a86cbc9
 }
 const saveText = () => {
   qsContent.value = true;
@@ -34,6 +44,7 @@ const saveText = () => {
     if (savedText.value.length > 15) {
       savedText.value = savedText.value.substring(0, 10) + '...';
     }
+<<<<<<< HEAD
     if (savedText.value === '') {
        question.innerText = 'Start typing your question';
        savedText.value = 'Question';
@@ -42,6 +53,11 @@ const saveText = () => {
   });
 };
 
+=======
+    console.log(savedText.value);
+  });
+}
+>>>>>>> e0f835529b469a12deccc45ded005fc81a86cbc9
 
 </script>
 
@@ -180,7 +196,11 @@ const saveText = () => {
             </div>
           </div>
           <div class=" style-question  py-1.5 px-0  items-stretch"
+<<<<<<< HEAD
                style="flex: 4 0 auto;-webkit-box-align: stretch;">
+=======
+                  style="flex: 4 0 auto;-webkit-box-align: stretch;">
+>>>>>>> e0f835529b469a12deccc45ded005fc81a86cbc9
             <div class="style-detail-question w-full h-0 flex content-center items-center">
               <div class="media-detail box-border">
                 <div class="media-qs-detail w-full h-full flex flex-col flex-1 items-center content-center">
@@ -197,6 +217,7 @@ const saveText = () => {
 
           </div>
           <div class="flex flex-col w-full items-center">
+<<<<<<< HEAD
               <ListCardAnswers/>
           </div>
         </div>
@@ -207,6 +228,23 @@ const saveText = () => {
           <div class="setting-side-action py-1.5 px-0 my-0 mx-1.5  border-t-2 flex content-center items-center">
             <button class="delete-btn  btn-style btn-border" style="width: inherit">
               Delete
+=======
+          <div class="answer-options w-full flex  flex-[4_1_0%] flex-wrap h-full content-stretch" >
+            <CardAnswer class="answer-option-1"/>
+            <CardAnswer class="answer-option-2"/>
+            <CardAnswer class="answer-option-3"/>
+            <CardAnswer class="answer-option-4"/>
+          </div>
+          </div>
+        </div>
+        <div class="settings-side box-border position-fixed right-0  w-1/5 h-full bg-white shadow-xl pt-0">
+        <div class="setting-side-content z-20 overflow-y-auto flex flex-col items-center bottom-0">
+
+        </div>
+          <div class="setting-side-action py-1.5 px-0 my-0 mx-1.5  border-t-2 flex content-center items-center">
+            <button class="delete-btn  btn-style btn-border" style="width: inherit">
+             Delete
+>>>>>>> e0f835529b469a12deccc45ded005fc81a86cbc9
             </button>
             <button class="dubp-btn btn-style btn-border " style="width: inherit">
               Duplicate
@@ -219,7 +257,11 @@ const saveText = () => {
   </div>
 </template>
 
+<<<<<<< HEAD
 <style>
+=======
+<style >
+>>>>>>> e0f835529b469a12deccc45ded005fc81a86cbc9
 .popup {
   display: block;
   position: fixed;
@@ -442,11 +484,17 @@ const saveText = () => {
   min-height: calc(clamp(0.5rem, 3.2vmin, 3rem) * 1);
   max-height: calc(clamp(0.5rem, 3.2vmin, 3rem) * 4 + clamp(0.5rem, 1.2vmin, 1rem) * 2);
 }
+<<<<<<< HEAD
 
 #guild-content:focus {
   @apply outline-none border-none text-xl text-black caret-black
 }
 
+=======
+#guild-content:focus{
+ @apply outline-none border-none text-xl text-black caret-black
+}
+>>>>>>> e0f835529b469a12deccc45ded005fc81a86cbc9
 .media-detail {
   --panel-background-color: rgba(250, 250, 250, 0.7);
   padding: 0px 1rem;
@@ -498,6 +546,7 @@ const saveText = () => {
   border-radius: 4px;
   height: 100% !important;
 }
+<<<<<<< HEAD
 
 .btn-style {
   @apply leading-7 m-0 border-none cursor-pointer inline-block align-bottom bg-white text-black rounded-lg text-sm font-bold text-center decoration-0 min-w-10 min-h-10 h-10 pt-0 px-6 pb-1 relative
@@ -514,12 +563,41 @@ const saveText = () => {
 }
 
 .style-question {
+=======
+.btn-style{
+  @apply leading-7 m-0 border-none cursor-pointer inline-block align-bottom bg-white text-black rounded-lg text-sm font-bold text-center decoration-0 min-w-10 min-h-10 h-10 pt-0 px-6 pb-1 relative
+}
+.btn-border{
+  border: 1px solid transparent;
+  line-height: 1.875rem;
+}
+.btn-style:last-of-type{
+  margin-left: 1.375rem;
+  border-color: rgb(115, 115, 115);
+}
+.style-question{
+>>>>>>> e0f835529b469a12deccc45ded005fc81a86cbc9
   display: flex;
   -webkit-box-align: center;
   align-items: center;
   flex: 6 1 0%;
   position: relative;
 }
+<<<<<<< HEAD
 
 
+=======
+.answer-option-1 .answer-option-sign{
+  @apply bg-red-600
+}
+.answer-option-2 .answer-option-sign{
+  @apply bg-blue-600
+}
+.answer-option-3 .answer-option-sign{
+  @apply bg-green-600
+}
+.answer-option-4 .answer-option-sign{
+  @apply bg-yellow-600
+}
+>>>>>>> e0f835529b469a12deccc45ded005fc81a86cbc9
 </style>

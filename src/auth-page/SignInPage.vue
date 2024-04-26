@@ -54,8 +54,8 @@ const input2 = ref('');
 
         </form>
         <MDBRow class="g-3 mt-3 mb-2">
-          <p class="text-center">Forgot Password?<a role="button" class="text-primary ms-1"><u>Reset your
-            password</u></a></p>
+          <p class="text-center">Forgot Password?<a role="button" class="text-primary ms-1"><router-link to="/PasswordForgottenPage">Reset your
+            password</router-link></a></p>
         </MDBRow>
         <MDBRow class="g-0 mt-3 mb-2">
           <MDBBtn @click="login"><img src="../assets/google.svg" alt="Google" class="float-start">Continue With Google

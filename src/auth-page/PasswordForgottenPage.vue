@@ -41,7 +41,7 @@ const input1 = ref('');
               </MDBCol>
             </MDBRow>
             <MDBRow class="g-0 mt-3 mb-2">
-              <MDBBtn color="secondary" type="submit">Send Code</MDBBtn>
+              <MDBBtn color="secondary" type="submit"><router-link to="">Send Code</router-link></MDBBtn>
             </MDBRow>
             <hr>
             <MDBRow class="g-0 mt-3 mb-2">

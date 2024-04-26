@@ -1,13 +1,11 @@
 <script setup>
+
 import {nextTick, onMounted, ref} from "vue";
 import {MDBIcon} from "mdb-vue-ui-kit";
 import TheHeaderCreative
   from "@/components/single-instance-components/create-greenhoot-components/TheHeaderCreative.vue";
-<<<<<<< HEAD
 import ListCardAnswers from "@/public-page/user-create-greenhot-page/components/ListCardAnswers.vue";
-=======
-import CardAnswer from "@/public-page/user-create-greenhot-page/components/CardAnwser.vue";
->>>>>>> e0f835529b469a12deccc45ded005fc81a86cbc9
+import MediaQuestionOption from "@/public-page/user-create-greenhot-page/components/MediaQuestionOption.vue";
 
 const openPopup = ref(false);
 const togglePopup = () => {
@@ -23,17 +21,11 @@ const makeEditable = () => {
   const question = document.getElementById('guild-content');
   if (question.innerText === 'Start typing your question') {
     question.innerText = '';
-<<<<<<< HEAD
     guildText.value.contentEditable = true;
     savedText.value = question.innerText;
     guildText.value.focus();
   }
 
-=======
-  }
-    guildText.value.contentEditable = true;
-    guildText.value.focus();
->>>>>>> e0f835529b469a12deccc45ded005fc81a86cbc9
 }
 const saveText = () => {
   qsContent.value = true;
@@ -44,20 +36,14 @@ const saveText = () => {
     if (savedText.value.length > 15) {
       savedText.value = savedText.value.substring(0, 10) + '...';
     }
-<<<<<<< HEAD
     if (savedText.value === '') {
-       question.innerText = 'Start typing your question';
-       savedText.value = 'Question';
+      question.innerText = 'Start typing your question';
+      savedText.value = 'Question';
     }
     console.log(savedText.value);
   });
 };
 
-=======
-    console.log(savedText.value);
-  });
-}
->>>>>>> e0f835529b469a12deccc45ded005fc81a86cbc9
 
 </script>
 
@@ -107,48 +93,51 @@ const saveText = () => {
       </div>
     </div>
   </div>
-  <div class="creator-container h-full flex flex-col overflow-auto ">
-    <TheHeaderCreative/>
-    <div
-        class="creator-sidebar box-border position-fixed left-0 z-20 overflow-hidden flex flex-col align-items-center bottom-0 w-1/6 h-full bg-white shadow-xl pt-0 ">
-      <div class="side-bar-content block position-relative max-h-full h-auto w-full overflow-y-auto">
-        <div class="w-full outline-0 ">
-          <div class="sidebar-block h-full bg-blue-50 user-select-none py-2  pe-4 block" aria-label="question block">
-            <div class=" flex justify-start items-center text-center text-gray-500 text-sm font-bold">
-              <div class="qs-number  text-sm fw-normal text-gray-500 w-1.5 text-right ms-4">1</div>
-              <div class="qs text-sm text-center ms-3">Quiz</div>
-            </div>
-            <div class="qs-content position-relative flex flex-row-reverse justify-center ">
-              <div class="sidebar-block-gh justify-center " tabindex="0" role="button" aria-describedby="hidden-text"
-                   draggable="false">
-                <div class="sidebar-block flex-col content-between h-full w-full max-w-full flex-1 py-0.5 px-1">
-                  <div class="qs-title text-gray-500 text-center font-medium mt-2">
-                    {{ qsContent ? savedText : 'Question' }}
-                  </div>
-                  <div class=" my-auto mx-0 flex justify-center relative ">
-                    <div
-                        class="qs-countdown block absolute top-1/2 left-0 w-6 h-6 border border-black rounded-full  text-center -translate-y-1/2  ">
-                      20
+  <div class="container-wrap h-full flex flex-col overflow-auto">
+    <div class="creator-container  ">
+      <div class="creator-header pb-[56px] h-[56px] relative m-0 p-0">
+        <TheHeaderCreative />
+      </div>
+      <div
+          class="creator-sidebar box-border position-fixed left-0 z-20 overflow-hidden flex flex-col align-items-center bottom-0 w-1/6 h-full bg-white shadow-xl pt-0 ">
+        <div class="side-bar-content block position-relative max-h-full h-auto w-full overflow-y-auto">
+          <div class="w-full outline-0 ">
+            <div class="sidebar-block h-full bg-blue-50 user-select-none py-2  pe-4 block" aria-label="question block">
+              <div class=" flex justify-start items-center text-center text-gray-500 text-sm font-bold">
+                <div class="qs-number  text-sm fw-normal text-gray-500 w-1.5 text-right ms-4">1</div>
+                <div class="qs text-sm text-center ms-3">Quiz</div>
+              </div>
+              <div class="qs-content position-relative flex flex-row-reverse justify-center ">
+                <div class="sidebar-block-gh justify-center " tabindex="0" role="button" aria-describedby="hidden-text"
+                     draggable="false">
+                  <div class="sidebar-block flex-col content-between h-full w-full max-w-full flex-1 py-0.5 px-1">
+                    <div class="qs-title text-gray-500 text-center font-medium mt-2">
+                      {{ qsContent ? savedText : 'Question' }}
                     </div>
-                    <div class=" flex content-center items-center overflow-hidden ">
+                    <div class=" my-auto mx-0 flex justify-center relative ">
                       <div
-                          class="  img-center flex w-8 h-6 justify-center items-center relative overflow-hidden border-2 border-dashed border-gray-500  text-gray-500 ">
+                          class="qs-countdown block absolute top-1/2 left-0 w-6 h-6 border border-black rounded-full  text-center -translate-y-1/2  ">
+                        20
+                      </div>
+                      <div class=" flex content-center items-center overflow-hidden ">
+                        <div
+                            class="  img-center flex w-8 h-6 justify-center items-center relative overflow-hidden border-2 border-dashed border-gray-500  text-gray-500 ">
                           <span class="flex z-50">
                         <MDBIcon icon="image" size="lg"/>
                       </span>
-                      </div>
+                        </div>
 
+                      </div>
+                    </div>
+                    <div class="answer-selector flex flex-wrap mt-2">
+                      <div class="answer-option relative h-3 mb-2 me-1  border border-gray-300 rounded-md "/>
+                      <div class="answer-option relative h-3 mb-2   border border-gray-300 rounded-md "/>
+                      <div class="answer-option relative h-3 mb-2 me-1  border border-gray-300 rounded-md "/>
+                      <div class="answer-option relative h-3 mb-2   border border-gray-300 rounded-md 2"/>
                     </div>
                   </div>
-                  <div class="answer-selector flex flex-wrap mt-2">
-                    <div class="answer-option relative h-3 mb-2 me-1  border border-gray-300 rounded-md "/>
-                    <div class="answer-option relative h-3 mb-2   border border-gray-300 rounded-md "/>
-                    <div class="answer-option relative h-3 mb-2 me-1  border border-gray-300 rounded-md "/>
-                    <div class="answer-option relative h-3 mb-2   border border-gray-300 rounded-md 2"/>
-                  </div>
                 </div>
-              </div>
-              <div class="sidebar-block-action visible flex flex-col justify-end self-end pe-0.5 ms-2">
+                <div class="sidebar-block-action visible flex flex-col justify-end self-end pe-0.5 ms-2">
                 <span>
                   <span>
                     <button aria-label="duplicate" tabindex="0"
@@ -167,101 +156,63 @@ const saveText = () => {
                     </button>
                   </span>
                 </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="side-bar-action ">
-        <div class=" flex flex-col bg-white w-full justify-center items-center mt-2">
+        <div class="side-bar-action ">
+          <div class=" flex flex-col bg-white w-full justify-center items-center mt-2">
           <span>
             <button class="add-btn start-button">
             Add question
           </button>
           </span>
 
+          </div>
         </div>
       </div>
-    </div>
-    <main class="main-content-wrapp">
-      <div class="content flex h-full">
-        <div class="content-background">
-          <div class="question-title w-full flex items-center " style="    -webkit-box-align: center;">
-            <div class="question-text-field w-full h-auto relative bg-white pb-1 rounded-2xl z-10">
-              <div class="input-container  guild-text " @click="makeEditable">
-                <p id="guild-content" class="text-center text-black text-lg  mt-2 border-none"
-                   ref="guildText" @blur="saveText">
-                  Start typing your question</p>
-              </div>
-            </div>
-          </div>
-          <div class=" style-question  py-1.5 px-0  items-stretch"
-<<<<<<< HEAD
-               style="flex: 4 0 auto;-webkit-box-align: stretch;">
-=======
-                  style="flex: 4 0 auto;-webkit-box-align: stretch;">
->>>>>>> e0f835529b469a12deccc45ded005fc81a86cbc9
-            <div class="style-detail-question w-full h-0 flex content-center items-center">
-              <div class="media-detail box-border">
-                <div class="media-qs-detail w-full h-full flex flex-col flex-1 items-center content-center">
-                  <div class="media-detail-wrap"
-                       style="max-width: 24.375rem;max-height: 16.25rem; --max-width: 24.375rem;  --max-height: 16.25rem;">
-                    <div class="mediaInfo">
-
-                    </div>
-                  </div>
-
+      <main class="main-content-wrapp ">
+        <div class="content flex h-full">
+          <div class="content-background ">
+            <div class="question-title w-full flex items-center " style="    -webkit-box-align: center;">
+              <div class="question-text-field w-full h-auto relative bg-white pb-1 rounded-2xl z-10">
+                <div class="input-container  guild-text " @click="makeEditable">
+                  <p id="guild-content" class="text-center text-black text-lg  mt-2 border-none"
+                     ref="guildText" @blur="saveText">
+                    Start typing your question</p>
                 </div>
               </div>
             </div>
-
-          </div>
-          <div class="flex flex-col w-full items-center">
-<<<<<<< HEAD
+            <MediaQuestionOption/>
+            <div class="flex flex-col w-full items-center">
               <ListCardAnswers/>
+              <button class="add-answer-btn ">
+                Add more answers
+              </button>
+            </div>
           </div>
-        </div>
-        <div class="settings-side box-border position-fixed right-0  w-1/5 h-full bg-white shadow-xl pt-0">
-          <div class="setting-side-content z-20 overflow-y-auto flex flex-col items-center bottom-0">
+          <div class="settings-side ">
+            <div class="setting-side-content z-20 overflow-y-auto flex flex-col items-center bottom-0">
 
-          </div>
-          <div class="setting-side-action py-1.5 px-0 my-0 mx-1.5  border-t-2 flex content-center items-center">
-            <button class="delete-btn  btn-style btn-border" style="width: inherit">
-              Delete
-=======
-          <div class="answer-options w-full flex  flex-[4_1_0%] flex-wrap h-full content-stretch" >
-            <CardAnswer class="answer-option-1"/>
-            <CardAnswer class="answer-option-2"/>
-            <CardAnswer class="answer-option-3"/>
-            <CardAnswer class="answer-option-4"/>
-          </div>
-          </div>
-        </div>
-        <div class="settings-side box-border position-fixed right-0  w-1/5 h-full bg-white shadow-xl pt-0">
-        <div class="setting-side-content z-20 overflow-y-auto flex flex-col items-center bottom-0">
+            </div>
+            <div class="setting-side-action py-1.5 px-0 my-0 mx-1.5  border-t-2 flex content-center items-center">
+              <button class="delete-btn  btn-style btn-border" style="width: inherit">
+                Delete
+              </button>
+              <button class="dubp-btn btn-style btn-border " style="width: inherit">
+                Duplicate
+              </button>
 
-        </div>
-          <div class="setting-side-action py-1.5 px-0 my-0 mx-1.5  border-t-2 flex content-center items-center">
-            <button class="delete-btn  btn-style btn-border" style="width: inherit">
-             Delete
->>>>>>> e0f835529b469a12deccc45ded005fc81a86cbc9
-            </button>
-            <button class="dubp-btn btn-style btn-border " style="width: inherit">
-              Duplicate
-            </button>
-
+            </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </div>
   </div>
 </template>
 
-<<<<<<< HEAD
 <style>
-=======
-<style >
->>>>>>> e0f835529b469a12deccc45ded005fc81a86cbc9
 .popup {
   display: block;
   position: fixed;
@@ -299,7 +250,45 @@ const saveText = () => {
   background: rgb(255, 255, 255);
   overflow: hidden auto;
 }
+.creator-container{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 
+}
+.add-answer-btn{
+  border: none;
+  overflow: visible;
+  outline: none;
+  font-style: inherit;
+  font-variant: inherit;
+  font-stretch: inherit;
+  font-family: inherit;
+  font-optical-sizing: inherit;
+  font-kerning: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  cursor: pointer;
+  -webkit-font-smoothing: inherit;
+  appearance: none;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(12px);
+  display: flex;
+  gap: 8px;
+  -webkit-box-align: center;
+  align-items: center;
+  width: fit-content;
+  margin: 8px;
+  padding: 16px;
+  font-size: 1rem;
+  line-height: 1.25rem;
+  font-weight: 700;
+  color: rgb(255, 255, 255);
+  text-decoration: underline;
+  border-radius: 0.25rem;
+}
 @media (min-width: 600px) {
   .popup-content {
     max-width: 95vw;
@@ -319,7 +308,6 @@ const saveText = () => {
     animation: 0.2s ease 0s 1 normal forwards running ZwfxJ;
   }
 }
-
 
 @keyframes ZwfxJ {
   0% {
@@ -473,9 +461,8 @@ const saveText = () => {
   background: url("src/public-page/image/bg.jpg") center center/cover no-repeat;
   flex: 1 1 calc(100% - 2 * clamp(16px, 2vmin, 48px));
   padding: 32px clamp(16px, 2vmin, 48px) 48px;
-  max-height: calc(100% - 2 * clamp(16px, 2vmin, 48px));
+  max-height: calc(100% - 2 * clamp(0px, 0vmin, 48px));
   margin-left: 12rem;
-  margin-right: 15rem;
 }
 
 .input-container {
@@ -484,74 +471,10 @@ const saveText = () => {
   min-height: calc(clamp(0.5rem, 3.2vmin, 3rem) * 1);
   max-height: calc(clamp(0.5rem, 3.2vmin, 3rem) * 4 + clamp(0.5rem, 1.2vmin, 1rem) * 2);
 }
-<<<<<<< HEAD
 
 #guild-content:focus {
   @apply outline-none border-none text-xl text-black caret-black
 }
-
-=======
-#guild-content:focus{
- @apply outline-none border-none text-xl text-black caret-black
-}
->>>>>>> e0f835529b469a12deccc45ded005fc81a86cbc9
-.media-detail {
-  --panel-background-color: rgba(250, 250, 250, 0.7);
-  padding: 0px 1rem;
-  width: 100%;
-  height: 100%;
-  min-height: 3rem;
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 0%;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  justify-content: center;
-  position: relative;
-}
-
-.media-detail-wrap {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  display: flex;
-  -webkit-box-pack: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  align-items: center;
-  flex: 1 1 0%;
-  opacity: 1;
-  background: var(--panel-background-color);
-  backdrop-filter: blur(12px);
-  border-radius: 0.25rem;
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
-  min-height: 9.875rem;
-  min-width: 14.8125rem;
-}
-
-.mediaInfo {
-  display: flex;
-  flex: 0 1 auto;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  justify-content: center;
-  padding: 0px 1rem;
-  cursor: pointer;
-  flex-direction: column;
-  width: 100%;
-  position: relative;
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
-  border-radius: 4px;
-  height: 100% !important;
-}
-<<<<<<< HEAD
-
-.btn-style {
-  @apply leading-7 m-0 border-none cursor-pointer inline-block align-bottom bg-white text-black rounded-lg text-sm font-bold text-center decoration-0 min-w-10 min-h-10 h-10 pt-0 px-6 pb-1 relative
-}
-
 .btn-border {
   border: 1px solid transparent;
   line-height: 1.875rem;
@@ -561,43 +484,18 @@ const saveText = () => {
   margin-left: 1.375rem;
   border-color: rgb(115, 115, 115);
 }
-
-.style-question {
-=======
-.btn-style{
+.btn-style {
   @apply leading-7 m-0 border-none cursor-pointer inline-block align-bottom bg-white text-black rounded-lg text-sm font-bold text-center decoration-0 min-w-10 min-h-10 h-10 pt-0 px-6 pb-1 relative
 }
-.btn-border{
-  border: 1px solid transparent;
-  line-height: 1.875rem;
-}
-.btn-style:last-of-type{
-  margin-left: 1.375rem;
-  border-color: rgb(115, 115, 115);
-}
-.style-question{
->>>>>>> e0f835529b469a12deccc45ded005fc81a86cbc9
+.settings-side{
   display: flex;
-  -webkit-box-align: center;
-  align-items: center;
-  flex: 6 1 0%;
+  flex-direction: column;
+  flex: 0 0 18rem;
+  width: 18rem;
   position: relative;
+  box-shadow: rgba(0, 0, 0, 0.15) -2px 0px 4px 0px;
+  background-color: rgb(255, 255, 255);
+  margin-right: 0rem;
 }
-<<<<<<< HEAD
 
-
-=======
-.answer-option-1 .answer-option-sign{
-  @apply bg-red-600
-}
-.answer-option-2 .answer-option-sign{
-  @apply bg-blue-600
-}
-.answer-option-3 .answer-option-sign{
-  @apply bg-green-600
-}
-.answer-option-4 .answer-option-sign{
-  @apply bg-yellow-600
-}
->>>>>>> e0f835529b469a12deccc45ded005fc81a86cbc9
 </style>

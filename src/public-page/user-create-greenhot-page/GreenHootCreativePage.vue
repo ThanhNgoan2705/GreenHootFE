@@ -1,7 +1,7 @@
 <script setup>
 
 import {nextTick, onMounted, ref} from "vue";
-import {MDBIcon} from "mdb-vue-ui-kit";
+import {MDBIcon,MDBSelect} from "mdb-vue-ui-kit";
 import TheHeaderCreative
   from "@/components/single-instance-components/create-greenhoot-components/TheHeaderCreative.vue";
 import ListCardAnswers from "@/public-page/user-create-greenhot-page/components/ListCardAnswers.vue";
@@ -17,6 +17,14 @@ onMounted(() => {
 const guildText = ref(null)
 const savedText = ref('');
 const qsContent = ref(false);
+
+const optionsQuestionType = ref([
+  {value: 1, text: 'Multiple choice'},
+  {value: 2, text: 'True or False'},
+  {value: 3, text: 'Type answer'},
+  {value: 4, text: 'Puzzle'},
+])
+const selectedQuestionType = ref([]);
 const makeEditable = () => {
   const question = document.getElementById('guild-content');
   if (question.innerText === 'Start typing your question') {
@@ -43,7 +51,6 @@ const saveText = () => {
     console.log(savedText.value);
   });
 };
-
 
 </script>
 
@@ -96,7 +103,7 @@ const saveText = () => {
   <div class="container-wrap h-full flex flex-col overflow-auto">
     <div class="creator-container  ">
       <div class="creator-header pb-[56px] h-[56px] relative m-0 p-0">
-        <TheHeaderCreative />
+        <TheHeaderCreative :themClick="themClick"/>
       </div>
       <div
           class="creator-sidebar box-border position-fixed left-0 z-20 overflow-hidden flex flex-col align-items-center bottom-0 w-1/6 h-full bg-white shadow-xl pt-0 ">
@@ -194,7 +201,23 @@ const saveText = () => {
           </div>
           <div class="settings-side ">
             <div class="setting-side-content z-20 overflow-y-auto flex flex-col items-center bottom-0">
+                <div class="list-options-setting flex flex-col items-center">
+                  <div class="option-setting flex justify-center items-center w-full h-12 bg-white border-b-2 border-gray-200">
+                 <MDBSelect>
 
+                 </MDBSelect>
+                  </div>
+                  <div class="option-setting flex justify-center items-center w-full h-12 bg-white border-b-2 border-gray-200">
+                    <div class="option-setting-title text-lg font-bold text-gray-500">
+                      Theme
+                    </div>
+                  </div>
+                  <div class="option-setting flex justify-center items-center w-full h-12 bg-white border-b-2 border-gray-200">
+                    <div class="option-setting-title text-lg font-bold text-gray-500">
+                      Media
+                    </div>
+                  </div>
+                </div>
             </div>
             <div class="setting-side-action py-1.5 px-0 my-0 mx-1.5  border-t-2 flex content-center items-center">
               <button class="delete-btn  btn-style btn-border" style="width: inherit">
@@ -206,6 +229,12 @@ const saveText = () => {
 
             </div>
           </div>
+          <div class="theme-side-selection hidden">
+            <div class="theme-side-content z-20 overflow-y-auto flex flex-col items-center bottom-0">
+
+            </div>
+          </div>
+
         </div>
       </main>
     </div>
@@ -250,7 +279,8 @@ const saveText = () => {
   background: rgb(255, 255, 255);
   overflow: hidden auto;
 }
-.creator-container{
+
+.creator-container {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -258,7 +288,8 @@ const saveText = () => {
   overflow: hidden;
 
 }
-.add-answer-btn{
+
+.add-answer-btn {
   border: none;
   overflow: visible;
   outline: none;
@@ -289,6 +320,7 @@ const saveText = () => {
   text-decoration: underline;
   border-radius: 0.25rem;
 }
+
 @media (min-width: 600px) {
   .popup-content {
     max-width: 95vw;
@@ -475,6 +507,7 @@ const saveText = () => {
 #guild-content:focus {
   @apply outline-none border-none text-xl text-black caret-black
 }
+
 .btn-border {
   border: 1px solid transparent;
   line-height: 1.875rem;
@@ -484,10 +517,12 @@ const saveText = () => {
   margin-left: 1.375rem;
   border-color: rgb(115, 115, 115);
 }
+
 .btn-style {
   @apply leading-7 m-0 border-none cursor-pointer inline-block align-bottom bg-white text-black rounded-lg text-sm font-bold text-center decoration-0 min-w-10 min-h-10 h-10 pt-0 px-6 pb-1 relative
 }
-.settings-side{
+
+.settings-side {
   display: flex;
   flex-direction: column;
   flex: 0 0 18rem;

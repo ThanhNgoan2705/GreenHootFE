@@ -10,9 +10,23 @@ import {PhotoIcon} from "@heroicons/vue/16/solid/index.js";
 import {ref} from "vue";
 
 const openPopup = ref(false);
+const openSideBar = ref(true);
 const togglePopup = () => {
   openPopup.value = !openPopup.value;
 }
+const toggleSideBar = () => {
+  openSideBar.value = !openSideBar.value;
+  const sidebar = document.querySelector('.settings-side');
+  const themeSidebar = document.querySelector('.theme-side-selection');
+  if (openSideBar.value) {
+    sidebar.classList.add('active');
+    themeSidebar.classList.remove('active')
+  } else {
+     sidebar.classList.remove('active');
+     themeSidebar.classList.add('active')
+  }
+}
+
 </script>
 <template>
   <header class="fixed left-0 right-0 z-[110] ">
@@ -38,7 +52,7 @@ const togglePopup = () => {
         </MDBNavbarNav>
         <MDBNavbarNav class="flex justify-between mr-auto mb-lg-0">
           <MDBNavbarItem>
-            <button class="flex flex-auto align-items-center whitespace-nowrap my-0 ms-4 px-8 theme-button">
+            <button class="flex flex-auto align-items-center whitespace-nowrap my-0 ms-4 px-8 theme-button" @click="toggleSideBar">
               <MDBIcon fas icon="palette"/>
               Themes
             </button>

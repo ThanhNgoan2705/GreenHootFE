@@ -679,8 +679,9 @@ const openSelectQSType = () => {
   background: url("src/public-page/image/bg.jpg") center center/cover no-repeat;
   flex: 1 1 calc(100% - 2 * clamp(16px, 2vmin, 48px));
   padding: 32px clamp(16px, 2vmin, 48px) 48px;
-  max-height: calc(100% - 2 * clamp(0px, 0vmin, 48px));
+  max-height: calc(100% - 2 * clamp(16px, 2vmin, 48px));
   margin-left: 12rem;
+  margin-right: 15rem;
 }
 
 .input-container {

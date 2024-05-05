@@ -1,12 +1,8 @@
-<script setup>
-import {
-  MDBContainer, MDBNavbar,
-  MDBNavbarBrand,
-  MDBInput, MDBRow, MDBCol, MDBCheckbox, MDBBtn, MDBCard, MDBCardBody, MDBCardTitle, MDBIcon, MDBNavbarNav
-} from "mdb-vue-ui-kit";
+<script setup lang="ts">
+import {MDBBtn, MDBCard, MDBCardBody, MDBCardTitle, MDBCol, MDBContainer, MDBInput, MDBRow} from "mdb-vue-ui-kit";
 import {ref} from "vue";
 import TheCommonHeader from "@/components/single-instance-components/public-component/TheCommonHeader.vue";
-import router from "@/router/index.js";
+import router from "@/router/index";
 import {googleAuthCodeLogin} from "vue3-google-login"
 
 const login = () => {
@@ -54,8 +50,8 @@ const input2 = ref('');
 
         </form>
         <MDBRow class="g-3 mt-3 mb-2">
-          <p class="text-center">Forgot Password?<a role="button" class="text-primary ms-1"><u>Reset your
-            password</u></a></p>
+          <p class="text-center">Forgot Password?<a role="button" class="text-primary ms-1"><router-link to="/PasswordForgottenPage">Reset your
+            password</router-link></a></p>
         </MDBRow>
         <MDBRow class="g-0 mt-3 mb-2">
           <MDBBtn @click="login"><img src="../assets/google.svg" alt="Google" class="float-start">Continue With Google

@@ -1,3 +1,5 @@
+<script setup lang="ts">
+</script>
 <template>
   <svg viewBox="0 0 32 32" focusable="false" stroke="none" stroke-width="0"
        aria-labelledby="label-4b334feb-9ce6-4aab-b228-63a376e73187" aria-hidden="true"

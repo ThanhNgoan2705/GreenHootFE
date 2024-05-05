@@ -1,4 +1,4 @@
-<script setup>
+<script setup  lang="ts">
 import {
   MDBNavbar,
   MDBNavbarBrand,
@@ -10,18 +10,31 @@ import {PhotoIcon} from "@heroicons/vue/16/solid/index.js";
 import {ref} from "vue";
 
 const openPopup = ref(false);
+const openSideBar = ref(true);
 const togglePopup = () => {
   openPopup.value = !openPopup.value;
 }
+const toggleSideBar = () => {
+  openSideBar.value = !openSideBar.value;
+  const sidebar = document.querySelector('.settings-side') as HTMLElement;
+  const themeSidebar = document.querySelector('.theme-side-selection') as HTMLElement;
+  if (openSideBar.value) {
+    sidebar.classList.add('active');
+    themeSidebar.classList.remove('active')
+  } else {
+     sidebar.classList.remove('active');
+     themeSidebar.classList.add('active')
+  }
+}
+
 </script>
 <template>
-  <header>
-    <div class="base-top-bar" style="height:65px">
-      <MDBNavbar expand="xl" light bg="white" container position="top" class="nav-container flex">
+  <header class="fixed left-0 right-0 z-[110] ">
+      <MDBNavbar expand="xl" light bg="white" container position="top" class="nav-container">
         <MDBNavbarNav>
           <MDBNavbarBrand href="#">
             <img
-                src="../logo/green.png"
+                src="../../../components/single-instance-components/logo/green.png"
                 height="50"
                 width="150"
                 alt=""
@@ -39,7 +52,7 @@ const togglePopup = () => {
         </MDBNavbarNav>
         <MDBNavbarNav class="flex justify-between mr-auto mb-lg-0">
           <MDBNavbarItem>
-            <button class="flex flex-auto align-items-center whitespace-nowrap my-0 ms-4 px-8 theme-button">
+            <button class="flex flex-auto align-items-center whitespace-nowrap my-0 ms-4 px-8 theme-button" @click="toggleSideBar">
               <MDBIcon fas icon="palette"/>
               Themes
             </button>
@@ -55,7 +68,6 @@ const togglePopup = () => {
           </MDBNavbarItem>
         </MDBNavbarNav>
       </MDBNavbar>
-    </div>
   </header>
   <div v-if="openPopup" class="popup ">
     <div class="popup-container p-1">
@@ -142,6 +154,18 @@ const togglePopup = () => {
 </template>
 
 <style scoped>
+.nav-container{
+  background: rgb(255, 255, 255);
+  height: 56px;
+  z-index: 10;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px 0px;
+  color: rgb(255, 255, 255);
+  padding: 0px 1rem;
+  -webkit-box-align: center;
+  align-items: center;
+  display: flex;
+  position: relative;
+}
 .button-setting,.button-add {
   height: 40px;
   border-radius: 4px;
@@ -270,9 +294,6 @@ const togglePopup = () => {
     margin-right: auto;
   }
 }
-
-@media (min-width: 600px)
-
 @media (min-width: 600px) {
   .greenhoot-sumary {
     animation: 0.2s ease 0s 1 normal forwards running ZwfxJ;

@@ -1,4 +1,4 @@
-<script setup>
+<script setup  lang="ts">
 import TheHeader from "@/components/single-instance-components/profile-component/TheHeader.vue";
 import {
   MDBTabs,

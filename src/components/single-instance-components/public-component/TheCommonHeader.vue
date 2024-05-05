@@ -1,4 +1,4 @@
-<script setup>
+<script setup  lang="ts">
 import {MDBNavbar, MDBNavbarBrand, MDBNavbarNav} from "mdb-vue-ui-kit";
 import TheLanguageSelector from "@/components/single-instance-components/public-component/TheLanguageSelector.vue";
 </script>

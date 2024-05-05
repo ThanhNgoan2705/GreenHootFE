@@ -1,4 +1,4 @@
-<script setup>
+<script setup  lang="ts">
 import {ref} from "vue";
 import {MDBBtn} from "mdb-vue-ui-kit";
 
@@ -9,9 +9,9 @@ const languages = ref([
   {name: 'Japanese', code: 'JA'},
   {name: 'Italian', code: 'IT'},
 ]);
-const selectedLanguage = ref('EN');
+const selectedLanguage = ref(languages.value[0].code);
 const showLanguage = ref(false);
-const selectLanguage = (lang) =>{
+const selectLanguage = (lang: string) =>{
   selectedLanguage.value = lang;
   showLanguage.value = false;
 }
@@ -20,10 +20,10 @@ const selectLanguage = (lang) =>{
 <template>
   <MDBBtn class="language-selector-toggle d-inline-flex m-auto" @click="showLanguage = !showLanguage">
     <i class="pi pi-globe" style="font-size: 1rem;color:black; margin:auto"></i>
-    <span class="ms-1">{{selectedLanguage ? selectedLanguage.code : 'EN'}}</span>
+    <span class="ms-1">{{selectedLanguage ? selectedLanguage : 'EN'}}</span>
   </MDBBtn>
   <div v-if="showLanguage" class="language-dropdown" >
-    <div v-for="lang in languages" @click="selectLanguage(lang)" class="m-auto">
+    <div v-for="(lang, index) in languages" :key="index" @click="selectLanguage(lang.name)" class="m-auto">
       <span class="ms-1" style="font-size: 12px">{{lang.name}}</span>
     </div>
   </div>

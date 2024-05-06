@@ -681,7 +681,6 @@ const openSelectQSType = () => {
   padding: 32px clamp(16px, 2vmin, 48px) 48px;
   max-height: calc(100% - 2 * clamp(16px, 2vmin, 48px));
   margin-left: 12rem;
-  margin-right: 15rem;
 }
 
 .input-container {

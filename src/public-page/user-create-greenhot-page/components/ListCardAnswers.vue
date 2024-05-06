@@ -2,12 +2,16 @@
 
 import {nextTick, onMounted, ref} from 'vue';
 import {MDBIcon} from 'mdb-vue-ui-kit';
-
-const props = defineProps({
-  questionType: String,
+import {answerCards} from "@/stores/answerCards";
+const questionType = ref({
+  0: 'Multiple choice',
+  1: 'True or False',
+  2: 'Type Answer',
+  3: 'Puzzle'
 })
+
+const store = answerCards();
 const onClick = ref(false);
-const hasContent = ref(false);
 let answerText = ref<HTMLElement | null>(null);
 const savedAnswer = ref('');
 const limitCharacterNumber = ref(80);
@@ -22,20 +26,18 @@ const makeEditable = (index: number) => {
   const answerOption = document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
   const limitNumber = document.querySelectorAll('.limitTime-number') as NodeListOf<HTMLElement>;
   answerOption.forEach((answer, i) => {
+    let currentAnswerText = answer; // Create a new local variable to store the current answer option
     if (i === index) {
-      if (answer.innerText !== '') {
-        console.log(answer.innerText + " before");
-        answer.innerText = '';
-        console.log(answer.innerText + " after");
-      }
-      answerText.value = answer;
-      answerText.value.contentEditable = "true";
-      limitNumber[index].style.display = 'block';
-      answerText.value.focus();
-    } else if (i !== index && answer.innerText === '' && answerText.value !== null) {
-      answer.innerText = 'Add answer ' + (i + 1);
-      answerText.value.contentEditable = "false";
-      limitNumber[i].style.display = 'none';
+      currentAnswerText.innerText= ' ';// Save the current answer text
+      currentAnswerText.contentEditable = 'true'; // Make the answer option editable
+      currentAnswerText.focus(); // Focus on the answer option
+      savedAnswer.value = currentAnswerText.innerText;
+      limitNumber[i].style.display = 'block'; // Display the character limit
+      limitNumber[i].innerText = MAX_CHARACTER - currentAnswerText.innerText.length + ''; // Display the remaining character
+    } if(i !== index && answer.innerText === '') {
+      currentAnswerText.innerText = 'Add answer ' + (i + 1); // Restore the answer text
+      currentAnswerText.contentEditable = 'false'; // Make the answer option not editable
+      limitNumber[i].style.display = 'none'; // Hide the character limit
     }
   });
 }
@@ -57,11 +59,9 @@ const setStatus = (index?: number) => {
   nextTick(() => {
     const answerOption = document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
     const limitNumber = document.querySelectorAll('.limitTime-number') as NodeListOf<HTMLElement>;
-
     answerOption.forEach((answer, i) => {
-      if (i !== index && answer.innerText === '' && answerText.value !== null) {
-        answer.innerText = 'Add answer ' + (i + 1);
-        answerText.value.contentEditable = "false";
+      if (i !== index && answer.innerText === '') {
+        answer.innerText = savedAnswer.value || 'Add answer ' + (i + 1);// Restore the answer text
         limitNumber[i].style.display = 'none';
       }
     });
@@ -91,14 +91,16 @@ const changeBgColorOnInput = (index: number) => {
   const answerContainer = document.querySelectorAll('.answer-option-container') as NodeListOf<HTMLElement>;
   const actionButton = document.querySelectorAll('.add-img-btn') as NodeListOf<HTMLElement>;
   const radioBtn = document.querySelectorAll('.radio-btn') as NodeListOf<HTMLElement>;
-  console.log(answerOption.length)
+  // Create a new local variable to store the current answer option
   answerOption.forEach((answer, i) => {
     if (i === index && answer.innerText !== '') {
       changeBGColor(index)
       actionButton[i].style.display = 'none';
       radioBtn[i].style.display = 'block';
-    } else if (i === index && answer.innerText === '') {
-      answerContainer[i].style.backgroundColor = 'white';
+    } else if (i !== index && answer.innerText === '') {
+      console.log('i', i);
+      console.log('index', index)
+      changeBGColor(index)
       actionButton[i].style.display = 'block';
       radioBtn[i].style.display = 'none';
     }
@@ -170,7 +172,7 @@ const removeAnswerImage = (index: number) => {
   const removeBtn = document.querySelectorAll('.remove-btn') as NodeListOf<HTMLElement>;
   const answerText = document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
   answerOption.forEach((answer, i) => {
-    if (i === index) {
+    if (i === index && answer.innerText !== '') {
       answer.innerText = '';
       answerContain[i].style.backgroundColor = 'white';
       actionButton[i].style.display = 'block';
@@ -183,7 +185,7 @@ const removeAnswerImage = (index: number) => {
 </script>
 
 <template>
-  <div v-if="questionType ==='Multiple choice'"
+  <div v-if="questionType['0'] ==='Multiple choice'"
        class="answer-options w-full flex  flex-[4_1_0%] flex-wrap h-full content-stretch">
     <div v-for="(item , index) in 4" :key="index"
          :class="`answer-option-${index}`"
@@ -225,7 +227,7 @@ const removeAnswerImage = (index: number) => {
       </div>
     </div>
   </div>
-  <div v-if="questionType ==='True or False'"
+  <div v-if="questionType['1'] ==='True or False'"
        class="answer-options w-full flex  flex-[4_1_0%] flex-wrap h-full content-stretch">
     <div v-for="(item , index) in 2" :key="index"
          :class="`answer-option-${index}`"
@@ -267,7 +269,7 @@ const removeAnswerImage = (index: number) => {
       </div>
     </div>
   </div>
-  <div v-if="questionType ==='Type Answer'"
+  <div v-if="questionType['2'] ==='Type Answer'"
        class="answer-options w-full flex  flex-[4_1_0%] flex-wrap h-full content-stretch">
     <div v-for="(item , index) in 4" :key="index"
          :class="`answer-option-${index}`"
@@ -309,7 +311,7 @@ const removeAnswerImage = (index: number) => {
       </div>
     </div>
   </div>
-  <div v-if="questionType ==='Puzzle'"
+  <div v-if="questionType['3'] ==='Puzzle'"
        class="answer-options w-full flex  flex-[4_1_0%] flex-wrap h-full content-stretch">
     <div v-for="(item , index) in 4" :key="index"
          :class="`answer-option-${index}`"

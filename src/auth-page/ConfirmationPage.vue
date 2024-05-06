@@ -1,15 +1,15 @@
-<script setup>
+<script setup lang="ts">
 import {
   MDBContainer,
   MDBRow,
   MDBCol,
   MDBCardTitle,
-  MDBBtn, MDBCard, MDBCardBody, MDBCardImg
+  MDBBtn, MDBCard, MDBCardBody
 } from "mdb-vue-ui-kit";
 import {ref} from "vue";
 import TheCommonHeader from "@/components/single-instance-components/public-component/TheCommonHeader.vue";
 
-const value = ref(null);
+const value = ref('');
 </script>
 
 <template>

@@ -1,12 +1,8 @@
-<script setup>
-import {
-  MDBContainer, MDBNavbar,
-  MDBNavbarBrand,
-  MDBInput, MDBRow, MDBCol, MDBCheckbox, MDBBtn, MDBCard, MDBCardBody, MDBCardTitle, MDBIcon, MDBNavbarNav
-} from "mdb-vue-ui-kit";
+<script setup lang="ts">
+import {MDBBtn, MDBCard, MDBCardBody, MDBCardTitle, MDBCol, MDBContainer, MDBInput, MDBRow} from "mdb-vue-ui-kit";
 import {ref} from "vue";
 import TheCommonHeader from "@/components/single-instance-components/public-component/TheCommonHeader.vue";
-import router from "@/router/index.js";
+import router from "@/router/index";
 import {googleAuthCodeLogin} from "vue3-google-login"
 
 const login = () => {

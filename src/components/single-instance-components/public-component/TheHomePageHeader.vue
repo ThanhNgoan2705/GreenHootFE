@@ -1,5 +1,5 @@
-<script setup>
-import router from "@/router/index.js";
+<script setup  lang="ts">
+import router from "@/router/index";
 import {
   MDBBtn,
   MDBIcon,
@@ -41,7 +41,7 @@ router.beforeEach((to, from, next) => {
           <MDBIcon icon="newspaper" size="lg"></MDBIcon>
           News
         </MDBBtn>
-        <MDBNavbarItem v-for="li in navList" :to="li.link" link class="fw-bold mt-2">{{li.name}}</MDBNavbarItem>
+        <MDBNavbarItem v-for="(li, index) in navList" :key="index" :to="li.link" link class="fw-bold mt-2">{{li.name}}</MDBNavbarItem>
       </MDBNavbarNav>
       <MDBNavbarNav class="me-md-0 align-items-center right-nav w-25 d-flex ">
         <MDBNavbarItem class="fw-bold me-2" to="#">Play</MDBNavbarItem>

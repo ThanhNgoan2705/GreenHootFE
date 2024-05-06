@@ -1,7 +1,6 @@
-<script setup>
+<script setup  lang="ts">
 import {
   MDBContainer, MDBNavbar,
-  MDBNavbarBrand,
   MDBInput, MDBRow, MDBCol, MDBCheckbox, MDBBtn, MDBCard, MDBCardBody, MDBCardTitle, MDBIcon, MDBNavbarNav
 } from "mdb-vue-ui-kit";
 import {ref} from "vue";
@@ -14,13 +13,6 @@ const checkbox3 = ref(false);
   <MDBContainer fluid class="bg-image">
     <MDBNavbar expand="xxl" light bg="white" container position="top" class="w-100 ms-0 me-0">
      <TheCommonHeader/>
-      <MDBNavbarNav right>
-        <Dropdown v-model="selectedLanguage" :options="languages" dropdown-icon="globe" option-label="name" placeholder="code" class="border-0">
-          <template #dropdownicon>
-            <i class="pi pi-globe" style="font-size: 1rem;color:black"></i>
-          </template>
-        </Dropdown>
-      </MDBNavbarNav>
     </MDBNavbar>
     <MDBContainer sm class="justify-content-center mt-5">
       <MDBBtn class="align-content-center h-50 border-1 mt-4" tag="a"

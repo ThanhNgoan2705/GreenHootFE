@@ -1,11 +1,15 @@
-<script setup>
-
-import {nextTick, onMounted, ref} from "vue";
-import {MDBIcon,MDBSelect} from "mdb-vue-ui-kit";
-import TheHeaderCreative
-  from "@/components/single-instance-components/create-greenhoot-components/TheHeaderCreative.vue";
+<script setup  lang="ts">
+import {type DefineComponent, nextTick, onMounted, ref} from "vue";
+import {MDBIcon,} from "mdb-vue-ui-kit";
+import TheHeaderCreative from "@/public-page/user-create-greenhot-page/components/TheHeaderCreative.vue";
 import ListCardAnswers from "@/public-page/user-create-greenhot-page/components/ListCardAnswers.vue";
 import MediaQuestionOption from "@/public-page/user-create-greenhot-page/components/MediaQuestionOption.vue";
+import MultipleChoiceIcon from "@/public-page/user-create-greenhot-page/components/icon/MultipleChoiceIcon.vue";
+import AnswerSelectIcon from "@/public-page/user-create-greenhot-page/components/icon/AnswerSelectIcon.vue";
+import QuestionTypeIcon from "@/public-page/user-create-greenhot-page/components/icon/QuestionTypeIcon.vue";
+import TrueFalseIcon from "@/public-page/user-create-greenhot-page/components/icon/TrueFalseIcon.vue";
+import TypeAnswerIcon from "@/public-page/user-create-greenhot-page/components/icon/TypeAnswerIcon.vue";
+import PuzzleIcon from "@/public-page/user-create-greenhot-page/components/icon/PuzzleIcon.vue";
 
 const openPopup = ref(false);
 const togglePopup = () => {
@@ -14,22 +18,71 @@ const togglePopup = () => {
 onMounted(() => {
   openPopup.value = true;
 })
-const guildText = ref(null)
+const guildText = ref<HTMLElement | null>(null);
 const savedText = ref('');
 const qsContent = ref(false);
+const openQuestionType = ref(false);
+const optionQuestionTypeIcon = ref('MultipleChoiceIcon');
 
 const optionsQuestionType = ref([
-  {value: 1, text: 'Multiple choice'},
-  {value: 2, text: 'True or False'},
-  {value: 3, text: 'Type answer'},
-  {value: 4, text: 'Puzzle'},
+  {value: 1, text: 'Multiple choice', icon: 'MultipleChoiceIcon'},
+  {value: 2, text: 'True or False', icon: 'TrueFalseIcon'},
+  {value: 3, text: 'Type answer', icon: 'TypeAnswerIcon'},
+  {value: 4, text: 'Puzzle', icon: 'PuzzleIcon'},
 ])
-const selectedQuestionType = ref([]);
+type IconComponents = {
+  [key: string]: DefineComponent<{}, {}, any>
+}
+const iconComponents: IconComponents = {
+  MultipleChoiceIcon,
+  TrueFalseIcon,
+  TypeAnswerIcon,
+  PuzzleIcon
+}
+const timeSetting = ref([
+  {value: 1, text: '20 seconds'},
+  {value: 2, text: '30 seconds'},
+  {value: 3, text: '40 seconds'},
+  {value: 4, text: '50 seconds'},
+  {value: 5, text: '1 minute'},
+  {value: 6, text: '1 minute 30 seconds'},
+  {value: 7, text: '2 minutes'},
+  {value: 8, text: '2 minutes 30 seconds'},
+]);
+const selectedTime = ref();
+const openTime = ref(false);
+const selectTime = (time:string) => {
+  selectedTime.value = time;
+  openTime.value = false;
+}
+const selectedPoint = ref();
+const openPoint = ref(false);
+const pointSetting = ref([
+  {value: 1, text: 'Standard', description: 'Award points based on correct answers'},
+  {value: 2, text: 'Double points', description: 'Give twice as many points for correct answers'},
+  {value: 3, text: 'No points', description: 'Lower the stakes by not awarding points'},
+]);
+const selectPoint = (point:string) => {
+  selectedPoint.value = point;
+  openPoint.value = false;
+}
+const openAnswer = ref(false);
+const selectedAnswer = ref();
+const answerSetting = ref([
+  {value: 1, text: 'Single select', description: 'Allow players to select only one answer'},
+  {value: 2, text: 'Multiples', description: 'Allow players to select multiple answers'},
+]);
+const selectAnswer = (answer:string) => {
+  selectedAnswer.value = answer;
+  openAnswer.value = false;
+}
+const selectedQuestionType = ref(optionsQuestionType.value[0]);
+console.log(selectedQuestionType.value);
 const makeEditable = () => {
-  const question = document.getElementById('guild-content');
-  if (question.innerText === 'Start typing your question') {
+  const question = document.getElementById('guild-content') as HTMLElement;
+  if (question.innerText === 'Start typing your question' && guildText.value !== null) {
     question.innerText = '';
-    guildText.value.contentEditable = true;
+    guildText.value.contentEditable = "true";
     savedText.value = question.innerText;
     guildText.value.focus();
   }
@@ -38,19 +91,25 @@ const makeEditable = () => {
 const saveText = () => {
   qsContent.value = true;
   nextTick(() => {
-    const question = document.getElementById('guild-content');
-    console.log("question " + question.innerText);
-    savedText.value = question.innerText;
-    if (savedText.value.length > 15) {
-      savedText.value = savedText.value.substring(0, 10) + '...';
-    }
-    if (savedText.value === '') {
-      question.innerText = 'Start typing your question';
-      savedText.value = 'Question';
+    const question = document.getElementById('guild-content') as HTMLElement;
+    if (question.innerText === '' && guildText.value!== null) {
+      guildText.value.contentEditable = "false";
+      savedText.value = question.innerText;
+      if (savedText.value.length > 15) {
+        savedText.value = savedText.value.substring(0, 10) + '...';
+      }
+      if (savedText.value === '') {
+        question.innerText = 'Start typing your question';
+        savedText.value = 'Question';
+      }
+      console.log(savedText.value);
     }
     console.log(savedText.value);
   });
 };
+const openSelectQSType = () => {
+  openQuestionType.value = false;
+}
 
 </script>
 
@@ -103,7 +162,7 @@ const saveText = () => {
   <div class="container-wrap h-full flex flex-col overflow-auto">
     <div class="creator-container  ">
       <div class="creator-header pb-[56px] h-[56px] relative m-0 p-0">
-        <TheHeaderCreative :themClick="themClick"/>
+        <TheHeaderCreative/>
       </div>
       <div
           class="creator-sidebar box-border position-fixed left-0 z-20 overflow-hidden flex flex-col align-items-center bottom-0 w-1/6 h-full bg-white shadow-xl pt-0 ">
@@ -187,61 +246,188 @@ const saveText = () => {
                 <div class="input-container  guild-text " @click="makeEditable">
                   <p id="guild-content" class="text-center text-black text-lg  mt-2 border-none"
                      ref="guildText" @blur="saveText">
-                    Start typing your question</p>
+                    Start typing your question
+                  </p>
                 </div>
               </div>
             </div>
             <MediaQuestionOption/>
             <div class="flex flex-col w-full items-center">
-              <ListCardAnswers/>
+              <ListCardAnswers :question-type="selectedQuestionType.text"/>
               <button class="add-answer-btn ">
                 Add more answers
               </button>
             </div>
           </div>
           <div class="settings-side ">
-            <div class="setting-side-content z-20 overflow-y-auto flex flex-col items-center bottom-0">
-                <div class="list-options-setting flex flex-col items-center">
-                  <div class="option-setting flex justify-center items-center w-full h-12 bg-white border-b-2 border-gray-200">
-                 <MDBSelect>
-
-                 </MDBSelect>
-                  </div>
-                  <div class="option-setting flex justify-center items-center w-full h-12 bg-white border-b-2 border-gray-200">
-                    <div class="option-setting-title text-lg font-bold text-gray-500">
-                      Theme
+            <div class="setting-side-content">
+              <div class="list-options-setting  flex flex-col items-center ">
+                <div class="option-setting  mt-1 mb-5">
+                  <label for="questionType" class="w-full text-sm font-bold text-black"
+                  >
+                    <span class="text-sm inline-block align-middle w-5 h-5  ">
+                      <QuestionTypeIcon/>
+                       </span>
+                    Question type
+                    <div id="questionType" class="relative border-box" @click="openQuestionType = !openQuestionType">
+                      <div class="select-box relative box-border mt-[8px]">
+                        <div class="box-content ">
+                          <div class="box-content-inner">
+                            <div class="box-content-icon">
+                              <div class="box-image absolute left-0 top-1/2 -translate-y-1/2 w-[24px] h-[24px]">
+                                <component :is="iconComponents[optionQuestionTypeIcon]" class="max-w-full max-h-full"/>
+                              </div>
+                            </div>
+                            <div class="box-content-text ms-[2rem] text-lg font-normal leading-3  ">
+                              <span class="text-sm text-gray-500">{{ selectedQuestionType.text }}</span>
+                            </div>
+                          </div>
+                          <div class="box-dropdown items-center self-stretch flex shrink-0 box-border">
+                            <div class="box-dropdown-icon p-2">
+                              <MDBIcon icon="chevron-down" size="lg"/>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div class="option-setting flex justify-center items-center w-full h-12 bg-white border-b-2 border-gray-200">
-                    <div class="option-setting-title text-lg font-bold text-gray-500">
-                      Media
-                    </div>
-                  </div>
+                  </label>
                 </div>
+                <hr class="w-full border-black mt-0 mb-4 "/>
+                <div class="time-setting  mb-5">
+                  <label for="timeSelection" class=" time-select-title w-full text-sm font-bold text-black ">
+                    <span class="text-sm inline-block align-middle w-5 h-5">
+                     <MDBIcon icon="stopwatch" size="lg"/>
+                    </span>
+                    Time Limit
+                    <div class="dropdown select-box relative box-border mt-[10px]" @click="openTime = !openTime">
+                      <div class="dropdown-selected w-full box-content ">
+                        <div
+                            class="box-content-inner overflow-hidden text-ellipsis relative flex items-center ms-1 font-normal text-gray-500">
+                          {{ selectedTime ? selectedTime.text : 'Select a time' }}
+                        </div>
+                        <div class="box-dropdown items-center self-stretch flex shrink-0 box-border">
+                          <div class="box-dropdown-icon p-2">
+                            <MDBIcon icon="chevron-down" size="lg"/>
+                          </div>
+                        </div>
+                      </div>
+                      <div v-if="openTime" class="dropdown-options ">
+                        <div
+                            v-for="time in timeSetting"
+                            :key="time.value"
+                            @click="selectTime(time.text)"
+                            class="dropdown-option p-2"
+                        >
+                          {{ time.text }}
+                        </div>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+                <div class="point-setting mb-6">
+                  <label for="pointSelection" class=" point-select-title w-full text-sm font-bold text-black ">
+                    <span class="text-sm inline-block align-middle w-5 h-5">
+                     <MDBIcon icon="award" size="lg"/>
+                    </span>
+                    Points
+                    <div class="dropdown select-box relative box-border mt-[10px]" @click="openPoint = !openPoint">
+                      <div class="dropdown-selected w-full box-content ">
+                        <div
+                            class="box-content-inner overflow-hidden text-ellipsis relative flex items-center ms-1 font-normal text-gray-500">
+                          {{ selectedPoint ? selectedPoint.text : 'Select a point' }}
+                        </div>
+                        <div class="dropdown-icon p-2">
+                          <MDBIcon icon="chevron-down" size="lg"/>
+                        </div>
+                        <div v-if="selectedPoint" class="  text-xs text-gray-400 ">{{ selectedPoint.description }}</div>
+                      </div>
+                      <div v-if="openPoint" class="dropdown-options ">
+                        <div
+                            v-for="point in pointSetting"
+                            :key="point.value"
+                            @click="selectPoint(point.text)"
+                            class="dropdown-option p-2"
+                        >
+                          {{ point.text }}
+                          <div class=" text-xs text-gray-400 font-normal">{{ point.description }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+                <div class="answer-setting mb-6">
+                  <label for="answerSelection" class=" answer-select-title w-full text-sm font-bold text-black ">
+                    <span class="text-sm inline-block align-middle w-5 h-5">
+                     <AnswerSelectIcon/>
+                    </span>
+                    Answer Options
+                    <div class="dropdown select-box relative box-border mt-[10px]" @click="openAnswer = !openAnswer">
+                      <div class="dropdown-selected w-full box-content ">
+                        <div
+                            class="box-content-inner overflow-hidden text-ellipsis relative flex items-center ms-1 font-normal text-gray-500">
+                          {{ selectedAnswer ? selectedAnswer.text : 'Select an answer' }}
+                        </div>
+                        <div class="dropdown-icon p-2">
+                          <MDBIcon icon="chevron-down" size="lg"/>
+                        </div>
+                        <div v-if="selectedAnswer" class="  text-xs text-gray-400 ">{{
+                            selectedAnswer.description
+                          }}
+                        </div>
+                      </div>
+                      <div v-if="openAnswer" class="dropdown-options ">
+                        <div
+                            v-for="answer in answerSetting"
+                            :key="answer.value"
+                            @click="selectAnswer(answer.text)"
+                            class="dropdown-option p-2"
+                        >
+                          {{ answer.text }}
+                          <div class=" text-xs text-gray-400 font-normal">{{ answer.description }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </div>
             </div>
             <div class="setting-side-action py-1.5 px-0 my-0 mx-1.5  border-t-2 flex content-center items-center">
-              <button class="delete-btn  btn-style btn-border" style="width: inherit">
+              <button class="btn-style delete-btn   btn-border" style="width: inherit">
                 Delete
               </button>
-              <button class="dubp-btn btn-style btn-border " style="width: inherit">
+              <button class=" btn-style  dup-btn" style="width: inherit">
                 Duplicate
               </button>
 
             </div>
           </div>
-          <div class="theme-side-selection hidden">
-            <div class="theme-side-content z-20 overflow-y-auto flex flex-col items-center bottom-0">
-
+          <div class="list-qs-type " v-if="openQuestionType">
+            <div
+                v-for="option in optionsQuestionType"
+                :key="option.value"
+                @click="openSelectQSType"
+                class="option-setting p-2 w-[8rem] h-[8rem] bg-white border-b border-gray-200 "
+            >
+              <div
+                  class="option-setting-title"
+                  @click="selectedQuestionType = option;
+                  openQuestionType = false;
+                optionQuestionTypeIcon = option.icon"
+              >
+                <span class="text-sm max-w-full max-h-full flex flex-col  items-center p-2">
+                  <component :is="iconComponents[option.icon] " class=""/>
+                </span>
+                {{ option.text }}
+              </div>
             </div>
           </div>
-
         </div>
       </main>
     </div>
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .popup {
   display: block;
   position: fixed;
@@ -340,6 +526,7 @@ const saveText = () => {
     animation: 0.2s ease 0s 1 normal forwards running ZwfxJ;
   }
 }
+
 
 @keyframes ZwfxJ {
   0% {
@@ -493,7 +680,7 @@ const saveText = () => {
   background: url("src/public-page/image/bg.jpg") center center/cover no-repeat;
   flex: 1 1 calc(100% - 2 * clamp(16px, 2vmin, 48px));
   padding: 32px clamp(16px, 2vmin, 48px) 48px;
-  max-height: calc(100% - 2 * clamp(0px, 0vmin, 48px));
+  max-height: calc(100% - 2 * clamp(16px, 2vmin, 48px));
   margin-left: 12rem;
 }
 
@@ -519,8 +706,13 @@ const saveText = () => {
 }
 
 .btn-style {
-  @apply leading-7 m-0 border-none cursor-pointer inline-block align-bottom bg-white text-black rounded-lg text-sm font-bold text-center decoration-0 min-w-10 min-h-10 h-10 pt-0 px-6 pb-1 relative
+  @apply leading-7 m-0 border-0 cursor-pointer inline-block align-bottom bg-white text-black rounded-lg text-sm font-bold text-center decoration-0 min-w-10 min-h-10 h-10 pt-0 px-6 pb-1 relative
 }
+
+.dup-btn {
+  @apply border-2 border-gray-500
+}
+
 
 .settings-side {
   display: flex;
@@ -533,4 +725,59 @@ const saveText = () => {
   margin-right: 0rem;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .settings-side {
+    transition: margin 0.6s ease-in-out 0s, transform 0.1s ease-in-out 0s;
+    transform: rotateY(0deg);
+  }
+}
+
+.setting-side-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 calc(100% - 2rem);
+  width: 100%;
+  height: calc(100% - 2rem);
+  position: relative;
+  background-color: rgb(255, 255, 255);
+  padding: 1rem;
+  max-height: 100%;
+  overflow: hidden auto;
+}
+
+.box-content {
+  @apply items-center bg-white border-gray-500 rounded-lg border-solid border-[1px] cursor-pointer flex flex-wrap justify-between min-h-[2.5rem] relative transition-all duration-100  box-border outline-0
+}
+
+.option-setting, .time-setting, .point-setting, .answer-setting {
+  @apply flex justify-center items-center w-full h-12 bg-white border-b border-gray-200
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-selected {
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+  .dropdown-options {
+    @apply absolute top-full left-0 z-10 bg-white border border-gray-200 rounded-md shadow-md w-full max-h-[200px] overflow-y-auto
+  }
+
+.dropdown-option {
+  cursor: pointer;
+}
+
+.dropdown-option:hover {
+  background-color: #eee;
+}
+
+.list-qs-type {
+  @apply absolute top-1/4 right-0  z-10 bg-white border border-gray-200 rounded-md shadow-md w-[18rem] max-h-full flex flex-wrap
+}
+.option-setting-title{
+  @apply  w-full text-sm font-bold text-black bg-gray-200 border-2 border-gray-200 text-center cursor-pointer
+}
 </style>

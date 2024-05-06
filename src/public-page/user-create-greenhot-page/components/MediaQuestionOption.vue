@@ -1,30 +1,32 @@
-<script setup>
+<script setup  lang="ts">
 import { ref } from 'vue';
 import { MDBIcon } from 'mdb-vue-ui-kit';
 const hasBackgroundImage = ref(false);
 const upLoadImage = () => {
-  const input = document.createElement('input');
-  const backgroundImage = document.querySelector('.media-detail-wrap');
-  const trashIcon = document.querySelector('.media-action');
+  const input = document.createElement('input')  as HTMLInputElement;
+  const backgroundImage = document.querySelector('.media-detail-wrap') as HTMLElement;
+  const trashIcon = document.querySelector('.media-action') as HTMLElement;
   input.type = 'file';
   // just image files with .png, .jpg, .jpeg, .gif and .svg extensions
   input.accept = 'image/*';
   input.onchange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      backgroundImage.style.backgroundImage = `url(${e.target.result})`;
-      hasBackgroundImage.value = true;
-      trashIcon.classList.remove('hidden');
-      console.log(e.target.result);
-    };
-    reader.readAsDataURL(file);
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const url = e.target?.result as string;
+        backgroundImage.style.backgroundImage = `url(${url})`;
+        hasBackgroundImage.value = true;
+        trashIcon.classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
   };
   input.click();
 };
 const removeBgImage = () => {
-  const backgroundImage = document.querySelector('.media-detail-wrap');
-  const trashIcon = document.querySelector('.media-action');
+  const backgroundImage = document.querySelector('.media-detail-wrap') as HTMLElement;
+  const trashIcon = document.querySelector('.media-action') as HTMLElement;
   backgroundImage.style.backgroundImage = '';
   hasBackgroundImage.value = false;
   trashIcon.classList.add('hidden');

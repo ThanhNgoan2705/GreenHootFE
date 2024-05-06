@@ -1,13 +1,12 @@
-<script setup>
-import {onBeforeMount, getCurrentInstance,ref} from "vue";
-  const openPopup = ref(false);
+<script setup  lang="ts">
+import {ref} from "vue";
+import { MDBIcon } from "mdb-vue-ui-kit";
+
+const openPopup = ref(false);
   const togglePopup = () => {
     openPopup.value = !openPopup.value;
   };
-  openPopup;
-  togglePopup;
 </script>
-
 <template>
   <div class="popup-container p-1">
     <div class="popup-content">
@@ -87,13 +86,13 @@ import {onBeforeMount, getCurrentInstance,ref} from "vue";
     margin-right: auto;
   }
 }
-@media (min-width: 600px)
 @media (min-width: 600px) {
-  .popup-content {
-    animation: 0.2s ease 0s 1 normal forwards running ZwfxJ;
+  @media (min-width: 600px) {
+    .popup-content {
+      animation: 0.2s ease 0s 1 normal forwards running ZwfxJ;
+    }
   }
 }
-
 
 @keyframes ZwfxJ {
   0% {

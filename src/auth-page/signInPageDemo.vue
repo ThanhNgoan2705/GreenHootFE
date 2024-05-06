@@ -1,5 +1,5 @@
 
-<script setup>
+<script setup  lang="ts">
 import { googleAuthCodeLogin } from "vue3-google-login"
 const login = () => {
   googleAuthCodeLogin().then((response) => {

@@ -1,4 +1,4 @@
-<script setup>
+<script setup  lang="ts">
 import {MDBIcon} from 'mdb-vue-ui-kit';
 import {computed, ref} from 'vue';
 const sidebarItem = ref([
@@ -24,7 +24,7 @@ const sidebarItem = ref([
   },
 ]);
 const activeLink = ref('Home');
-const setActiveLink = (name) => {
+const setActiveLink = (name: string) => {
   activeLink.value = name;
 };
 </script>
@@ -37,7 +37,7 @@ const setActiveLink = (name) => {
           class="sidebar-item"
           :class="{active: activeLink === item.name}"
           @click="setActiveLink(item.name)"
-          :aria-current="activeLink.value === item.name ? 'page' : undefined"
+          :aria-current="activeLink=== item.name ? 'page' : undefined"
         >
           <MDBIcon :icon="item.icon" size="ms" class="mb-2" />
           <a :class="{active: activeLink === item.name}">{{ item.name }}</a>

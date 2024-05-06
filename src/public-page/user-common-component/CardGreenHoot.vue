@@ -1,6 +1,5 @@
-<script setup>
+<script setup lang="ts">
 import {MDBCard, MDBCardImg, MDBCardBody, MDBCardText,MDBCardFooter,MDBBtn,MDBCardTitle} from 'mdb-vue-ui-kit';
-import {ref} from 'vue';
 </script>
 
 <template>

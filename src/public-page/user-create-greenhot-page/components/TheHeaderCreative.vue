@@ -1,4 +1,4 @@
-<script setup>
+<script setup  lang="ts">
 import {
   MDBNavbar,
   MDBNavbarBrand,
@@ -16,8 +16,8 @@ const togglePopup = () => {
 }
 const toggleSideBar = () => {
   openSideBar.value = !openSideBar.value;
-  const sidebar = document.querySelector('.settings-side');
-  const themeSidebar = document.querySelector('.theme-side-selection');
+  const sidebar = document.querySelector('.settings-side') as HTMLElement;
+  const themeSidebar = document.querySelector('.theme-side-selection') as HTMLElement;
   if (openSideBar.value) {
     sidebar.classList.add('active');
     themeSidebar.classList.remove('active')
@@ -34,7 +34,7 @@ const toggleSideBar = () => {
         <MDBNavbarNav>
           <MDBNavbarBrand href="#">
             <img
-                src="../logo/green.png"
+                src="../../../components/single-instance-components/logo/green.png"
                 height="50"
                 width="150"
                 alt=""
@@ -294,9 +294,6 @@ const toggleSideBar = () => {
     margin-right: auto;
   }
 }
-
-@media (min-width: 600px)
-
 @media (min-width: 600px) {
   .greenhoot-sumary {
     animation: 0.2s ease 0s 1 normal forwards running ZwfxJ;

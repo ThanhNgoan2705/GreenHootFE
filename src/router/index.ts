@@ -6,18 +6,10 @@ import PasswordForgottenPage from "@/auth-page/PasswordForgottenPage.vue";
 import ConfirmationPage from "@/auth-page/ConfirmationPage.vue";
 import SignInPageDemo from "@/auth-page/signInPageDemo.vue";
 import Home from "../HomePage.vue";
-import userRoutes from "@/router/user.routes.js";
-import sidebarRoutes from "@/router/sidebar.routes.js";
-function requireAuth(to, from, next) {
-    const isAuthenticated = false;  // replace with actual login check
-    const isLoginSuccess = false;  // replace with actual login check
-   if(isAuthenticated){
-       next()
-   }
-    else{
-         next('/SignInPage')
-    }
-}
+import userRoutes from "@/router/user.routes";
+import sidebarRoutes from "@/router/sidebar.routes";
+import playRoutes from "@/router/play.routes";
+
 const routes= [
     {path: '/Home',name:'Home', component: Home,meta:{showHeader: true} },
     { path: '/SignInPage', component: SignInPage,meta:{showHeader: false} },
@@ -30,6 +22,7 @@ const routes= [
     { path: '/:pathMatch(.*)*', redirect: '/Home' },
     ...userRoutes,
     ...sidebarRoutes,
+    ...playRoutes
 ];
 const router = createRouter({
     history: createWebHashHistory(),

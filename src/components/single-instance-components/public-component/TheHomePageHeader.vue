@@ -44,7 +44,7 @@ router.beforeEach((to, from, next) => {
         <MDBNavbarItem v-for="(li, index) in navList" :key="index" :to="li.link" link class="fw-bold mt-2">{{li.name}}</MDBNavbarItem>
       </MDBNavbarNav>
       <MDBNavbarNav class="me-md-0 align-items-center right-nav w-25 d-flex ">
-        <MDBNavbarItem class="fw-bold me-2" to="#">Play</MDBNavbarItem>
+        <MDBNavbarItem class="fw-bold me-2" ><router-link to="/enter-pin" class="text-black font-bold">Play</router-link></MDBNavbarItem>
         <MDBNavbarItem class="me-2 ms-2">
           <MDBBtn class="align-content-center h-50 text-body-secondary" tag="a" @click="router.push('/SignupPage')"
                   style="background-color: rgb(15,116,26)">

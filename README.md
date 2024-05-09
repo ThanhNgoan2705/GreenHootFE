@@ -1,9 +1,9 @@
 <<<<<<< HEAD
-# GreenHootFE
+# GreenHootFE_Vue3
 =======
 # green_hoot
 
-This template should help get you started developing with Vue 3 in Vite.
+This project is created for students to join in interactive test software, which they can do test and play/
 
 ## Recommended IDE Setup
 

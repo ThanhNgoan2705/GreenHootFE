@@ -5,11 +5,13 @@ const routes = [
         path: "/waiting-players",
         name: "WaitingPlayersPage",
         component: WaitingPlayersPage,
+        meta: { showHeader: false },
     },
     {
         path:"/enter-pin",
         name: "EnterPage",
         component: EnterPinPage,
+        meta: { showHeader: false },
     }
     ];
 export default routes;

@@ -9,13 +9,3 @@ interface Question {
     questionAnswerOptions: String;
     questionAnswer: String[];
 }
-export const question = defineStore({
-    id: "question",
-    state:()=>{return{
-        questions: [
-            {
-                id: ""
-            }
-    }
-    }
-}

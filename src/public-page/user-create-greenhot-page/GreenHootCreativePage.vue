@@ -1,4 +1,4 @@
-<script setup  lang="ts">
+<script setup lang="ts">
 import {type DefineComponent, nextTick, onMounted, ref} from "vue";
 import {MDBIcon,} from "mdb-vue-ui-kit";
 import TheHeaderCreative from "@/public-page/user-create-greenhot-page/components/TheHeaderCreative.vue";
@@ -51,7 +51,7 @@ const timeSetting = ref([
 ]);
 const selectedTime = ref();
 const openTime = ref(false);
-const selectTime = (time:string) => {
+const selectTime = (time: string) => {
   selectedTime.value = time;
   openTime.value = false;
 }
@@ -62,7 +62,7 @@ const pointSetting = ref([
   {value: 2, text: 'Double points', description: 'Give twice as many points for correct answers'},
   {value: 3, text: 'No points', description: 'Lower the stakes by not awarding points'},
 ]);
-const selectPoint = (point:string) => {
+const selectPoint = (point: string) => {
   selectedPoint.value = point;
   openPoint.value = false;
 }
@@ -72,7 +72,7 @@ const answerSetting = ref([
   {value: 1, text: 'Single select', description: 'Allow players to select only one answer'},
   {value: 2, text: 'Multiples', description: 'Allow players to select multiple answers'},
 ]);
-const selectAnswer = (answer:string) => {
+const selectAnswer = (answer: string) => {
   selectedAnswer.value = answer;
   openAnswer.value = false;
 }
@@ -92,7 +92,7 @@ const saveText = () => {
   qsContent.value = true;
   nextTick(() => {
     const question = document.getElementById('guild-content') as HTMLElement;
-    if (question.innerText === '' && guildText.value!== null) {
+    if (question.innerText === '' && guildText.value !== null) {
       guildText.value.contentEditable = "false";
       savedText.value = question.innerText;
       if (savedText.value.length > 15) {
@@ -527,6 +527,7 @@ const openSelectQSType = () => {
     }
   }
 }
+
 @keyframes ZwfxJ {
   0% {
     opacity: 0;
@@ -681,7 +682,6 @@ const openSelectQSType = () => {
   padding: 32px clamp(16px, 2vmin, 48px) 48px;
   max-height: calc(100% - 2 * clamp(16px, 2vmin, 48px));
   margin-left: 12rem;
-  margin-right: 15rem;
 }
 
 .input-container {
@@ -762,9 +762,9 @@ const openSelectQSType = () => {
   cursor: pointer;
 }
 
-  .dropdown-options {
-    @apply absolute top-full left-0 z-10 bg-white border border-gray-200 rounded-md shadow-md w-full max-h-[200px] overflow-y-auto
-  }
+.dropdown-options {
+  @apply absolute top-full left-0 z-10 bg-white border border-gray-200 rounded-md shadow-md w-full max-h-[200px] overflow-y-auto
+}
 
 .dropdown-option {
   cursor: pointer;
@@ -777,7 +777,8 @@ const openSelectQSType = () => {
 .list-qs-type {
   @apply absolute top-1/4 right-0  z-10 bg-white border border-gray-200 rounded-md shadow-md w-[18rem] max-h-full flex flex-wrap
 }
-.option-setting-title{
-  @apply  w-full text-sm font-bold text-black bg-gray-200 border-2 border-gray-200 text-center cursor-pointer
+
+.option-setting-title {
+  @apply w-full text-sm font-bold text-black bg-gray-200 border-2 border-gray-200 text-center cursor-pointer
 }
 </style>

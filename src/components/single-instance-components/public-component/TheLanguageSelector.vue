@@ -1,4 +1,4 @@
-<script setup  lang="ts">
+<script setup lang="ts">
 import {ref} from "vue";
 import {MDBBtn} from "mdb-vue-ui-kit";
 
@@ -11,8 +11,10 @@ const languages = ref([
 ]);
 const selectedLanguage = ref(languages.value[0].code);
 const showLanguage = ref(false);
-const selectLanguage = (lang: string) =>{
-  selectedLanguage.value = lang;
+const selectLanguage = (lang: string) => {
+  const codeSelected = languages.value.find(l => l.name === lang)?.code;
+  if (codeSelected === undefined) return;
+  selectedLanguage.value = codeSelected;
   showLanguage.value = false;
 }
 </script>
@@ -20,11 +22,11 @@ const selectLanguage = (lang: string) =>{
 <template>
   <MDBBtn class="language-selector-toggle d-inline-flex m-auto" @click="showLanguage = !showLanguage">
     <i class="pi pi-globe" style="font-size: 1rem;color:black; margin:auto"></i>
-    <span class="ms-1">{{selectedLanguage ? selectedLanguage : 'EN'}}</span>
+    <span class="ms-1">{{ selectedLanguage ? selectedLanguage : 'EN' }}</span>
   </MDBBtn>
-  <div v-if="showLanguage" class="language-dropdown" >
+  <div v-if="showLanguage" class="language-dropdown">
     <div v-for="(lang, index) in languages" :key="index" @click="selectLanguage(lang.name)" class="m-auto">
-      <span class="ms-1" style="font-size: 12px">{{lang.name}}</span>
+      <span class="ms-1 text-sm cursor-pointer" >{{ lang.name }}</span>
     </div>
   </div>
 </template>
@@ -41,10 +43,11 @@ const selectLanguage = (lang: string) =>{
   background: #fff;
   color: #333;
 }
-.language-dropdown{
+
+.language-dropdown {
   position: absolute;
-  top: 2.6rem;
-  right: 1.5rem;
+  top: 1.5rem;
+  right: 1rem;
   background: #fff;
   border: 0.0625rem solid #565656;
   z-index: 1000;
@@ -52,12 +55,16 @@ const selectLanguage = (lang: string) =>{
   flex-direction: column;
   width: 5rem;
 }
-.language-dropdown div{
+
+.language-dropdown div {
   color: black;
   padding: 5px 4px;
   text-decoration: none;
   display: block;
 }
-.language-dropdown div:hover {background-color: #f1f1f1;}
+
+.language-dropdown div:hover {
+  background-color: #f1f1f1;
+}
 
 </style>

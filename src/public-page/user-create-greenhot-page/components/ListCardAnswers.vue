@@ -2,14 +2,15 @@
 
 import {nextTick, onMounted, ref} from 'vue';
 import {MDBIcon} from 'mdb-vue-ui-kit';
+import {answerCards} from "@/stores/answerCards";
 
+const store = answerCards();
 const props = defineProps({
   questionType: String,
 })
 const onClick = ref(false);
-const hasContent = ref(false);
 let answerText = ref<HTMLElement | null>(null);
-const savedAnswer = ref('');
+const savedAnswer = store.answerCards.map((item) => item.text);
 const limitCharacterNumber = ref(80);
 const symbol = ref({
   0: 'heart',
@@ -18,27 +19,6 @@ const symbol = ref({
   3: 'star'
 })
 
-const makeEditable = (index: number) => {
-  const answerOption = document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
-  const limitNumber = document.querySelectorAll('.limitTime-number') as NodeListOf<HTMLElement>;
-  answerOption.forEach((answer, i) => {
-    if (i === index) {
-      if (answer.innerText !== '') {
-        console.log(answer.innerText + " before");
-        answer.innerText = '';
-        console.log(answer.innerText + " after");
-      }
-      answerText.value = answer;
-      answerText.value.contentEditable = "true";
-      limitNumber[index].style.display = 'block';
-      answerText.value.focus();
-    } else if (i !== index && answer.innerText === '' && answerText.value !== null) {
-      answer.innerText = 'Add answer ' + (i + 1);
-      answerText.value.contentEditable = "false";
-      limitNumber[i].style.display = 'none';
-    }
-  });
-}
 const MAX_CHARACTER = 80;
 onMounted(() => {
   const answerOption = document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
@@ -57,13 +37,20 @@ const setStatus = (index?: number) => {
   nextTick(() => {
     const answerOption = document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
     const limitNumber = document.querySelectorAll('.limitTime-number') as NodeListOf<HTMLElement>;
-
     answerOption.forEach((answer, i) => {
-      if (i !== index && answer.innerText === '' && answerText.value !== null) {
-        answer.innerText = 'Add answer ' + (i + 1);
-        answerText.value.contentEditable = "false";
+      if (i === index && answer.innerText !== '' && answer.innerText !== ' Add your answer' + (i + 1)) {
+        answer.innerText = store.answerCards[i]?.answerText; // Update with answerText
+        savedAnswer[i] = store.answerCards[i]?.answerText; // Update with answerText
+        answer.contentEditable = 'true';
+        limitNumber[i].style.display = 'block';
+      }
+      if (i === index && answer.innerText === '') {
+        answer.innerText = 'Add your answer ' + (i + 1);
+        answer.contentEditable = 'false';
+        savedAnswer[i] = answer.innerText;
         limitNumber[i].style.display = 'none';
       }
+
     });
   });
 }
@@ -77,33 +64,7 @@ onMounted(() => {
     });
   });
 });
-const changeBGColor = (index: number) => {
-  const color = ['rgb(226,27,60)', 'rgb(19,104,206)', 'rgb(0,128,0)', 'rgb(216, 158, 0)'];
-  const answerContainer = document.querySelectorAll('.answer-option-container') as NodeListOf<HTMLElement>;
-  answerContainer.forEach((answer, i) => {
-    if (i === index) {
-      answer.style.backgroundColor = color[i];
-    }
-  });
-}
-const changeBgColorOnInput = (index: number) => {
-  const answerOption = document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
-  const answerContainer = document.querySelectorAll('.answer-option-container') as NodeListOf<HTMLElement>;
-  const actionButton = document.querySelectorAll('.add-img-btn') as NodeListOf<HTMLElement>;
-  const radioBtn = document.querySelectorAll('.radio-btn') as NodeListOf<HTMLElement>;
-  console.log(answerOption.length)
-  answerOption.forEach((answer, i) => {
-    if (i === index && answer.innerText !== '') {
-      changeBGColor(index)
-      actionButton[i].style.display = 'none';
-      radioBtn[i].style.display = 'block';
-    } else if (i === index && answer.innerText === '') {
-      answerContainer[i].style.backgroundColor = 'white';
-      actionButton[i].style.display = 'block';
-      radioBtn[i].style.display = 'none';
-    }
-  });
-}
+
 const uploadImage = (index: number) => {
   const fileInput = document.createElement('input');
   fileInput.type = 'file';
@@ -117,11 +78,13 @@ const uploadImage = (index: number) => {
         if (e.target) {
           const answerOption = document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
           const answerContainer = document.querySelectorAll('.answer-option-container') as NodeListOf<HTMLElement>;
+          const wrappImage = document.querySelectorAll('.answer-option-edit') as NodeListOf<HTMLElement>;
           const actionButton = document.querySelectorAll('.add-img-btn') as NodeListOf<HTMLElement>;
           const radioBtn = document.querySelectorAll('.radio-btn') as NodeListOf<HTMLElement>;
           const removeBtn = document.querySelectorAll('.remove-btn') as NodeListOf<HTMLElement>;
           const answerText = document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
           answerOption.forEach((answer, i) => {
+            const img = document.createElement('img');
             if (i === index) {
               answer.innerText = '';
               answerContainer[i].style.backgroundColor = 'white';
@@ -129,7 +92,7 @@ const uploadImage = (index: number) => {
               radioBtn[i].style.display = 'block';
               removeBtn[i].style.display = 'block';
               answerText[i].innerText = '';
-              answerText[i].appendChild(document.createElement('img')).src = (e.target as FileReader).result as string;
+              wrappImage[i].style.backgroundImage = `url(${(e.target as FileReader).result})`;
             }
           });
         }
@@ -138,15 +101,6 @@ const uploadImage = (index: number) => {
     }
   };
 }
-
-onMounted(() => {
-  const answerOption = document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
-  answerOption.forEach((answer, index) => {
-    answer.addEventListener('input', () => {
-      changeBgColorOnInput(index);
-    });
-  });
-});
 const markTrueAnswer = (index: number) => {
   const radioBtn = document.querySelectorAll('.radio-btn') as NodeListOf<HTMLElement>;
   const iconTick = document.querySelectorAll('.icon-tick') as NodeListOf<HTMLElement>;
@@ -162,22 +116,25 @@ const markTrueAnswer = (index: number) => {
     }
   });
 }
-const removeAnswerImage = (index: number) => {
-  const answerContain = document.querySelectorAll('.answer-option-container') as NodeListOf<HTMLElement>;
-  const answerOption = document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
-  const actionButton = document.querySelectorAll('.add-img-btn') as NodeListOf<HTMLElement>;
-  const radioBtn = document.querySelectorAll('.radio-btn') as NodeListOf<HTMLElement>;
+onMounted(() => {
+  removeImageOnLoad();
+});
+
+const removeImageOnLoad = () => {
   const removeBtn = document.querySelectorAll('.remove-btn') as NodeListOf<HTMLElement>;
-  const answerText = document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
-  answerOption.forEach((answer, i) => {
-    if (i === index) {
-      answer.innerText = '';
-      answerContain[i].style.backgroundColor = 'white';
-      actionButton[i].style.display = 'block';
-      radioBtn[i].style.display = 'none';
-      removeBtn[i].style.display = 'none';
-      answerText[i].innerText = 'Add answer ' + (i + 1);
-    }
+  const radioBtn = document.querySelectorAll('.radio-btn') as NodeListOf<HTMLElement>;
+  const actionButton = document.querySelectorAll('.add-img-btn') as NodeListOf<HTMLElement>;
+  removeBtn.forEach((button, index) => {
+    button.addEventListener('click', () => {
+      store.removeAnswerImage(index);
+      const answerOption = document.querySelector(`.answer-option-edit`) as HTMLElement;
+      if (answerOption) {
+        answerOption.style.backgroundImage = '';
+        removeBtn[index].style.display = 'none';
+        radioBtn[index].style.display = 'none';
+        actionButton[index].style.display = 'block';
+      }
+    });
   });
 }
 </script>
@@ -185,31 +142,39 @@ const removeAnswerImage = (index: number) => {
 <template>
   <div v-if="questionType ==='Multiple choice'"
        class="answer-options w-full flex  flex-[4_1_0%] flex-wrap h-full content-stretch">
-    <div v-for="(item , index) in 4" :key="index"
+    <div v-for="(item , index) in store.answerCards" :key="item.id"
          :class="`answer-option-${index}`"
          ref="cardAnswers"
-         class="answer-option-container  asw-res py-0.5 px-0.5 my-0.5 mx-0.5">
+         class="answer-option-container  asw-res py-0.5 px-0.5 my-0.5 mx-0.5"
+         :style="{backgroundColor: store.changeBgColor(index)}"
+    >
       <div class="answer-option-sign" ref="sign">
         <span class=" sign-icon inline-block align-middle w-10 h-10 "/>
       </div>
       <MDBIcon :icon="symbol[index as keyof typeof symbol]" size="2xl" class="text-white absolute left-3.5 top-1/2"/>
       <div class=" flex flex-1 items-center content-end w-full relative h-full " style="max-width: calc(100% - 3rem);">
         <div class="ans-contain  w-full h-full">
-          <div class="answer-option-edit whitespace-pre-wrap break-words box-border" @click="makeEditable(index)"
+          <div class="answer-option-edit whitespace-pre-wrap break-words box-border"
+               @click="store.makeEditable(index)"
                @blur="setStatus(index)">
-            <p class="answer-option-text text-black caret-white relative w-full" ref="answerText">Add answer
-              {{ index + 1 }}
-            </p>
+            <p class="answer-option-text relative w-full"
+               :contenteditable="store.answerCards[index].isEditable"
+               v-on:input="store.addAnswerText(index, ($event.target as HTMLElement).innerText)"
+            >{{ store.answerCards[index].text }}</p>
             <span class="limitTime-number  absolute right-1 top-0 rounded-full text-gray "
                   ref="limitCharacterNumber">{{ MAX_CHARACTER }}</span>
           </div>
-          <div class=" absolute right-1/3 bottom-1 ">
-            <button class=" remove-btn hidden bg-white color-black rounded-2 " @click="removeAnswerImage(index)">
+          <div class="absolute right-1/3 bottom-1 ">
+            <button class="remove-btn hidden bg-white" @blur="setStatus(index)">
               remove
             </button>
           </div>
         </div>
-        <button class=" add-img-btn  " style="display:block" @click="uploadImage(index)">
+        <button
+            class=" add-img-btn  "
+            style="display:block"
+            :style="{display : store.answerCards[index].answerText.length>0?'none' : 'block'}"
+            @click="uploadImage(index)">
           <MDBIcon icon="image" size="2xl" class="text-gray-400"/>
         </button>
         <button role="switch"
@@ -217,7 +182,7 @@ const removeAnswerImage = (index: number) => {
                 aria-label="Add audio"
                 class=" radio-btn add-audio-btn "
                 @click="markTrueAnswer(index)"
-                style="display:none">
+                :style="{display : store.answerCards[index].answerText.length>0?'block' : 'none'}">
           <span class="icon-tick hidden">
             <MDBIcon icon="check" size="2xl" class="text-white"/>
             </span>
@@ -225,132 +190,132 @@ const removeAnswerImage = (index: number) => {
       </div>
     </div>
   </div>
-  <div v-if="questionType ==='True or False'"
-       class="answer-options w-full flex  flex-[4_1_0%] flex-wrap h-full content-stretch">
-    <div v-for="(item , index) in 2" :key="index"
-         :class="`answer-option-${index}`"
-         ref="cardAnswers"
-         class="answer-option-container  asw-res py-0.5 px-0.5 my-0.5 mx-0.5">
-      <div class="answer-option-sign" ref="sign">
-        <span class=" sign-icon inline-block align-middle w-10 h-10 "/>
-      </div>
-      <MDBIcon :icon="symbol[index as keyof typeof symbol]" size="2xl" class="text-white absolute left-3.5 top-1/2"/>
-      <div class=" flex flex-1 items-center content-end w-full relative h-full " style="max-width: calc(100% - 3rem);">
-        <div class="ans-contain  w-full h-full">
-          <div class="answer-option-edit whitespace-pre-wrap break-words box-border" @click="makeEditable(index)"
-               @blur="setStatus(index)">
-            <p class="answer-option-text text-black caret-white relative w-full" ref="answerText">Add answer
-              {{ index + 1 }}
-            </p>
-            <span class="limitTime-number  absolute right-1 top-0 rounded-full text-gray "
-                  ref="limitCharacterNumber">{{ MAX_CHARACTER }}</span>
-          </div>
-          <div class=" absolute right-1/3 bottom-1 ">
-            <button class=" remove-btn hidden bg-white color-black rounded-2 " @click="removeAnswerImage(index)">
-              remove
-            </button>
-          </div>
-        </div>
-        <button class=" add-img-btn  " style="display:block" @click="uploadImage(index)">
-          <MDBIcon icon="image" size="2xl" class="text-gray-400"/>
-        </button>
-        <button role="switch"
-                aria-checked="false"
-                aria-label="Add audio"
-                class=" radio-btn add-audio-btn "
-                @click="markTrueAnswer(index)"
-                style="display:none">
-          <span class="icon-tick hidden">
-            <MDBIcon icon="check" size="2xl" class="text-white"/>
-            </span>
-        </button>
-      </div>
-    </div>
-  </div>
-  <div v-if="questionType ==='Type Answer'"
-       class="answer-options w-full flex  flex-[4_1_0%] flex-wrap h-full content-stretch">
-    <div v-for="(item , index) in 4" :key="index"
-         :class="`answer-option-${index}`"
-         ref="cardAnswers"
-         class="answer-option-container  asw-res py-0.5 px-0.5 my-0.5 mx-0.5">
-      <div class="answer-option-sign" ref="sign">
-        <span class=" sign-icon inline-block align-middle w-10 h-10 "/>
-      </div>
-      <MDBIcon :icon="symbol[index as keyof typeof symbol]" size="2xl" class="text-white absolute left-3.5 top-1/2"/>
-      <div class=" flex flex-1 items-center content-end w-full relative h-full " style="max-width: calc(100% - 3rem);">
-        <div class="ans-contain  w-full h-full">
-          <div class="answer-option-edit whitespace-pre-wrap break-words box-border" @click="makeEditable(index)"
-               @blur="setStatus(index)">
-            <p class="answer-option-text text-black caret-white relative w-full" ref="answerText">Add answer
-              {{ index + 1 }}
-            </p>
-            <span class="limitTime-number  absolute right-1 top-0 rounded-full text-gray "
-                  ref="limitCharacterNumber">{{ MAX_CHARACTER }}</span>
-          </div>
-          <div class=" absolute right-1/3 bottom-1 ">
-            <button class=" remove-btn hidden bg-white color-black rounded-2 " @click="removeAnswerImage(index)">
-              remove
-            </button>
-          </div>
-        </div>
-        <button class=" add-img-btn  " style="display:block" @click="uploadImage(index)">
-          <MDBIcon icon="image" size="2xl" class="text-gray-400"/>
-        </button>
-        <button role="switch"
-                aria-checked="false"
-                aria-label="Add audio"
-                class=" radio-btn add-audio-btn "
-                @click="markTrueAnswer(index)"
-                style="display:none">
-          <span class="icon-tick hidden">
-            <MDBIcon icon="check" size="2xl" class="text-white"/>
-            </span>
-        </button>
-      </div>
-    </div>
-  </div>
-  <div v-if="questionType ==='Puzzle'"
-       class="answer-options w-full flex  flex-[4_1_0%] flex-wrap h-full content-stretch">
-    <div v-for="(item , index) in 4" :key="index"
-         :class="`answer-option-${index}`"
-         ref="cardAnswers"
-         class="answer-option-container  asw-res py-0.5 px-0.5 my-0.5 mx-0.5">
-      <div class="answer-option-sign" ref="sign">
-        <span class=" sign-icon inline-block align-middle w-10 h-10 "/>
-      </div>
-      <MDBIcon :icon="symbol[index as keyof typeof symbol]" size="2xl" class="text-white absolute left-3.5 top-1/2"/>
-      <div class=" flex flex-1 items-center content-end w-full relative h-full " style="max-width: calc(100% - 3rem);">
-        <div class="ans-contain  w-full h-full">
-          <div class="answer-option-edit whitespace-pre-wrap break-words box-border" @click="makeEditable(index)"
-               @blur="setStatus(index)">
-            <p class="answer-option-text text-black caret-white relative w-full" ref="answerText">Add answer
-              {{ index + 1 }}
-            </p>
-            <span class="limitTime-number  absolute right-1 top-0 rounded-full text-gray "
-                  ref="limitCharacterNumber">{{ MAX_CHARACTER }}</span>
-          </div>
-          <div class=" absolute right-1/3 bottom-1 ">
-            <button class=" remove-btn hidden bg-white color-black rounded-2 " @click="removeAnswerImage(index)">
-              remove
-            </button>
-          </div>
-        </div>
-        <button class=" add-img-btn  " style="display:block" @click="uploadImage(index)">
-          <MDBIcon icon="image" size="2xl" class="text-gray-400"/>
-        </button>
-        <button role="switch"
-                aria-checked="false"
-                aria-label="Add audio"
-                class=" radio-btn add-audio-btn "
-                @click="markTrueAnswer(index)"
-                style="display:none">
-          <span class="icon-tick hidden">
-            <MDBIcon icon="check" size="2xl" class="text-white"/>
-            </span>
-        </button>
-      </div>
-    </div>
-  </div>
+  <!--  <div v-if="questionType ==='True or False'"-->
+  <!--       class="answer-options w-full flex  flex-[4_1_0%] flex-wrap h-full content-stretch">-->
+  <!--    <div v-for="(item , index) in 2" :key="index"-->
+  <!--         :class="`answer-option-${index}`"-->
+  <!--         ref="cardAnswers"-->
+  <!--         class="answer-option-container  asw-res py-0.5 px-0.5 my-0.5 mx-0.5">-->
+  <!--      <div class="answer-option-sign" ref="sign">-->
+  <!--        <span class=" sign-icon inline-block align-middle w-10 h-10 "/>-->
+  <!--      </div>-->
+  <!--      <MDBIcon :icon="symbol[index as keyof typeof symbol]" size="2xl" class="text-white absolute left-3.5 top-1/2"/>-->
+  <!--      <div class=" flex flex-1 items-center content-end w-full relative h-full " style="max-width: calc(100% - 3rem);">-->
+  <!--        <div class="ans-contain  w-full h-full">-->
+  <!--          <div class="answer-option-edit whitespace-pre-wrap break-words box-border" @click="makeEditable(index)"-->
+  <!--               @blur="setStatus(index)">-->
+  <!--            <p class="answer-option-text text-black caret-white relative w-full" ref="answerText">Add answer-->
+  <!--              {{ index + 1 }}-->
+  <!--            </p>-->
+  <!--            <span class="limitTime-number  absolute right-1 top-0 rounded-full text-gray "-->
+  <!--                  ref="limitCharacterNumber">{{ MAX_CHARACTER }}</span>-->
+  <!--          </div>-->
+  <!--          <div class=" absolute right-1/3 bottom-1 ">-->
+  <!--            <button class=" remove-btn hidden bg-white color-black rounded-2 " @click="removeAnswerImage(index)">-->
+  <!--              remove-->
+  <!--            </button>-->
+  <!--          </div>-->
+  <!--        </div>-->
+  <!--        <button class=" add-img-btn  " style="display:block" @click="uploadImage(index)">-->
+  <!--          <MDBIcon icon="image" size="2xl" class="text-gray-400"/>-->
+  <!--        </button>-->
+  <!--        <button role="switch"-->
+  <!--                aria-checked="false"-->
+  <!--                aria-label="Add audio"-->
+  <!--                class=" radio-btn add-audio-btn "-->
+  <!--                @click="markTrueAnswer(index)"-->
+  <!--                style="display:none">-->
+  <!--          <span class="icon-tick hidden">-->
+  <!--            <MDBIcon icon="check" size="2xl" class="text-white"/>-->
+  <!--            </span>-->
+  <!--        </button>-->
+  <!--      </div>-->
+  <!--    </div>-->
+  <!--  </div>-->
+  <!--  <div v-if="questionType ==='Type Answer'"-->
+  <!--       class="answer-options w-full flex  flex-[4_1_0%] flex-wrap h-full content-stretch">-->
+  <!--    <div v-for="(item , index) in 4" :key="index"-->
+  <!--         :class="`answer-option-${index}`"-->
+  <!--         ref="cardAnswers"-->
+  <!--         class="answer-option-container  asw-res py-0.5 px-0.5 my-0.5 mx-0.5">-->
+  <!--      <div class="answer-option-sign" ref="sign">-->
+  <!--        <span class=" sign-icon inline-block align-middle w-10 h-10 "/>-->
+  <!--      </div>-->
+  <!--      <MDBIcon :icon="symbol[index as keyof typeof symbol]" size="2xl" class="text-white absolute left-3.5 top-1/2"/>-->
+  <!--      <div class=" flex flex-1 items-center content-end w-full relative h-full " style="max-width: calc(100% - 3rem);">-->
+  <!--        <div class="ans-contain  w-full h-full">-->
+  <!--          <div class="answer-option-edit whitespace-pre-wrap break-words box-border" @click="makeEditable(index)"-->
+  <!--               @blur="setStatus(index)">-->
+  <!--            <p class="answer-option-text text-black caret-white relative w-full" ref="answerText">Add answer-->
+  <!--              {{ index + 1 }}-->
+  <!--            </p>-->
+  <!--            <span class="limitTime-number  absolute right-1 top-0 rounded-full text-gray "-->
+  <!--                  ref="limitCharacterNumber">{{ MAX_CHARACTER }}</span>-->
+  <!--          </div>-->
+  <!--          <div class=" absolute right-1/3 bottom-1 ">-->
+  <!--            <button class=" remove-btn hidden bg-white color-black rounded-2 " @click="removeAnswerImage(index)">-->
+  <!--              remove-->
+  <!--            </button>-->
+  <!--          </div>-->
+  <!--        </div>-->
+  <!--        <button class=" add-img-btn  " style="display:block" @click="uploadImage(index)">-->
+  <!--          <MDBIcon icon="image" size="2xl" class="text-gray-400"/>-->
+  <!--        </button>-->
+  <!--        <button role="switch"-->
+  <!--                aria-checked="false"-->
+  <!--                aria-label="Add audio"-->
+  <!--                class=" radio-btn add-audio-btn "-->
+  <!--                @click="markTrueAnswer(index)"-->
+  <!--                style="display:none">-->
+  <!--          <span class="icon-tick hidden">-->
+  <!--            <MDBIcon icon="check" size="2xl" class="text-white"/>-->
+  <!--            </span>-->
+  <!--        </button>-->
+  <!--      </div>-->
+  <!--    </div>-->
+  <!--  </div>-->
+  <!--  <div v-if="questionType ==='Puzzle'"-->
+  <!--       class="answer-options w-full flex  flex-[4_1_0%] flex-wrap h-full content-stretch">-->
+  <!--    <div v-for="(item , index) in 4" :key="index"-->
+  <!--         :class="`answer-option-${index}`"-->
+  <!--         ref="cardAnswers"-->
+  <!--         class="answer-option-container  asw-res py-0.5 px-0.5 my-0.5 mx-0.5">-->
+  <!--      <div class="answer-option-sign" ref="sign">-->
+  <!--        <span class=" sign-icon inline-block align-middle w-10 h-10 "/>-->
+  <!--      </div>-->
+  <!--      <MDBIcon :icon="symbol[index as keyof typeof symbol]" size="2xl" class="text-white absolute left-3.5 top-1/2"/>-->
+  <!--      <div class=" flex flex-1 items-center content-end w-full relative h-full " style="max-width: calc(100% - 3rem);">-->
+  <!--        <div class="ans-contain  w-full h-full">-->
+  <!--          <div class="answer-option-edit whitespace-pre-wrap break-words box-border" @click="makeEditable(index)"-->
+  <!--               @blur="setStatus(index)">-->
+  <!--            <p class="answer-option-text text-black caret-white relative w-full" ref="answerText">Add answer-->
+  <!--              {{ index + 1 }}-->
+  <!--            </p>-->
+  <!--            <span class="limitTime-number  absolute right-1 top-0 rounded-full text-gray "-->
+  <!--                  ref="limitCharacterNumber">{{ MAX_CHARACTER }}</span>-->
+  <!--          </div>-->
+  <!--          <div class=" absolute right-1/3 bottom-1 ">-->
+  <!--            <button class=" remove-btn hidden bg-white color-black rounded-2 " @click="removeAnswerImage(index)">-->
+  <!--              remove-->
+  <!--            </button>-->
+  <!--          </div>-->
+  <!--        </div>-->
+  <!--        <button class=" add-img-btn  " style="display:block" @click="uploadImage(index)">-->
+  <!--          <MDBIcon icon="image" size="2xl" class="text-gray-400"/>-->
+  <!--        </button>-->
+  <!--        <button role="switch"-->
+  <!--                aria-checked="false"-->
+  <!--                aria-label="Add audio"-->
+  <!--                class=" radio-btn add-audio-btn "-->
+  <!--                @click="markTrueAnswer(index)"-->
+  <!--                style="display:none">-->
+  <!--          <span class="icon-tick hidden">-->
+  <!--            <MDBIcon icon="check" size="2xl" class="text-white"/>-->
+  <!--            </span>-->
+  <!--        </button>-->
+  <!--      </div>-->
+  <!--    </div>-->
+  <!--  </div>-->
 
 </template>
 
@@ -380,6 +345,11 @@ const removeAnswerImage = (index: number) => {
   cursor: text;
 }
 
+.answer-option-edit {
+  @apply bg-contain bg-no-repeat ms-2 me-2.5 bg-left
+}
+
+
 .answer-option-sign {
   flex: 0 0 auto;
   border-radius: 4px;
@@ -395,6 +365,14 @@ const removeAnswerImage = (index: number) => {
 .answer-option-text:focus {
   @apply outline-none border-none text-lg text-black caret-black
 }
+
+.answer-option-text[contenteditable="true"] {
+  @apply text-white caret-white
+}
+.answer-option-text[contenteditable="false"] {
+  @apply text-black caret-black
+}
+
 
 .answer-option-text img {
   object-fit: contain;

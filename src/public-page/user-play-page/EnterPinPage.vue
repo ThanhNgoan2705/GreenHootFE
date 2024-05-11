@@ -30,7 +30,7 @@ const removePlacehoder = (event: FocusEvent) => {
               <button class="enter-code"
                       type="submit"
                       aria-label="Enter"
-                      @click="enterGame">Enter
+                     >Enter
               </button>
             </div>
           </form>

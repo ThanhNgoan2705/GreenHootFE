@@ -1,10 +1,9 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import SignInPage from "@/auth-page/SignInPage.vue";
-import SignupPage from "@/auth-page/SignupPage.vue";
-import EmailVerification from "@/auth-page/EmailVerificationPage.vue";
-import PasswordForgottenPage from "@/auth-page/PasswordForgottenPage.vue";
-import ConfirmationPage from "@/auth-page/ConfirmationPage.vue";
-import SignInPageDemo from "@/auth-page/signInPageDemo.vue";
+import SignInPage from "@/public-page/auth-page/SignInPage.vue";
+import SignupPage from "@/public-page/auth-page/SignupPage.vue";
+import EmailVerification from "@/public-page/auth-page/EmailVerificationPage.vue";
+import PasswordForgottenPage from "@/public-page/auth-page/PasswordForgottenPage.vue";
+import ConfirmationPage from "@/public-page/auth-page/ConfirmationPage.vue";
 import Home from "../HomePage.vue";
 import userRoutes from "@/router/user.routes";
 import sidebarRoutes from "@/router/sidebar.routes";
@@ -17,7 +16,6 @@ const routes= [
     { path: '/EmailVerification',component: EmailVerification,meta:{showHeader: false} },
     {path: '/PasswordForgottenPage',component: PasswordForgottenPage,meta:{showHeader: false} },
     {path: '/ConfirmationPage',component: ConfirmationPage,meta:{showHeader: false} },
-    {path: '/SignInPageDemo',component: SignInPageDemo,meta:{showHeader: false} },
     { path: '/', redirect: '/Home' },
     { path: '/:pathMatch(.*)*', redirect: '/Home' },
     ...userRoutes,

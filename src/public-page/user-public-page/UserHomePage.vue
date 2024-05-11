@@ -2,11 +2,12 @@
 import TheHeader from "@/components/single-instance-components/profile-component/TheHeader.vue";
 import TheMenuSideBar from "@/components/single-instance-components/profile-component/TheMenuSideBar.vue";
 import {
-  MDBContainer, MDBRow, MDBCol,
+ MDBRow, MDBCol,
   MDBCard, MDBCardBody, MDBBtn, MDBIcon, MDBListGroup,
-  MDBListGroupItem, MDBCardTitle
+  MDBListGroupItem
 } from 'mdb-vue-ui-kit';
 import CardGreenHoot from "@/public-page/user-common-component/CardGreenHoot.vue";
+
 </script>
 <template>
   <div class="user-home-page ">

@@ -8,7 +8,7 @@ const routes = [
     {path: '/', redirect: '/UserHomePage'},
     {path: '/UserProfilePage', component: UserProfilePage, meta: {showHeader: true}},
     {path: '/UserSettingsPage', component: UserSettingsPage, meta: {showHeader: true}},
-    {path: '/GreenHootCreativePage', component: GreenHootCreativePage, meta: {showHeader: true}},
+    {path: '/GreenHootCreativePage', component: GreenHootCreativePage, meta: {showHeader: false}},
     {path: '/:pathMatch(.*)*', redirect: '/UserHomePage'},
 ];
 export default routes

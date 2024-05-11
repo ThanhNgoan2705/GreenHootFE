@@ -1,4 +1,4 @@
-// src/stores/answerCards.ts
+// src/stores/AnswerCards.ts
 import {defineStore} from 'pinia';
 
 interface AnswerCard extends HTMLElement {

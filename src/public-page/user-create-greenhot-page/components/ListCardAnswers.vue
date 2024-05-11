@@ -2,7 +2,7 @@
 
 import {nextTick, onMounted, ref} from 'vue';
 import {MDBIcon} from 'mdb-vue-ui-kit';
-import {answerCards} from "@/stores/answerCards";
+import {answerCards} from "@/stores/AnswerCards";
 
 const store = answerCards();
 const props = defineProps({
@@ -369,6 +369,7 @@ const removeImageOnLoad = () => {
 .answer-option-text[contenteditable="true"] {
   @apply text-white caret-white
 }
+
 .answer-option-text[contenteditable="false"] {
   @apply text-black caret-black
 }

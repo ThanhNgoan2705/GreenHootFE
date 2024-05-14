@@ -1,6 +1,6 @@
 const wsConfig = {
     host: "ws://localhost",
-    port: 8081,
-    path: "/socket/ws",
+    port: 8080,
+    path: "/",
 }
 export default wsConfig;

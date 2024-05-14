@@ -1,10 +1,11 @@
 import AbsHandler from "./AbsHandler";
+import type {PacketWrapper} from "@/proto/Proto";
 
 export class AuthHandler extends AbsHandler {
     constructor() {
         super();
     }
-    onMessageHandler(packets) {
+    onMessageHandler(packets: PacketWrapper) {
         packets.packet;
         //to do
     }

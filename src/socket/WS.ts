@@ -25,6 +25,7 @@ export class WS {
     public static send(msg: Packet): void {
         if (WS.me()._ws.readyState == WebSocket.OPEN) {
             WS.me()._ws.send(PacketWrapper.toBinary(PacketWrapper.create({ packet: [msg] })));
+            console.log("WS.send:::send msg");
         } else {
             console.log("WS.send:::WS is not ready");
         }

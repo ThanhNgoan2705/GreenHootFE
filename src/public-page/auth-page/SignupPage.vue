@@ -12,11 +12,14 @@ const password = ref('');
 const checkbox3 = ref(false);
 const sendRegister = () => {
   let reqRegister = ReqRegister.create();
-  let resRegister = ResRegister.create();
   reqRegister.username = userName.value;
   reqRegister.password = password.value;
+  console.log(userName.value);
+  console.log(password.value);
+  reqRegister.sponsor = '';
+  reqRegister.phone= '';
   let packet = Packet.create();
-  packet.data = {oneofKind: 'reqRegister', reqRegister: reqRegister};
+  packet.data = {oneofKind: 'reqRegister', reqRegister: {username: userName.value, password: password.value, sponsor: '', phone: '', }};
   WS.send(packet);
 
 }
@@ -35,7 +38,7 @@ const sendRegister = () => {
       <h3 class="text-center">Create an account</h3>
       <MDBCard  class="col-lg-4 m-auto ">
         <MDBCardBody>
-          <MDBCardTitle class="text-center"> Sign up with your email</MDBCardTitle>
+          <MDBCardTitle class="text-center"> Sign up with your User Name</MDBCardTitle>
           <form>
             <MDBRow class="g-3 mt-3 mb-2">
               <MDBCol>

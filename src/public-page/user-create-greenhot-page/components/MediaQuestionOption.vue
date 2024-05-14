@@ -2,35 +2,59 @@
 import { ref } from 'vue';
 import { MDBIcon } from 'mdb-vue-ui-kit';
 const hasBackgroundImage = ref(false);
+const emit = defineEmits(['update:backgroundImage']);
 const upLoadImage = () => {
-  const input = document.createElement('input')  as HTMLInputElement;
-  const backgroundImage = document.querySelector('.media-detail-wrap') as HTMLElement;
+  const input = document.createElement('input') as HTMLInputElement;
+  const imageWrap = document.querySelector('.media-img-wrap') as HTMLElement;
+  const backgroundImage = document.querySelector('.media-img') as HTMLElement;
   const trashIcon = document.querySelector('.media-action') as HTMLElement;
+  const bgContainer = document.querySelector('.mediaInfo') as HTMLElement;
   input.type = 'file';
-  // just image files with .png, .jpg, .jpeg, .gif and .svg extensions
   input.accept = 'image/*';
   input.onchange = (e) => {
     const file = (e.target as HTMLInputElement).files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        const url = e.target?.result as string;
-        backgroundImage.style.backgroundImage = `url(${url})`;
+        const img = document.createElement('img');
+        img.src = e.target?.result as string;
+        emit('update:backgroundImage', img.src);
+        // Remove the existing img element if it exists
+        const existingImg = backgroundImage.querySelector('img');
+        if (existingImg) {
+          backgroundImage.removeChild(existingImg);
+        }
+        // Append the new img element
+        backgroundImage.append(img);
         hasBackgroundImage.value = true;
+        imageWrap.classList.remove('hidden');
         trashIcon.classList.remove('hidden');
+        bgContainer.classList.add('hidden');
       };
       reader.readAsDataURL(file);
     }
   };
   input.click();
 };
+
 const removeBgImage = () => {
-  const backgroundImage = document.querySelector('.media-detail-wrap') as HTMLElement;
+  const imageWrap = document.querySelector('.media-img-wrap') as HTMLElement;
+  const backgroundImage = document.querySelector('.media-img') as HTMLElement;
   const trashIcon = document.querySelector('.media-action') as HTMLElement;
-  backgroundImage.style.backgroundImage = '';
+  const bgContainer = document.querySelector('.mediaInfo') as HTMLElement;
+  // Remove the img element from the backgroundImage element
+  const img = backgroundImage.querySelector('img');
+  if (img) {
+    backgroundImage.removeChild(img);
+    emit('update:backgroundImage', '')
+  }
   hasBackgroundImage.value = false;
+  imageWrap.classList.add('hidden');
+  bgContainer.classList.remove('hidden');
   trashIcon.classList.add('hidden');
 };
+
+
 </script>
 
 <template>
@@ -38,7 +62,7 @@ const removeBgImage = () => {
     <div class="media-detail box-border">
       <div class="media-qs-detail box-border">
         <div class="media-detail-wrap min-h-[260px] min-w-[200px]"
-             style="max-width: 24.375rem;max-height: 16.25rem; --max-width: 24.375rem;  --max-height: 16.25rem;">
+             style="">
           <div class="mediaInfo">
             <div class="add-qs-image flex flex-col items-center justify-center">
               <div class="media-library "/>
@@ -46,10 +70,14 @@ const removeBgImage = () => {
                 <button  @click="upLoadImage"><MDBIcon icon="plus" size="2x"/></button>
               </div>
             </div>
-            <div class="media-action  hidden absolute right-2 bottom-1  ">
-              <div class="media-action-icon   flex w-9 h-9 bg-white rounded-sm items-center justify-center">
-                <button><MDBIcon icon="trash" size="lg" @click="removeBgImage" /></button>
-              </div>
+          </div>
+          <div class="media-action hidden">
+            <div class="media-action-icon   flex w-9 h-9 bg-white rounded-sm items-center justify-center">
+              <button><MDBIcon icon="trash" size="lg" @click="removeBgImage" /></button>
+            </div>
+          </div>
+          <div class="media-img-wrap hidden ">
+            <div class="media-img ">
             </div>
           </div>
 
@@ -117,8 +145,11 @@ const removeBgImage = () => {
   min-height: 9.875rem;
   min-width: 14.8125rem;
 }
+.media-detail-wrap{
+  max-width: 24.375rem;max-height: 16.25rem; --max-width: 24.375rem;  --max-height: 16.25rem;
+}
 
-.mediaInfo {
+.mediaInfo{
   display: flex;
   flex: 0 1 auto;
   -webkit-box-align: center;
@@ -133,6 +164,23 @@ const removeBgImage = () => {
   box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
   border-radius: 4px;
   height: 100% !important;
+}
+.media-img-wrap{
+  @apply h-full w-full m-auto absolute inset-1 z-0;
+}
+.media-img{
+  @apply relative h-[99.95%]  w-[99.95%] rounded overflow-hidden ;
+}
+.media-img img{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 100%;
+  max-height: 100%;
+}
+.media-action{
+  @apply h-12 w-12 absolute right-2 bottom-1 z-10;
 }
 .media-library{
   display: flex;

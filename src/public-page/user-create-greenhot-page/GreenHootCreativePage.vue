@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {type DefineComponent, nextTick, onMounted, ref} from "vue";
+import {type DefineComponent, nextTick, onMounted, type Ref, ref, type UnwrapRef} from "vue";
 import {MDBIcon,} from "mdb-vue-ui-kit";
 import TheHeaderCreative from "@/public-page/user-create-greenhot-page/components/TheHeaderCreative.vue";
 import ListCardAnswers from "@/public-page/user-create-greenhot-page/components/ListCardAnswers.vue";
@@ -80,39 +80,41 @@ const selectedQuestionType = ref(optionsQuestionType.value[0]);
 console.log(selectedQuestionType.value);
 const makeEditable = () => {
   const question = document.getElementById('guild-content') as HTMLElement;
-  if (question.innerText === 'Start typing your question' && guildText.value !== null) {
+  if (question.innerText === 'Start typing your question' && guildText.value) {
     question.innerText = '';
     guildText.value.contentEditable = "true";
-    savedText.value = question.innerText;
     guildText.value.focus();
+    savedText.value = question.innerText;
   }
 
 }
 const saveText = () => {
+  console.log(guildText.value?.innerText);
   qsContent.value = true;
   nextTick(() => {
     const question = document.getElementById('guild-content') as HTMLElement;
-    if (question.innerText === '' && guildText.value !== null) {
+    savedText.value = question.innerText;
+    if (question.innerText === '' && guildText.value) {
       guildText.value.contentEditable = "false";
-      savedText.value = question.innerText;
-      if (savedText.value.length > 15) {
-        savedText.value = savedText.value.substring(0, 10) + '...';
-      }
-      if (savedText.value === '') {
-        question.innerText = 'Start typing your question';
-        savedText.value = 'Question';
-      }
-      console.log(savedText.value);
+      savedText.value = 'Question';
+      question.innerText = 'Start typing your question';
     }
+    if (savedText.value.length > 15) {
+      savedText.value = savedText.value.substring(0, 10) + '...';
+    }
+    console.log(savedText.value);
     console.log(savedText.value);
   });
 };
 const openSelectQSType = () => {
   openQuestionType.value = false;
 }
+const qsImage = ref('');
 
+const handleImageUpdate = (newImage: string) => {
+  qsImage.value = newImage;
+}
 </script>
-
 <template>
   <!--        popup content goes here-->
   <div v-if="openPopup" class="popup">
@@ -164,8 +166,7 @@ const openSelectQSType = () => {
       <div class="creator-header pb-[56px] h-[56px] relative m-0 p-0">
         <TheHeaderCreative/>
       </div>
-      <div
-          class="creator-sidebar box-border position-fixed left-0 z-20 overflow-hidden flex flex-col align-items-center bottom-0 w-1/6 h-full bg-white shadow-xl pt-0 ">
+      <div class="creator-sidebar box-border position-fixed left-0 z-20 overflow-hidden flex flex-col align-items-center bottom-0 w-1/6 h-full bg-white shadow-xl pt-0 ">
         <div class="side-bar-content block position-relative max-h-full h-auto w-full overflow-y-auto">
           <div class="w-full outline-0 ">
             <div class="sidebar-block h-full bg-blue-50 user-select-none py-2  pe-4 block" aria-label="question block">
@@ -178,7 +179,9 @@ const openSelectQSType = () => {
                      draggable="false">
                   <div class="sidebar-block flex-col content-between h-full w-full max-w-full flex-1 py-0.5 px-1">
                     <div class="qs-title text-gray-500 text-center font-medium mt-2">
-                      {{ qsContent ? savedText : 'Question' }}
+                      <span>
+                        <span class="text-sm text-gray-500">{{ qsContent ? savedText : 'Question' }}</span>
+                      </span>
                     </div>
                     <div class=" my-auto mx-0 flex justify-center relative ">
                       <div
@@ -187,12 +190,12 @@ const openSelectQSType = () => {
                       </div>
                       <div class=" flex content-center items-center overflow-hidden ">
                         <div
-                            class="  img-center flex w-8 h-6 justify-center items-center relative overflow-hidden border-2 border-dashed border-gray-500  text-gray-500 ">
-                          <span class="flex z-50">
-                        <MDBIcon icon="image" size="lg"/>
-                      </span>
+                            class="img-center flex w-8 h-6 justify-center items-center relative overflow-hidden border-2 border-dashed border-gray-500 text-gray-500">
+                          <div class="icon-image flex z-50">
+                            <MDBIcon v-if="!qsImage" icon="image" size="lg"/>
+                            <img v-else :src="qsImage" alt="image" class="w-full h-full"/>
+                          </div>
                         </div>
-
                       </div>
                     </div>
                     <div class="answer-selector flex flex-wrap mt-2">
@@ -251,7 +254,7 @@ const openSelectQSType = () => {
                 </div>
               </div>
             </div>
-            <MediaQuestionOption/>
+            <MediaQuestionOption @update:backgroundImage="handleImageUpdate"/>
             <div class="flex flex-col w-full items-center">
               <ListCardAnswers :question-type="selectedQuestionType.text"/>
               <button class="add-answer-btn ">
@@ -636,6 +639,7 @@ const openSelectQSType = () => {
   min-width: 100%;
   padding: 0 1.5rem;
 }
+
 
 .qs-content {
   height: calc(100% - 2rem);

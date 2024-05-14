@@ -1,3 +1,4 @@
+import {WS} from "@/socket/WS";
 import { createApp } from 'vue'
 import App from './App.vue'
 import './assets/tailwind.css'
@@ -16,8 +17,10 @@ import vue3GoogleLogin from 'vue3-google-login';
 // Import Bootstrap and BootstrapVue CSS files (order is important)
 import {createPinia} from "pinia";
 
+WS.me();
 // Create a new Vue instance
 const app = createApp(App)
+
 app.use(router)
 app.use(createPinia())
 app.use(PrimeVue)

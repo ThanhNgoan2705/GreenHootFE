@@ -39,7 +39,7 @@ import {
                 Courses
               </router-link>
               <router-link class="router-link" to="">
-                 <MDBIcon icon="user-circle" size="lg" class="me-3 grey-color" />
+                 <MDBIcon icon="useUserStore-circle" size="lg" class="me-3 grey-color" />
                 Folder
                 <MDBIcon icon="plus" size="sm" class="ms-5 grey-color" />
               </router-link>

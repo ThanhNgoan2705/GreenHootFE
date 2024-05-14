@@ -23,7 +23,7 @@ const input1 = ref('');
         <MDBCardBody>
           <MDBCardTitle class="text-center"> Verify your email to Continue</MDBCardTitle>
           <img class="align-items-center m-auto d-block w-25 h-25"
-               src="../assets/icon-email.png"
+               src="../../assets/icon-email.png"
                alt="..."
           />
           <p class="text-center">We will send a verification code to your email</p>

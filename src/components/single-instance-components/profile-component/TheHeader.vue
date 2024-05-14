@@ -18,7 +18,8 @@ import {
 } from 'mdb-vue-ui-kit';
 import {ref} from 'vue';
 import {useRoute} from "vue-router";
-
+import {Packet,ReqLogout} from "@/proto/Proto";
+import {WS} from "@/socket/WS";
 const dropdown6 = ref(false);
 const dropdown7 = ref(false);
 const route = useRoute();
@@ -41,6 +42,13 @@ const categoriesList = ref([
   {id: 7, label: 'Language', img: 'https://images-cdn.kahoot.it/ef13773e-0c0a-48f2-9647-9e0240db8e99'},
   {id: 8, label: 'Geography', img: 'https://images-cdn.kahoot.it/330a09be-638b-4ba7-98f7-32f0481169d1'},
 ])
+
+const sendLogOut = () => {
+  let packet = Packet.create();
+  packet.data = {oneofKind: 'reqLogout', reqLogout: ReqLogout.create()};
+  WS.send(packet);
+  console.log("send logout");
+}
 </script>
 <template>
   <div class="base-top-bar" style="height:65px">
@@ -145,7 +153,7 @@ const categoriesList = ref([
           </MDBDropdownToggle>
           <MDBDropdownMenu class="user-manager" :animation="false">
             <MDBDropdownItem class="action-dropdown d-inline-flex">
-              <MDBIcon icon="user-circle" size="lg" class="m-1" style="color: darkgreen"/>
+              <MDBIcon icon="useUserStore-circle" size="lg" class="m-1" style="color: darkgreen"/>
               Chanchan_2705
             </MDBDropdownItem>
             <MDBDropdownItem divider/>
@@ -156,9 +164,9 @@ const categoriesList = ref([
               <router-link to="/UserSettingsPage" class="action-dropdown">Setting</router-link>
             </MDBDropdownItem>
             <MDBDropdownItem>
-              <router-link to="/Home" class="action-dropdown" style="color: red">
+              <router-link to="/Home" @click="sendLogOut()" class="action-dropdown" style="color: red">
                 <MDBIcon icon="sign-out-alt" size="lg" class="me-1"/>
-                Sign out
+                Log out
               </router-link>
             </MDBDropdownItem>
           </MDBDropdownMenu>

@@ -1,16 +1,16 @@
-import WaitingPlayersPage from "@/public-page/user-play-page/WaitingPlayersPage.vue";
-import EnterPinPage from "@/public-page/user-play-page/EnterPinPage.vue";
+import EnterPinPage from "@/public-page/user-play-page/player-page/EnterPinPage.vue";
+import GreenHootPlay from "@/public-page/user-play-page/player-page/PlayPlayersPage.vue";
 const routes = [
-    {
-        path: "/waiting-players",
-        name: "WaitingPlayersPage",
-        component: WaitingPlayersPage,
-        meta: { showHeader: false },
-    },
     {
         path:"/enter-pin",
         name: "EnterPage",
         component: EnterPinPage,
+        meta: { showHeader: false },
+    },
+    {
+        path:"/greenhoot-play",
+        name: "GreenHootPlay",
+        component: GreenHootPlay,
         meta: { showHeader: false },
     }
     ];

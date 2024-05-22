@@ -15,14 +15,18 @@ const login = () => {
 const userNameInput = ref('');
 const passwordInput = ref('');
 
-const sendLogInAccount=()=>{
+const sendLogInAccount=(event)=>{
   let reqLogin = ReqLogin.create();
+  event.preventDefault();
   console.log(userNameInput.value);
   console.log(passwordInput.value);
-  reqLogin.username = userNameInput.value;
-  reqLogin.password = passwordInput.value;
+  // reqLogin.username = userNameInput.value;
+  // reqLogin.password = passwordInput.value;
+  reqLogin.username = "haonghai";
+  reqLogin.password = "123456";
   let packet = Packet.create();
-  packet.data = {oneofKind: 'reqLogin', reqLogin: {username: userNameInput.value, password: passwordInput.value}};
+  packet.data = {oneofKind: 'reqLogin', reqLogin: reqLogin};
+  console.log("sent login");
   WS.send(packet);
 }
 </script>
@@ -59,7 +63,7 @@ const sendLogInAccount=()=>{
             </MDBCol>
           </MDBRow>
           <MDBRow class="g-0 mt-3 mb-2">
-            <MDBBtn color="secondary" type="submit" @click="sendLogInAccount()">Log In</MDBBtn>
+            <MDBBtn color="secondary" type="submit" @click="sendLogInAccount($event)">Log In</MDBBtn>
           </MDBRow>
 
         </form>

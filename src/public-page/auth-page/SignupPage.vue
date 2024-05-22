@@ -3,15 +3,17 @@ import {
   MDBContainer, MDBNavbar,
   MDBInput, MDBRow, MDBCol, MDBCheckbox, MDBBtn, MDBCard, MDBCardBody, MDBCardTitle, MDBIcon, MDBNavbarNav
 } from "mdb-vue-ui-kit";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import TheCommonHeader from "@/components/single-instance-components/public-component/TheCommonHeader.vue";
 import {Packet, ReqRegister, ResRegister} from "@/proto/Proto";
 import {WS} from "@/socket/WS";
+import {AuthHandler} from "@/handler/AuthHandler";
 const userName = ref('');
 const password = ref('');
 const checkbox3 = ref(false);
-const sendRegister = () => {
+const sendRegister = (event) => {
   let reqRegister = ReqRegister.create();
+  event.preventDefault();
   reqRegister.username = userName.value;
   reqRegister.password = password.value;
   console.log(userName.value);
@@ -23,6 +25,7 @@ const sendRegister = () => {
   WS.send(packet);
 
 }
+
 </script>
 <template>
   <MDBContainer fluid class="bg-image">
@@ -79,7 +82,7 @@ const sendRegister = () => {
               </MDBCol>
             </MDBRow>
             <MDBRow class="g-0 mt-3 mb-2">
-                <button class="btn-sign-up transition ease-in-out delay-150"  @click="sendRegister()" >Sign Up</button>
+                <button class="btn-sign-up transition ease-in-out delay-150"  @click="sendRegister($event)" >Sign Up</button>
             </MDBRow>
 
           </form>

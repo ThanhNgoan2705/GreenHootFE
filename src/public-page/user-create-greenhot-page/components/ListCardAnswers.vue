@@ -196,7 +196,7 @@ const removeAnswerImage = (index: number) => {
       <div class="answer-option-sign" ref="sign">
         <span class=" sign-icon inline-block align-middle w-10 h-10 "/>
       </div>
-      <MDBIcon :icon="symbol[index as keyof typeof symbol]" size="2xl" class="text-white absolute left-3.5 top-1/2"/>
+      <MDBIcon :icon="symbol[index as keyof typeof symbol]" size="xl" class="text-white absolute left-4 top-1/2"/>
       <div class=" flex flex-1 items-center content-end w-full relative h-full " style="max-width: calc(100% - 3rem);">
         <div class="ans-contain  w-full h-full">
           <div class="answer-option-edit whitespace-pre-wrap break-words box-border"

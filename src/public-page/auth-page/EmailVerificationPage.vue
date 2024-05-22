@@ -11,8 +11,19 @@ import {
 } from "mdb-vue-ui-kit";
 import {ref} from "vue";
 import TheCommonHeader from "@/components/single-instance-components/public-component/TheCommonHeader.vue";
+import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
-const input1 = ref('');
+const emailInput = ref('');
+const emailIsValid = ref(false);
+const checkFomatEmail = (email: string) => {
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  emailIsValid.value = emailRegex.test(email);
+  console.log(emailIsValid.value);
+}
+const sendEmail = (email: string,event : Event) => {
+  event.preventDefault();
+  console.log(email);
+}
 </script>
 
 <template>
@@ -32,11 +43,12 @@ const input1 = ref('');
               <MDBCol>
                 <MDBInput
                     label="Email"
-                    v-model="input1"
-                    invalidFeedback="Please provide your Email address"
-                    validFeedback="Looks good!"
-                    isValid
+                    v-model="emailInput"
+                    :invalidFeedback="emailIsValid ? 'Looks goods!' : 'Please provide Email in correct format'"
+                    :validFeedback= "emailIsValid ? 'Looks goods!' : 'Please provide Email in correct format'"
+                    :isValid = "emailIsValid"
                     required
+                    @input="checkFomatEmail(emailInput)"
                 />
               </MDBCol>
             </MDBRow>

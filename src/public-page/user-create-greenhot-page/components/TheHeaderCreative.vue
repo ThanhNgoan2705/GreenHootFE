@@ -29,7 +29,7 @@ const toggleSideBar = () => {
 
 </script>
 <template>
-  <header class="fixed left-0 right-0 z-[110] ">
+  <header>
       <MDBNavbar expand="xl" light bg="white" container position="top" class="nav-container">
         <MDBNavbarNav>
           <MDBNavbarBrand href="#">
@@ -154,13 +154,16 @@ const toggleSideBar = () => {
 </template>
 
 <style scoped>
+header{
+  @apply fixed left-0 right-0 z-[110]
+}
 .nav-container{
   background: rgb(255, 255, 255);
   height: 56px;
   z-index: 10;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px 0px;
+  box-shadow: rgba(0, 0, 0, 0.1)0 2px 4px 0;
   color: rgb(255, 255, 255);
-  padding: 0px 1rem;
+  padding:0 1rem;
   -webkit-box-align: center;
   align-items: center;
   display: flex;
@@ -175,7 +178,7 @@ const toggleSideBar = () => {
   justify-content: space-between;
   -webkit-box-align: center;
   align-items: center;
-  padding: 0px;
+  padding:0;
   cursor: pointer;
   overflow: hidden;
   width: 45%;
@@ -198,7 +201,7 @@ const toggleSideBar = () => {
   min-width: 32px;
   min-height: 32px;
   height: 32px;
-  padding: 0px 16px 4px;
+  padding:0 16px 4px;
   line-height: 32px;
   position: relative;
 }
@@ -250,8 +253,8 @@ const toggleSideBar = () => {
 .popup {
   display: block;
   position: fixed;
-  top: 0px;
-  left: 0px;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   overflow: hidden auto;
@@ -265,16 +268,16 @@ const toggleSideBar = () => {
 .popup-container {
   display: inline-block;
   text-align: start;
-  top: 0px;
+  top:0;
   cursor: default;
-  outline: 0px;
+  outline:0;
   vertical-align: middle;
 }
 
 .greenhoot-sumary {
   width: 100%;
   height: 100%;
-  border-radius: 0px;
+  border-radius:0;
   animation: auto ease 0s 1 normal none running;
   position: relative;
   display: flex;
@@ -303,7 +306,7 @@ const toggleSideBar = () => {
 .summary-form {
   flex: 1 1 auto;
   overflow-y: auto;
-  padding: 0px 24px;
+  padding:0 24px;
 }
 
 .dialog-action {
@@ -319,17 +322,17 @@ const toggleSideBar = () => {
 
 .dialog-action button {
   min-width: 7.5rem;
-  margin: 0px 4px;
+  margin:0 4px;
 }
 
 .btn-cls {
   width: initial;
-  margin: 0px;
-  border: 0px;
+  margin:0;
+  border:0;
   cursor: pointer;
   display: inline-block;
   vertical-align: bottom;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px -4px inset;
+  box-shadow: rgba(0, 0, 0, 0.25)0 -4px inset;
   background: rgb(242, 242, 242);
   color: rgb(0, 0, 0);
   border-radius: 4px;
@@ -339,7 +342,7 @@ const toggleSideBar = () => {
   text-decoration: none;
   min-width: 42px;
   min-height: 42px;
-  padding: 0px 16px 4px;
+  padding:0 16px 4px;
   position: relative;
   font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -351,7 +354,7 @@ const toggleSideBar = () => {
   cursor: pointer;
   display: inline-block;
   vertical-align: bottom;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px -4px inset;
+  box-shadow: rgba(0, 0, 0, 0.25)0 -4px inset;
   background: rgb(38, 137, 12);
   color: rgb(255, 255, 255);
   border-radius: 4px;
@@ -361,7 +364,7 @@ const toggleSideBar = () => {
   text-decoration: none;
   min-width: 42px;
   min-height: 42px;
-  padding: 0px 16px 4px;
+  padding:0 16px 4px;
   position: relative;
   font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }

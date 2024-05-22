@@ -93,9 +93,6 @@ export const answerCards = defineStore({
             }
         },
         addAnswerImage(index: number) {
-
-
-
         },
         removeAnswerImage(index: number) {
             if (index < this.answerCards.length) {

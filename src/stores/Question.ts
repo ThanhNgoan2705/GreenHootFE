@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
+import type Answer from "@/stores/Answers";
 
-interface Question {
+export default interface Question {
     id: String;
     questionText: String;
     questionImage: String;
@@ -8,7 +9,7 @@ interface Question {
     QuestionTimeLimit: Number;
     questionPoints: Number;
     questionAnswerOptions: String;
-    questionAnswer: String[];
+    questionAnswer: Array<Answer>;
 }
 
 export const useQuestionStore = defineStore({
@@ -23,5 +24,10 @@ export const useQuestionStore = defineStore({
         removeQuestion(questionId: String) {
             this.questions = this.questions.filter((question) => question.id !== questionId);
         },
+        duplicateQuestion(questionId: String) {
+            const question = this.questions.find((question) => question.id === questionId);
+            if (!question) return;
+            this.questions.push({...question, id: Math.random().toString()});
+        }
     },
 });

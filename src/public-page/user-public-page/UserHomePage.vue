@@ -1,25 +1,27 @@
-<script setup  lang="ts">
+<script setup lang="ts">
 import TheHeader from "@/components/single-instance-components/profile-component/TheHeader.vue";
 import TheMenuSideBar from "@/components/single-instance-components/profile-component/TheMenuSideBar.vue";
 import {
- MDBRow, MDBCol,
+  MDBRow, MDBCol,
   MDBCard, MDBCardBody, MDBBtn, MDBIcon, MDBListGroup,
   MDBListGroupItem
 } from 'mdb-vue-ui-kit';
 import CardGreenHoot from "@/public-page/user-common-component/CardGreenHoot.vue";
-
+import {userStore} from '@/stores/Auth'; // Import the exported store
+const user = userStore(); // Create a reactive reference to the store
 </script>
 <template>
-  <div class="user-home-page ">
-    <div class="main-page">
-      <TheMenuSideBar/>
-      <div class="d-inline-flex ms-lg-5 right-main-contain" style="--main-element-scrollbar-width: 16px;">
-        <TheHeader/>
-        <main id="main-contain" class="main-container ms-lg-3">
-          <div class="content-page content-inside">
+  <div class="main max-h-full max-w-full flex">
+    <TheHeader/>
+    <TheMenuSideBar/>
+    <div class="user-home-page overflow-auto">
+      <div class="main-page max-w-full ">
+        <div class="d-inline-flex  right-main-contain ms-[5rem]  overflow-auto"
+             style="--main-element-scrollbar-width: 16px">
+          <div class="content-page content-inside flex justify-between mt-[7rem] me-2rem">
             <!--         left-content-->
-            <div class="ifo-container-left ">
-              <MDBCard class="w-100 info-card">
+            <div class="ifo-container-left w-1/5 ">
+              <MDBCard class="w-100 info-card ">
                 <MDBCardBody>
                   <MDBRow>
                     <MDBCol class="col-md-10">
@@ -31,7 +33,7 @@ import CardGreenHoot from "@/public-page/user-common-component/CardGreenHoot.vue
                   </MDBRow>
                   <MDBRow>
                     <MDBCol class="col-md-7">
-                      <p> chan chan</p>
+                      <p>{{ user.getUserInfo().name }} </p>
                     </MDBCol>
                   </MDBRow>
                   <MDBRow class="m-auto bg-color">
@@ -54,14 +56,14 @@ import CardGreenHoot from "@/public-page/user-common-component/CardGreenHoot.vue
               </MDBCard>
             </div>
             <!--         center-content-->
-            <div class="main-content">
-              <MDBRow class="d-flex justify-content-between">
+            <div class="main-content w-1/2">
+              <div class="d-flex justify-content-between">
                 <CardGreenHoot/>
                 <CardGreenHoot/>
-              </MDBRow>
+              </div>
             </div>
             <!--         right-content-->
-            <div class="list-room-right ">
+            <div class="list-room-right w-1/4">
               <MDBCard class="create-box">
                 <MDBCardBody>
                   <MDBRow>
@@ -117,24 +119,20 @@ import CardGreenHoot from "@/public-page/user-common-component/CardGreenHoot.vue
               </MDBCard>
             </div>
           </div>
-        </main>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <style>
 .user-home-page {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
+  @apply max-h-full max-w-full m-0 p-0 flex flex-col items-center justify-center;
 }
 
 .main-page {
   display: flex;
   box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
+
 }
 
 .right-main-contain {
@@ -142,20 +140,13 @@ import CardGreenHoot from "@/public-page/user-common-component/CardGreenHoot.vue
   width: 100%;
   flex-direction: column;
   max-height: 100svh;
-  height: calc(0rem + 100vh);
   overflow: hidden;
   position: relative;
-}
-
-.main-container {
-  overflow: auto;
-  flex: 1 1 0%;
+  background-color: rgb(250, 250, 250);
 }
 
 .content-inside {
   display: flex;
-  padding-top: 2rem;
-  padding-bottom: 5.5rem;
   background-color: rgb(250, 250, 250);
   min-height: 100vh;
   z-index: 2;
@@ -164,27 +155,34 @@ import CardGreenHoot from "@/public-page/user-common-component/CardGreenHoot.vue
 .content-page {
   box-sizing: border-box;
   min-width: 0;
-  margin: 0 auto;
   width: 100%;
   max-width: 1280px;
   flex-wrap: nowrap;
   height: fit-content;
 }
 
+.ifo-container-left, .main-content, .list-room-right {
+  box-sizing: border-box;
+  margin-right: 5px;
+  min-width: 0;
+}
+
 @media screen and (min-width: 1100px) {
   .ifo-container-left {
-    width: 300px;
+    width: 350px;
     margin: 0 0 0 13px;
     flex: 0 0 auto;
   }
 }
+
 @media screen and (min-width: 768px) {
   .ifo-container-left {
-    width: 300px;
+    width: 350px;
     margin: 0 0 0 13px;
     flex: 0 0 auto;
   }
 }
+
 @media screen and (min-width: 375px) {
   .ifo-container-left {
     width: 100%;
@@ -195,7 +193,7 @@ import CardGreenHoot from "@/public-page/user-common-component/CardGreenHoot.vue
 
 @media screen and (min-width: 1100px) {
   .main-content {
-    width: 100%;
+    width: 400px;
     margin: 0 16px;
     flex: 1 1 auto;
   }
@@ -216,9 +214,10 @@ import CardGreenHoot from "@/public-page/user-common-component/CardGreenHoot.vue
     flex: 1 1 auto;
   }
 }
+
 @media screen and (min-width: 1100px) {
   .list-room-right {
-    width: 300px;
+    width: 350px;
     margin: 0 16px 0 0;
     flex: 0 0 auto;
   }
@@ -226,11 +225,12 @@ import CardGreenHoot from "@/public-page/user-common-component/CardGreenHoot.vue
 
 @media screen and (min-width: 768px) {
   .list-room-right {
-    width: 300px;
+    width: 250px;
     margin: 0;
     flex: 0 0 auto;
   }
 }
+
 @media screen and (min-width: 375px) {
   .list-room-right {
     width: 100%;
@@ -238,6 +238,7 @@ import CardGreenHoot from "@/public-page/user-common-component/CardGreenHoot.vue
     flex: 1 1 auto;
   }
 }
+
 .greenHot-card {
   padding: 8px 16px;
   height: 75px;

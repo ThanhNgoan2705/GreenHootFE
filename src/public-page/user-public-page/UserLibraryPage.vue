@@ -1,19 +1,16 @@
-<script setup  lang="ts">
+<script setup lang="ts">
 import TheHeader from "@/components/single-instance-components/profile-component/TheHeader.vue";
 import TheMenuSideBar from "@/components/single-instance-components/profile-component/TheMenuSideBar.vue";
-import {
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBIcon,
-} from "mdb-vue-ui-kit";
+import {userStore} from '@/stores/Auth';
+import {MDBCol, MDBContainer, MDBIcon, MDBRow} from "mdb-vue-ui-kit"; // Import the exported store
+const user = userStore(); // Create a reactive reference to the store
 </script>
 <template>
-  <MDBContainer fluid class="user-home-page">
+  <div class="main max-h-full max-w-full flex">
     <TheHeader/>
-    <MDBContainer fluid class="user-home-page_content d-inline-flex">
-      <TheMenuSideBar/>
-      <MDBContainer class="w-100 content-container">
+    <TheMenuSideBar/>
+    <div class="user-home-page overflow-auto">
+      <div class="w-100 content-container">
         <!--         left-content-->
         <MDBRow>
           <MDBCol col="2" class="container-left mt-lg-4 p-0">
@@ -39,9 +36,9 @@ import {
                 Courses
               </router-link>
               <router-link class="router-link" to="">
-                 <MDBIcon icon="useUserStore-circle" size="lg" class="me-3 grey-color" />
+                <MDBIcon icon="useUserStore-circle" size="lg" class="me-3 grey-color"/>
                 Folder
-                <MDBIcon icon="plus" size="sm" class="ms-5 grey-color" />
+                <MDBIcon icon="plus" size="sm" class="ms-5 grey-color"/>
               </router-link>
             </div>
             <!-- Sidenav-->
@@ -49,12 +46,15 @@ import {
           <MDBCol col="10" class="main-content">
           </MDBCol>
         </MDBRow>
-      </MDBContainer>
-    </MDBContainer>
-  </MDBContainer>
+      </div>
+    </div>
+  </div>
 </template>
+<style>
+.user-home-page {
+  @apply max-h-full max-w-full m-0 p-0 flex flex-col items-center justify-center;
+}
 
-<style scoped>
 .content-container {
   box-sizing: border-box;
   min-width: 0;
@@ -108,15 +108,18 @@ import {
 .icon-svg {
   pointer-events: none;
 }
+
 .link-container .router-link {
   color: rgb(110, 110, 110);
   text-decoration: none;
   cursor: pointer;
 }
+
 .router-link:hover {
   background-color: rgb(192, 191, 191);
 }
-.router-link{
+
+.router-link {
   padding: 0 16px;
   font-size: 16px;
   display: flex;

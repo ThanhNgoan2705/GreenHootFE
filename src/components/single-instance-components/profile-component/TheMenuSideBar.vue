@@ -1,6 +1,7 @@
-<script setup  lang="ts">
+<script setup lang="ts">
 import {MDBIcon} from 'mdb-vue-ui-kit';
 import {computed, ref} from 'vue';
+
 const sidebarItem = ref([
   {
     name: 'Home',
@@ -23,27 +24,32 @@ const sidebarItem = ref([
     link: '/UserReportsPage',
   },
 ]);
-const activeLink = ref('Home');
+const activeLink = ref(sidebarItem.value[0].link);
+const isActive = ref(false);
 const setActiveLink = (name: string) => {
-  activeLink.value = name;
+  activeLink.value = sidebarItem.value.find((item) => item.name === name)?.link || '';
+  isActive.value = true;
+  console.log(activeLink.value);
 };
 </script>
 <template>
   <div class="menu-sidebar__content">
-    <ul>
-      <li v-for="item in sidebarItem" :key="item.name">
-        <router-link
-          :to="item.link"
-          class="sidebar-item"
-          :class="{active: activeLink === item.name}"
-          @click="setActiveLink(item.name)"
-          :aria-current="activeLink=== item.name ? 'page' : undefined"
-        >
-          <MDBIcon :icon="item.icon" size="ms" class="mb-2" />
-          <a :class="{active: activeLink === item.name}">{{ item.name }}</a>
-        </router-link>
-      </li>
-    </ul>
+    <div class="sidebar-container">
+      <ul>
+        <div  v-for="item in sidebarItem" :key="item.name" class="item-container">
+          <router-link
+              :to="item.link"
+              class="sidebar-item"
+              @click="setActiveLink(item.name)"
+              :class="{active : activeLink === item.link}"
+              :aria-current="activeLink=== item.name ? 'page' : undefined"
+          >
+            <MDBIcon :icon="item.icon" size="ms" class="mb-2"/>
+            <a :style="isActive? 'color-white':'color-black'">{{ item.name }}</a>
+          </router-link>
+        </div>
+      </ul>
+    </div>
   </div>
 </template>
 <style scoped>
@@ -51,10 +57,10 @@ const setActiveLink = (name: string) => {
   background-color: rgb(255, 255, 255);
   min-width: 79px;
   max-width: 79px;
+  max-height:100%;
   box-sizing: border-box;
   overflow-y: auto;
   height: 100%;
-  padding-top: 64px;
   border-right: 1px solid rgb(233, 233, 233);
   box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
   display: flex;
@@ -63,16 +69,22 @@ const setActiveLink = (name: string) => {
   justify-content: space-between;
   z-index: 141;
 }
+.sidebar-container {
+  display: flex;
+  flex-direction: column;
+  margin-top:5rem;
+}
 
-li {
+div.item-container {
   list-style: none;
   padding: 10px;
-  font-size: 20px;
+  font-size: 22px;
   display: flex;
   align-items: center;
 }
-.menu-sidebar__content{
-  position:fixed;
+
+.menu-sidebar__content {
+  position: fixed;
   left: 0;
   height: 100%;
   background-color: #fff;
@@ -81,6 +93,7 @@ li {
   gap: 4px;
 
 }
+
 ul {
   padding: 0;
   margin: 0;
@@ -93,6 +106,7 @@ a.sidebar-item {
   min-height: 50px;
   width: 100%;
   padding: 2px;
+  background-color:white;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -111,15 +125,21 @@ a {
   color: rgb(5, 5, 5);
   text-decoration: none !important;
 }
-.sidebar-item{
+
+.sidebar-item {
+  background-color: rgb(225, 225, 225);
   transition: background-color 0.3s;
 }
+
 .sidebar-item.active {
-  background-color: rgb(70, 23, 143);
   border-radius: 0.25rem;
   min-height: 50px;
 }
-a.active {
+.sidebar-item.router-link-active{
+  background-color: rgb(70, 53, 171);
+  color: rgb(255, 255, 255);
+}
+a.router-link-active{
   color: rgb(255, 255, 255);
 }
 

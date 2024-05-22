@@ -4,7 +4,7 @@ import TheLanguageSelector from "@/components/single-instance-components/public-
 </script>
 <template>
   <MDBNavbar expand="xxl" light bg="white" container position="top" class="w-100 ms-0 me-0">
-    <MDBNavbarBrand href="#">
+    <MDBNavbarBrand href="/Home">
       <img
           src="../logo/green.png"
           height="38"

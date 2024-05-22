@@ -5,7 +5,6 @@ import TheMenuSideBar from "@/components/single-instance-components/profile-comp
 
 <template>
   <div class="user-library-page">
-    <TheHeader/>
     <div class="user-library-page__content">
       <TheMenuSideBar/>
     </div>

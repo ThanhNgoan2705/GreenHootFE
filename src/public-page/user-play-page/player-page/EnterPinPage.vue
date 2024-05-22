@@ -18,7 +18,7 @@ const removePlacehoder = (event: FocusEvent) => {
     <main class="main-content ">
       <div class="content ">
         <div class="logo w-full">
-          <img class="max-w-[18rem] h-auto object-center bg-transparent " src="./components/image/logo.png" alt="logo">
+          <img class="max-w-[18rem] h-auto object-center bg-transparent " src="../components/image/logo.png" alt="logo">
         </div>
         <div class="form-enter   ">
           <form class="form flex flex-col w-[20rem] h-[3rem] bg-transparent content-center">

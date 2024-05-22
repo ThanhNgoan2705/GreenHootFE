@@ -10,6 +10,8 @@ import QuestionTypeIcon from "@/public-page/user-create-greenhot-page/components
 import TrueFalseIcon from "@/public-page/user-create-greenhot-page/components/icon/TrueFalseIcon.vue";
 import TypeAnswerIcon from "@/public-page/user-create-greenhot-page/components/icon/TypeAnswerIcon.vue";
 import PuzzleIcon from "@/public-page/user-create-greenhot-page/components/icon/PuzzleIcon.vue";
+import QuestionDemo from "@/public-page/user-create-greenhot-page/components/QuestionDemo.vue";
+
 
 const openPopup = ref(false);
 const togglePopup = () => {
@@ -114,6 +116,36 @@ const qsImage = ref('');
 const handleImageUpdate = (newImage: string) => {
   qsImage.value = newImage;
 }
+
+const questionCount = ref(1);
+const incrementQuestion = () => {
+  questionCount.value++;
+}
+const addQuestionDemo = () => {
+  incrementQuestion();
+  setActiveQuestionDemo(questionCount.value - 1);
+}
+const handleDeleteQuestion = (id: number) => {
+  if (questionCount.value === 0) {
+    const systemMessage = document.getElementById('system-message') as HTMLElement;
+    systemMessage.innerText = 'You must have at least one question';
+    systemMessage.style.display = 'block';
+    setTimeout(() => {
+      systemMessage.style.display = 'none';
+    }, 3000);
+    return;
+  }
+  questionCount.value -= 1;
+}
+let activeQsDemo = ref(0);
+const isActiveQsDemo = ref(false);
+const setActiveQuestionDemo = (id: number) => {
+  if (activeQsDemo.value === id) {
+    return;
+  } else {
+    activeQsDemo.value = id;
+  }
+};
 </script>
 <template>
   <!--        popup content goes here-->
@@ -161,70 +193,40 @@ const handleImageUpdate = (newImage: string) => {
       </div>
     </div>
   </div>
-  <div class="container-wrap h-full flex flex-col overflow-auto">
-    <div class="creator-container  ">
-      <div class="creator-header pb-[56px] h-[56px] relative m-0 p-0">
+  <div class="container-wrap ">
+    <div class="creator-container">
+      <div class="creator-header pb-[56px] h-[56px] relative">
         <TheHeaderCreative/>
       </div>
-      <div class="creator-sidebar box-border position-fixed left-0 z-20 overflow-hidden flex flex-col align-items-center bottom-0 w-1/6 h-full bg-white shadow-xl pt-0 ">
-        <div class="side-bar-content block position-relative max-h-full h-auto w-full overflow-y-auto">
-          <div class="w-full outline-0 ">
-            <div class="sidebar-block h-full bg-blue-50 user-select-none py-2  pe-4 block" aria-label="question block">
-              <div class=" flex justify-start items-center text-center text-gray-500 text-sm font-bold">
-                <div class="qs-number  text-sm fw-normal text-gray-500 w-1.5 text-right ms-4">1</div>
-                <div class="qs text-sm text-center ms-3">Quiz</div>
-              </div>
-              <div class="qs-content position-relative flex flex-row-reverse justify-center ">
-                <div class="sidebar-block-gh justify-center " tabindex="0" role="button" aria-describedby="hidden-text"
-                     draggable="false">
-                  <div class="sidebar-block flex-col content-between h-full w-full max-w-full flex-1 py-0.5 px-1">
-                    <div class="qs-title text-gray-500 text-center font-medium mt-2">
-                      <span>
-                        <span class="text-sm text-gray-500">{{ qsContent ? savedText : 'Question' }}</span>
-                      </span>
-                    </div>
-                    <div class=" my-auto mx-0 flex justify-center relative ">
-                      <div
-                          class="qs-countdown block absolute top-1/2 left-0 w-6 h-6 border border-black rounded-full  text-center -translate-y-1/2  ">
-                        20
-                      </div>
-                      <div class=" flex content-center items-center overflow-hidden ">
-                        <div
-                            class="img-center flex w-8 h-6 justify-center items-center relative overflow-hidden border-2 border-dashed border-gray-500 text-gray-500">
-                          <div class="icon-image flex z-50">
-                            <MDBIcon v-if="!qsImage" icon="image" size="lg"/>
-                            <img v-else :src="qsImage" alt="image" class="w-full h-full"/>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="answer-selector flex flex-wrap mt-2">
-                      <div class="answer-option relative h-3 mb-2 me-1  border border-gray-300 rounded-md "/>
-                      <div class="answer-option relative h-3 mb-2   border border-gray-300 rounded-md "/>
-                      <div class="answer-option relative h-3 mb-2 me-1  border border-gray-300 rounded-md "/>
-                      <div class="answer-option relative h-3 mb-2   border border-gray-300 rounded-md 2"/>
-                    </div>
-                  </div>
+      <div class="creator-sidebar box-border ">
+        <div class="side-bar-content ">
+          <QuestionDemo v-for="(n,index) in questionCount" :key="n"
+                        :qs-content="qsContent"
+                        :qs-image="qsImage"
+                        :saved-text="savedText"
+                        :question-count="questionCount"
+                        :id="n"
+                        :class="{ 'active-demo': activeQsDemo === index }"
+                        @increment="addQuestionDemo"
+                        @deleteQuestion="handleDeleteQuestion(n)"
+                        @click="setActiveQuestionDemo(index)"
+                        :is-active="!isActiveQsDemo"
+          />
+          <div class="dialog-delete-wrap">
+            <div class="dialog-confirm-delete ">
+              <div class="dialog-contain">
+                <div class="dialog-title">
+                  <h1 class="text-lg font-bold text-gray-900">Delete question</h1>
                 </div>
-                <div class="sidebar-block-action visible flex flex-col justify-end self-end pe-0.5 ms-2">
-                <span>
-                  <span>
-                    <button aria-label="duplicate" tabindex="0"
-                            class=" p-0 border-0 w-auto bg-none rounded-sm cursor-pointer mt-2">
-                      <span class="icon-dupli">
-                        <MDBIcon icon="clone" size="sm"/>
-                      </span>
-                    </button>
-                  </span>
-                  <span>
-                    <button aria-label="delete" tabindex="0"
-                            class=" p-0 border-0 w-auto bg-none rounded-sm cursor-pointe mt-3 mb-1">
-                      <span class="icon-delete inline-block ">
-                        <MDBIcon icon="trash-alt" size="sm"/>
-                      </span>
-                    </button>
-                  </span>
-                </span>
+                <div class="dialog-content">
+                  <p class=" delete-log-text text-sm text-gray-500">Are you sure you want to delete this question?</p>
+                  <p class=" delete-log-title hidden text-sm text-gray-500">Can't delete the only question in your
+                    GreenHoot </p>
+                </div>
+                <div class="dialog-action">
+                  <button class="btn-cancel">Cancel</button>
+                  <button class="btn-del">Delete</button>
+                  <button class="btn-ok hidden">Ok</button>
                 </div>
               </div>
             </div>
@@ -233,7 +235,8 @@ const handleImageUpdate = (newImage: string) => {
         <div class="side-bar-action ">
           <div class=" flex flex-col bg-white w-full justify-center items-center mt-2">
           <span>
-            <button class="add-btn start-button">
+            <button class="add-btn start-button"
+                    @click="addQuestionDemo">
             Add question
           </button>
           </span>
@@ -469,13 +472,33 @@ const handleImageUpdate = (newImage: string) => {
   overflow: hidden auto;
 }
 
+.container-wrap {
+  @apply w-full overflow-hidden h-full flex flex-col
+}
+
 .creator-container {
-  width: 100%;
+  @apply w-full overflow-hidden h-full flex flex-col
+}
+
+.creator-sidebar {
+  position: fixed;
+  left: 0px;
+  z-index: 101;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  -webkit-box-align: center;
+  align-items: center;
+  bottom: unset;
+  width: 12rem;
   height: 100%;
-  overflow: hidden;
+  background: rgb(255, 255, 255);
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
+  padding-top: 0px;
+}
 
+.question-demo.active-demo .sidebar-block {
+  @apply bg-blue-300
 }
 
 .add-answer-btn {
@@ -625,7 +648,7 @@ const handleImageUpdate = (newImage: string) => {
 }
 
 .side-bar-content {
-  margin: 3.5rem 0 0;
+  @apply block relative z-[4] max-h-full h-auto w-full overflow-y-auto mt-[3.5rem] mx-0 mb-0 ;
 }
 
 .side-bar-action {
@@ -784,5 +807,18 @@ const handleImageUpdate = (newImage: string) => {
 
 .option-setting-title {
   @apply w-full text-sm font-bold text-black bg-gray-200 border-2 border-gray-200 text-center cursor-pointer
+}
+
+.dialog-delete-wrap {
+  @apply hidden block fixed top-0 left-0 w-full h-full overflow-x-hidden overflow-y-auto text-center bg-gray-900 bg-opacity-70 cursor-pointer;
+  z-index: 110;
+}
+
+.dialog-confirm-delete {
+  @apply inline-block text-start top-0 cursor-default outline-0 align-middle
+}
+
+.dialog-contain {
+  @apply max-w-[95vw] max-h-[95vh] w-[29.5rem]  h-auto border-[5px] border-gray-200 mx-auto relative flex flex-col bg-white overflow-x-hidden overflow-y-auto
 }
 </style>

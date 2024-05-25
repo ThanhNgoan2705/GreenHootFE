@@ -10,6 +10,8 @@ import {
 } from "mdb-vue-ui-kit";
 import { ref} from "vue";
 import TheLanguageSelector from "@/components/single-instance-components/public-component/TheLanguageSelector.vue";
+import {Packet, ReqRelogin} from "@/proto/Proto";
+import {WS} from "@/socket/WS";
 const navList = ref([
   {name: 'School', link: 'School.vue'},
   {name: 'Work', link: 'Work.vue'},
@@ -21,7 +23,17 @@ router.beforeEach((to, from, next) => {
   console.log('from', from);
   next();
 });
-
+const sendReLoginAccount=(event)=>{
+  const token = localStorage.getItem('auth-token');
+  let reqReLogin = ReqRelogin.create();
+  event.preventDefault();
+  console.log(token);
+  reqReLogin.token = token;
+  let packet = Packet.create();
+  packet.data = {oneofKind: 'reqRelogin', reqRelogin: reqReLogin};
+  console.log("sent reLogin");
+  WS.send(packet);
+}
 </script>
 <template>
   <header>
@@ -52,7 +64,7 @@ router.beforeEach((to, from, next) => {
           </MDBBtn>
         </MDBNavbarItem>
         <MDBNavbarItem class="fw-bold me-2 ms-2" @click="router.push('/SignInPage')">
-          <router-link to="/SignInPage" style="color:black">Log In</router-link>
+          <button  style="color:black" @click="sendReLoginAccount($event)">Log In</button>
         </MDBNavbarItem>
         <MDBNavbarItem class="ms-lg-3 mb-lg-0">
         <TheLanguageSelector/>

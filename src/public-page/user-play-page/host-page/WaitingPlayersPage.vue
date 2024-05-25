@@ -13,7 +13,7 @@ const copyLink = (link :number) => {
 </script>
 
 <template>
-  <div class="container-fluid waiting-wrapper">
+  <div class=" waiting-wrapper">
     <div class="header">
       <div class="header-content">
         <div class="invitation">
@@ -47,7 +47,7 @@ const copyLink = (link :number) => {
 
 <style scoped>
 .waiting-wrapper {
-  @apply w-full h-full m-0 p-0  flex flex-col bg-[url('/src/public-page/user-play-page/components/image/background.jpg')] bg-cover bg-center bg-no-repeat overflow-x-hidden overflow-y-auto;
+  @apply w-[100vw] h-[100vh] m-0 p-0  flex flex-col bg-[url('/src/public-page/user-play-page/components/image/background.jpg')] bg-cover bg-center bg-no-repeat overflow-x-hidden overflow-y-auto;
 }
 
 .header {
@@ -63,7 +63,7 @@ const copyLink = (link :number) => {
 }
 .qr-code {
   width: 10vw;
-  height: 10vw;
+  height: 10vh;
   max-width: 100%;
   max-height: 100%;
   background: white;

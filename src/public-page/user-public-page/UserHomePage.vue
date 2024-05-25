@@ -7,20 +7,25 @@ import {
   MDBListGroupItem
 } from 'mdb-vue-ui-kit';
 import CardGreenHoot from "@/public-page/user-common-component/CardGreenHoot.vue";
-import {userStore} from '@/stores/Auth'; // Import the exported store
-const user = userStore(); // Create a reactive reference to the store
+import {useUserStore} from "@/stores/userStore";
+const userStore = useUserStore();
+const token = userStore.getToken();
+const user = userStore.getUserInfo();
+console.log("token"+token);
+console.log("user"+user);
+
 </script>
 <template>
   <div class="main max-h-full max-w-full flex">
     <TheHeader/>
     <TheMenuSideBar/>
-    <div class="user-home-page overflow-auto">
+    <div  class="user-home-page overflow-auto">
       <div class="main-page max-w-full ">
         <div class="d-inline-flex  right-main-contain ms-[5rem]  overflow-auto"
              style="--main-element-scrollbar-width: 16px">
-          <div class="content-page content-inside flex justify-between mt-[7rem] me-2rem">
+          <div class="content-page content-inside flex  mt-[7rem] me-2rem">
             <!--         left-content-->
-            <div class="ifo-container-left w-1/5 ">
+            <div class="ifo-container-left  ">
               <MDBCard class="w-100 info-card ">
                 <MDBCardBody>
                   <MDBRow>
@@ -33,7 +38,7 @@ const user = userStore(); // Create a reactive reference to the store
                   </MDBRow>
                   <MDBRow>
                     <MDBCol class="col-md-7">
-                      <p>{{ user.getUserInfo().name }} </p>
+                      <p>{{ user?.username}}</p>
                     </MDBCol>
                   </MDBRow>
                   <MDBRow class="m-auto bg-color">
@@ -56,14 +61,14 @@ const user = userStore(); // Create a reactive reference to the store
               </MDBCard>
             </div>
             <!--         center-content-->
-            <div class="main-content w-1/2">
+            <div class="main-content ">
               <div class="d-flex justify-content-between">
                 <CardGreenHoot/>
                 <CardGreenHoot/>
               </div>
             </div>
             <!--         right-content-->
-            <div class="list-room-right w-1/4">
+            <div class="list-room-right ">
               <MDBCard class="create-box">
                 <MDBCardBody>
                   <MDBRow>
@@ -124,7 +129,7 @@ const user = userStore(); // Create a reactive reference to the store
     </div>
   </div>
 </template>
-<style>
+<style  scoped>
 .user-home-page {
   @apply max-h-full max-w-full m-0 p-0 flex flex-col items-center justify-center;
 }
@@ -160,85 +165,65 @@ const user = userStore(); // Create a reactive reference to the store
   flex-wrap: nowrap;
   height: fit-content;
 }
-
 .ifo-container-left, .main-content, .list-room-right {
-  box-sizing: border-box;
-  margin-right: 5px;
-  min-width: 0;
-}
+   box-sizing: border-box;
+   margin-right: 5px;
+   min-width: 0;
+ }
 
+
+/* For devices with screen width greater than 1100px */
 @media screen and (min-width: 1100px) {
-  .ifo-container-left {
+  .ifo-container-left, .list-room-right {
     width: 350px;
     margin: 0 0 0 13px;
     flex: 0 0 auto;
   }
-}
-
-@media screen and (min-width: 768px) {
-  .ifo-container-left {
-    width: 350px;
-    margin: 0 0 0 13px;
-    flex: 0 0 auto;
-  }
-}
-
-@media screen and (min-width: 375px) {
-  .ifo-container-left {
-    width: 100%;
-    margin: 0 13px;
-    flex: 1 1 auto;
-  }
-}
-
-@media screen and (min-width: 1100px) {
   .main-content {
-    width: 400px;
+    width: 600px;
     margin: 0 16px;
     flex: 1 1 auto;
   }
 }
 
-@media screen and (min-width: 768px) {
-  .main-content {
-    width: 100%;
-    margin: 0 16px;
-    flex: 1 1 auto;
-  }
-}
-
-@media screen and (min-width: 375px) {
-  .main-content {
-    width: 100%;
-    margin: 0 16px;
-    flex: 1 1 auto;
-  }
-}
-
-@media screen and (min-width: 1100px) {
-  .list-room-right {
-    width: 350px;
-    margin: 0 16px 0 0;
-    flex: 0 0 auto;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .list-room-right {
+/* For devices with screen width between 768px and 1100px */
+@media screen and (min-width: 768px) and (max-width: 1100px) {
+  .ifo-container-left, .list-room-right {
     width: 250px;
     margin: 0;
     flex: 0 0 auto;
   }
-}
-
-@media screen and (min-width: 375px) {
-  .list-room-right {
+  .main-content {
     width: 100%;
-    margin: 0;
+    margin: 0 16px;
     flex: 1 1 auto;
   }
 }
 
+/* For devices with screen width less than 768px */
+@media screen and (max-width: 768px) {
+  .ifo-container-left, .list-room-right {
+    width: 100%;
+    margin: 0;
+    flex: 1 1 auto;
+  }
+  .main-content {
+    width: 100%;
+    margin: 0 16px;
+    flex: 1 1 auto;
+  }
+}
+.ifo-container-left {
+  width: 25%; /* adjust as needed */
+}
+
+.main-content {
+  width: 45%; /* adjust as needed */
+}
+
+.list-room-right {
+  width: 25%; /* adjust as needed */
+}
 .greenHot-card {
   padding: 8px 16px;
   height: 75px;

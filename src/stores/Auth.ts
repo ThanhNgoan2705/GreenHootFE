@@ -3,8 +3,10 @@ import type Test from "@/stores/Test";
 import type {State} from "@headlessui/vue/dist/internal/open-closed";
 
 export interface User {
-    id: String;
-    name: String;
+    id: number;
+    username: String;
+    playerName: String;
+    gender: number;
     email: String;
     phone: String;
     isLogin: Boolean;

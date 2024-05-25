@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {ref} from "vue";
 import TheLanguageSelector from "@/components/single-instance-components/public-component/TheLanguageSelector.vue";
 
 const removePlacehoder = (event: FocusEvent) => {
@@ -8,8 +7,8 @@ const removePlacehoder = (event: FocusEvent) => {
 }
 </script>
 
-<template>
-  <div class="container-fluid waiting-wrapper">
+<template >
+  <div class=" waiting-wrapper ">
     <div class="header">
       <div class="language-select absolute right-2 border-2 rounded-3xl ">
         <TheLanguageSelector/>
@@ -46,7 +45,7 @@ const removePlacehoder = (event: FocusEvent) => {
 
 <style scoped>
 .waiting-wrapper {
-  @apply w-full h-full m-0 p-0  flex flex-col bg-[url('/src/public-page/user-play-page/components/image/background.jpg')] bg-cover bg-center bg-no-repeat overflow-x-hidden overflow-y-auto;
+  @apply w-full h-full m-0 p-0  flex flex-col bg-[url('../components/image/background.jpg')] bg-cover bg-center bg-no-repeat overflow-x-hidden overflow-y-auto;
 }
 
 .header {
@@ -75,7 +74,7 @@ const removePlacehoder = (event: FocusEvent) => {
 }
 
 .main-content {
-  @apply w-full h-5/6 my-0 ;
+  @apply w-full h-full my-0 ;
 }
 
 .main-content .content {

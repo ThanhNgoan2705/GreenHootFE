@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import {MDBCard, MDBCardImg, MDBCardBody, MDBCardText,MDBCardFooter,MDBBtn,MDBCardTitle} from 'mdb-vue-ui-kit';
+import {ref} from "vue";
+
 </script>
 
 <template>
@@ -12,7 +14,7 @@ import {MDBCard, MDBCardImg, MDBCardBody, MDBCardText,MDBCardFooter,MDBBtn,MDBCa
       <small class="text-muted">Last updated 3 mins ago</small>
     </MDBCardText>
     <MDBCardFooter class="align-items-center bg-white">
-      <MDBBtn color="primary" class="w-100 m-auto start-button">Start</MDBBtn>
+      <button  class="w-100 m-auto start-button" @click="hostRoom()">Start</button>
     </MDBCardFooter>
   </MDBCardBody>
 </MDBCard>

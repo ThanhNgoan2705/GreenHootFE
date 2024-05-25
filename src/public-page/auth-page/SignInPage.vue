@@ -4,9 +4,8 @@ import {ref} from "vue";
 import TheCommonHeader from "@/components/single-instance-components/public-component/TheCommonHeader.vue";
 import router from "@/router";
 import {googleAuthCodeLogin} from "vue3-google-login"
-import {Packet,ReqLogin} from "@/proto/Proto";
+import {Packet, ReqLogin, ReqRelogin} from "@/proto/Proto";
 import {WS} from "@/socket/WS";
-
 const login = () => {
   googleAuthCodeLogin().then((response) => {
     console.log("Handle the response", response)
@@ -20,21 +19,21 @@ const sendLogInAccount=(event)=>{
   event.preventDefault();
   console.log(userNameInput.value);
   console.log(passwordInput.value);
-  // reqLogin.username = userNameInput.value;
-  // reqLogin.password = passwordInput.value;
-  reqLogin.username = "haonghai";
-  reqLogin.password = "123456";
+  reqLogin.username = userNameInput.value;
+  reqLogin.password = passwordInput.value;
   let packet = Packet.create();
   packet.data = {oneofKind: 'reqLogin', reqLogin: reqLogin};
   console.log("sent login");
   WS.send(packet);
 }
+
+
 </script>
 <template>
-  <MDBContainer fluid class="bg-image ">
+  <MDBContainer fluid class="bg-image overflow-auto w-[100vw] h-[100vh] ">
     <TheCommonHeader/>
-    <MDBCard class="col-lg-4 mt-xl-5 p-3 m-auto ">
-      <MDBCardBody class="">
+    <MDBCard class=" mt-[5rem] p-3 mx-auto w-1/3 h-1/3  ">
+      <MDBCardBody class="p-2">
         <MDBCardTitle class="text-center"> Log in</MDBCardTitle>
         <form>
           <MDBRow class="g-3 mt-3 mb-2">

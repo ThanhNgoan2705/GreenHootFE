@@ -31,16 +31,21 @@ const types = ref([
   {value: '3', text: 'Parent'},
 ])
 const isChecked = ref(true);
+import {useUserStore} from "@/stores/userStore";
+const userStore = useUserStore();
+const userName = ref(userStore.user?.username);
+const phoneNumber = ref(userStore.user?.phone);
+const userEmail = ref(userStore.user?.email);
 </script>
 
 <template>
   <MDBContainer fluid class="user-home-page">
     <TheHeader/>
-    <MDBContainer fluid class="user-home-page_content d-inline-flex">
+    <MDBContainer fluid class="user-home-page_content d-inline-flex ">
       <TheMenuSideBar/>
-      <MDBContainer class="w-100">
+      <MDBContainer class="w-100 ">
         <div class="w-100 my-lg-4">
-          <h3>Settings</h3>
+          <h3 class="ms-4">Settings</h3>
         </div>
         <MDBTabs v-model="activeTabId5">
           <!-- Tabs navs -->
@@ -69,7 +74,7 @@ const isChecked = ref(true);
                       <MDBCardBody>
                         <div class="title-box align-items-center">
                           <MDBCardTitle>User Information</MDBCardTitle>
-                          <MDBBtn disabled="disabled" class="save-btn">Save</MDBBtn>
+                          <button  class="save-btn disabled" >Save</button>
                         </div>
                         <div>
                           <MDBRow>
@@ -78,12 +83,21 @@ const isChecked = ref(true);
                                    alt="..."/>
                             </MDBCol>
                             <MDBCol col="8">
-                              <label for="username" class="fw-bold ">UserName</label>
-                              <input type="text" id="username" class=" form-control mt-1 mb-3"/>
-                              <label for="Name" class="fw-bold">Name</label>
-                              <input type="text" id="name" class="form-control mt-1 mb-3"/>
+                              <label for="username" class="fw-bold">UserName</label>
+                              <input type="text"
+                                     id="username"
+                                      v-model="userName"
+                                     class=" form-control mt-1 mb-3"/>
+                              <label for="Name" class="fw-bold">Phone</label>
+                              <input type="number"
+                                     id="phone"
+                                      v-model="phoneNumber"
+                                     class="form-control mt-1 mb-3"/>
                               <label for="email" class="fw-bold">Email</label>
-                              <input type="email" id="email" class="form-control mt-1 mb-3"/>
+                              <input type="email"
+                                     id="email"
+                                      v-model="userEmail"
+                                     class="form-control mt-1 mb-3"/>
                             </MDBCol>
                           </MDBRow>
                           <MDBRow>

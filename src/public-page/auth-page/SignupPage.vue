@@ -1,4 +1,4 @@
-<script setup  lang="ts">
+<script setup lang="ts">
 import {
   MDBContainer, MDBNavbar,
   MDBInput, MDBRow, MDBCol, MDBCheckbox, MDBBtn, MDBCard, MDBCardBody, MDBCardTitle, MDBIcon, MDBNavbarNav
@@ -8,6 +8,7 @@ import TheCommonHeader from "@/components/single-instance-components/public-comp
 import {Packet, ReqRegister, ResRegister} from "@/proto/Proto";
 import {WS} from "@/socket/WS";
 import {AuthHandler} from "@/handler/AuthHandler";
+
 const userName = ref('');
 const password = ref('');
 const checkbox3 = ref(false);
@@ -19,27 +20,30 @@ const sendRegister = (event) => {
   console.log(userName.value);
   console.log(password.value);
   reqRegister.sponsor = '';
-  reqRegister.phone= '';
+  reqRegister.phone = '';
   let packet = Packet.create();
-  packet.data = {oneofKind: 'reqRegister', reqRegister: {username: userName.value, password: password.value, sponsor: '', phone: '', }};
+  packet.data = {
+    oneofKind: 'reqRegister',
+    reqRegister: {username: userName.value, password: password.value, sponsor: '', phone: '',}
+  };
   WS.send(packet);
 
 }
 
 </script>
 <template>
-  <MDBContainer fluid class="bg-image">
+  <div  class="bg-image overflow-auto w-[100vw] h-[100vh]">
     <MDBNavbar expand="xxl" light bg="white" container position="top" class="w-100 ms-0 me-0">
-     <TheCommonHeader/>
+      <TheCommonHeader/>
     </MDBNavbar>
-    <MDBContainer sm class="justify-content-center mt-5">
-      <MDBBtn class="align-content-center h-50 border-1 mt-4" tag="a"
+    <div class="flex flex-col justify-center mt-5 overflow-y-auto mb-10">
+      <MDBBtn class="align-content-center flex flex-row w-[6rem] h-auto border-1 mt-4" tag="a"
               style="background-color: rgb(255,255,255);">
-        <MDBIcon icon="chevron-left" size="lg" class="m-1"></MDBIcon>
+        <MDBIcon icon="chevron-left" size="lg" ></MDBIcon>
         <router-link to="/Home">Back</router-link>
       </MDBBtn>
       <h3 class="text-center">Create an account</h3>
-      <MDBCard  class="col-lg-4 m-auto ">
+      <MDBCard class="col-lg-4 mx-auto ">
         <MDBCardBody>
           <MDBCardTitle class="text-center"> Sign up with your User Name</MDBCardTitle>
           <form>
@@ -69,44 +73,51 @@ const sendRegister = (event) => {
               </MDBCol>
             </MDBRow>
             <MDBRow class="g-3 mt-3 mb-2">
-              <MDBCol >
+              <MDBCol class="border-0">
                 <MDBCheckbox
+
                     label="I wish to receive information, offers, recommendations, and updates from Green Hoot!"
                     v-model="checkbox3"
                     invalidFeedback="You must agree before submitting."
                     validFeedback="Looks good!"
-
                     :isValid="false"
                     required
                 />
               </MDBCol>
             </MDBRow>
             <MDBRow class="g-0 mt-3 mb-2">
-                <button class="btn-sign-up transition ease-in-out delay-150"  @click="sendRegister($event)" >Sign Up</button>
+              <button class="btn-sign-up transition ease-in-out delay-150" @click="sendRegister($event)">Sign Up
+              </button>
             </MDBRow>
 
           </form>
           <MDBRow class="g-3 mt-3 mb-2">
-            <MDBBtn > <img src="../../assets/google.svg" alt="Google" class="float-start">Continue With Google</MDBBtn>
+            <MDBBtn><img src="../../assets/google.svg" alt="Google" class="float-start">Continue With Google</MDBBtn>
           </MDBRow>
           <MDBRow class="g-3 mt-3 mb-2">
-            <p class="text-center">Already have an account?<a role="button" class="text-primary ms-1"> <u><router-link to="/SignInPage">Log In</router-link></u></a></p>
-            <p ><router-link to="/EmailVerification"> verify email</router-link></p>
+            <p class="text-center">Already have an account?<a role="button" class="text-primary ms-1"> <u>
+              <router-link to="/SignInPage">Log In</router-link>
+            </u></a></p>
+            <p>
+              <router-link to="/EmailVerification"> verify email</router-link>
+            </p>
           </MDBRow>
         </MDBCardBody>
       </MDBCard>
-    </MDBContainer>
-  </MDBContainer>
+    </div>
+  </div>
 </template>
 <style scoped>
-.bg-image{
-  background: rgb(140,202,252);
-  background: linear-gradient(90deg, rgba(140,202,252,0.9623307941340599) 0%, rgba(181,210,245,1) 48%, rgba(198,237,255,1) 100%);
+.bg-image {
+  background: rgb(140, 202, 252);
+  background: linear-gradient(90deg, rgba(140, 202, 252, 0.9623307941340599) 0%, rgba(181, 210, 245, 1) 48%, rgba(198, 237, 255, 1) 100%);
 }
-.col .form-check{
+
+ .form-check {
   @apply border-0 shadow-none
 }
-.btn-sign-up{
+
+.btn-sign-up {
   cursor: pointer;
   display: inline-block;
   vertical-align: bottom;

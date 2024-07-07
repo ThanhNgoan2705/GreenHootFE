@@ -2,6 +2,7 @@ import wsConfig from "../config/Config";
 
 import { Packet, PacketWrapper, ReqLogin } from "@/proto/Proto";
 import {HandlerManage} from "@/manage/HandleManage";
+import ReLogin  from "@/service/AuthRelogin";
 
 export class WS {
     set ws(value: WebSocket) {
@@ -30,6 +31,7 @@ export class WS {
         // console.debug("WS.send:::", msg)
         // this.listPacket.push(msg);
         if (WS.me()._ws.readyState == WebSocket.OPEN) {
+            console.log("WS.send:::WS is ready");
             WS.me()._ws.send(PacketWrapper.toBinary(PacketWrapper.create({ packet: [msg] })));
         } else {
             console.log("WS.send:::WS is not ready");
@@ -51,24 +53,31 @@ export class WS {
         // this.checkAndReconnect();
         this.connect();
         console.log("WS created")
+
         console.debug("WS created");
     }
 
     onOpen = (event: any) => {
-        console.log("WS.onOpen:::", event.data);
-        console.debug("WS connected");
+        // console.log("WS.onOpen:::", event.data);
+        // console.debug("WS connected");
+        console.log("WS connected");
+        // viet ham relogin
+        ReLogin();
 
     };
 
     onMessage = (event: any) => {
         console.log("WS.onMessage:::", event.data);
+       
         let data = new Uint8Array(event.data);
+        // console.log(data)
         let msg = PacketWrapper.fromBinary(data);
-        console.log("WS.onMessage:::", msg);
-        console.log(msg)
+        // console.log("WS.onMessage:::", msg);
+        // console.log(msg)
         // let resData = msg.packet[0].data.resData;
         // console.log(JSON.parse(resData.dataString))
         // console.log(resData.action);
+        // console.log(msg.packet.length)
         HandlerManage.me()?.onMessageHandler(msg);
 
     };

@@ -1,15 +1,33 @@
 <script setup  lang="ts">
-import {ref} from "vue";
-import QrcodeVue, {type Level, type RenderAs} from "qrcode.vue";
+import { ref } from "vue";
+import QrcodeVue, { type Level, type RenderAs } from "qrcode.vue";
 import wsConfig from "@/config/Config";
-const pinCode = ref(123456);
-const value = wsConfig.host + '/play/' + pinCode.value;
-const level = ref<Level> ('M');
-const renderAs = ref<RenderAs>('svg');
-const copyLink = (link :number) => {
-  navigator.clipboard.writeText(link.toString());
-}
+import { showToastTopRight } from "@/service/Alert";
+import { Packet, ReqStartExam } from "@/proto/Proto";
+import { WS } from "@/socket/WS";
 
+
+const roomId = JSON.parse(sessionStorage.getItem('roomId'));
+const examId = JSON.parse(sessionStorage.getItem('examId'));
+const hostId = JSON.parse(sessionStorage.getItem('auth-user')).userId;
+
+const pinCode = parseInt(roomId);
+console.log(pinCode);
+const copyLink = (link: number) => {
+  navigator.clipboard.writeText(link.toString());
+  showToastTopRight("Copied to clipboard");
+}
+const startGameRequest = () => {
+  let startGame = ReqStartExam.create();
+  startGame.roomId = roomId;
+  startGame.examId = examId;
+  startGame.hostId = hostId;
+  let packet = Packet.create();
+  packet.data = { oneofKind: 'reqStartExam', reqStartExam: startGame };
+  console.log(packet);
+  console.log("sent start game request to server");
+  WS.send(packet);
+}
 </script>
 
 <template>
@@ -24,18 +42,14 @@ const copyLink = (link :number) => {
             <span class="text-lg">Join with pin:</span>
             <span class="text-5xl ms-2 font-bold cursor-pointer " @click="copyLink(pinCode)">{{ pinCode }}</span>
           </div>
-
-        </div>
-        <div class="qr-code">
-          <QrcodeVue :value="value" :level="level" :renderAs="renderAs" class="w-full h-full p-0.5"/>
         </div>
       </div>
 
     </div>
     <main class="main-content">
       <div class="content">
-        <div class="player-showing w-full">
-
+        <div class="player-showing w-full flex content-center justify-center mt-[5rem]">
+          <button class="start-button" @click="startGameRequest">Start Game</button>
         </div>
       </div>
     </main>
@@ -47,37 +61,24 @@ const copyLink = (link :number) => {
 
 <style scoped>
 .waiting-wrapper {
-  @apply w-[100vw] h-[100vh] m-0 p-0  flex flex-col bg-[url('/src/public-page/user-play-page/components/image/background.jpg')] bg-cover bg-center bg-no-repeat overflow-x-hidden overflow-y-auto;
+  @apply w-[100vw] h-[100vh] m-0 p-0 flex flex-col bg-[url('/src/public-page/user-play-page/components/image/background.jpg')] bg-cover bg-center bg-no-repeat overflow-x-hidden overflow-y-auto;
 }
 
 .header {
-  @apply flex w-full h-1/6 p-2 justify-center items-center ;
+  @apply flex w-full h-1/6 p-2 justify-center items-center;
 }
 
 .invitation {
-  @apply flex w-5/6 h-full  justify-center items-center border-none relative ;
+  @apply flex w-full h-full justify-center items-center border-none relative;
 }
 
 .header-content {
   @apply flex w-1/2 h-full justify-between items-center;
 }
-.qr-code {
-  width: 10vw;
-  height: 10vh;
-  max-width: 100%;
-  max-height: 100%;
-  background: white;
-  border: none;
-  margin-right: 2%;
-  margin-left:2%;
-  padding: 0;
-  overflow: visible;
-  display: flex;
-  position: relative;
-}
 
-.join-link, .join-pin {
-  @apply w-1/2 h-full bg-white;;
+.join-link,
+.join-pin {
+  @apply w-1/2 h-full bg-white rounded-md flex justify-center items-center;
 }
 
 /* For screens smaller than 600px */
@@ -101,4 +102,6 @@ const copyLink = (link :number) => {
   }
 }
 
-</style>
+.start-button {
+  @apply w-1/5 h-12 text-black bg-white rounded-md cursor-pointer text-lg font-bold hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50;
+}</style>

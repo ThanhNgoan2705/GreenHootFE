@@ -1,9 +1,6 @@
 <script setup  lang="ts">
 import {
   MDBContainer,
-  MDBNavbar,
-  MDBNavbarBrand,
-  MDBNavbarNav,
   MDBRow,
   MDBCol,
   MDBCardTitle,
@@ -12,6 +9,7 @@ import {
 import {ref} from "vue";
 import TheCommonHeader from "@/components/single-instance-components/public-component/TheCommonHeader.vue";
 import {c} from "vite/dist/node/types.d-aGj9QkWt";
+import { ReqVerify } from "@/proto/Proto";
 
 const emailInput = ref('');
 const emailIsValid = ref(false);
@@ -20,9 +18,10 @@ const checkFomatEmail = (email: string) => {
   emailIsValid.value = emailRegex.test(email);
   console.log(emailIsValid.value);
 }
-const sendEmail = (email: string,event : Event) => {
+const requestVerifyEmail = (event:Event) => {
   event.preventDefault();
-  console.log(email);
+  let reqVeriryAccount = ReqVerify.create();
+  reqVeriryAccount.email = emailInput.value;
 }
 </script>
 
@@ -34,7 +33,7 @@ const sendEmail = (email: string,event : Event) => {
         <MDBCardBody>
           <MDBCardTitle class="text-center"> Verify your email to Continue</MDBCardTitle>
           <img class="align-items-center m-auto d-block w-25 h-25"
-               src="../../assets/icon-email.png"
+               src="../../assets/img/icon-email.png"
                alt="..."
           />
           <p class="text-center">We will send a verification code to your email</p>

@@ -6,54 +6,90 @@ import {
   MDBCardTitle,
   MDBBtn, MDBCard, MDBCardBody
 } from "mdb-vue-ui-kit";
-import {ref} from "vue";
-import TheCommonHeader from "@/components/single-instance-components/public-component/TheCommonHeader.vue";
 
-const value = ref('');
+import TheCommonHeader from "@/components/single-instance-components/public-component/TheCommonHeader.vue";
+import { reactive } from "vue";
+import { ref } from "vue";
+import { Packet, ReqChangePasswordForgot, ReqVerify, ReqVerifyForgotPassword } from "@/proto/Proto";
+import { WS } from "@/socket/WS";
+
+
+
+const otpLength = 6; // Length of the OTP
+const otp = reactive(Array(otpLength).fill(''));
+const otpInput = ref<Array<HTMLInputElement | null>>([]);
+
+const onInput = (event: Event, index: number) => {
+  const input = event.target as HTMLInputElement;
+  otp[index] = input.value;
+
+  // Move to the next input field if there is a next field
+  if (input.value && index < otpLength - 1) {
+    if (otpInput.value[index + 1] !== null && otpInput.value[index + 1] !== undefined) {
+      otpInput.value[index + 1]?.focus();
+    }
+  }
+};
+
+const onKeyDown = (event: KeyboardEvent, index: number) => {
+  const input = event.target as HTMLInputElement;
+
+  // Handle backspace to move to the previous input field
+  if (event.key === 'Backspace' && !input.value && index > 0) {
+    otpInput.value[index - 1]?.focus();
+  }
+};
+
+const onSubmitVerifyEmail = (event: Event) => {
+  const otpValue = otp.join('');
+  const email = sessionStorage.getItem('email');
+  console.log(otpValue);
+  let requestVerify = ReqVerify.create({ email: email, code: otpValue });
+  console.log(requestVerify);
+  let packet = Packet.create();
+  packet.data = {
+    oneofKind: 'reqVerify',
+    reqVerify: requestVerify
+  };
+  console.log(packet);
+  WS.send(packet);
+  sessionStorage.removeItem('email');
+};
+const onSubmitVerifyChangePassword = (event: Event) => {
+  const otpValue = otp.join('');
+  const email = sessionStorage.getItem('email');
+  console.log(otpValue);
+  const code = parseInt(otpValue);
+  console.log(code);
+  let requestVerifyForgotpass = ReqVerifyForgotPassword.create({ email: email, otp: code });
+  console.log(requestVerifyForgotpass);
+  let packet = Packet.create();
+  packet.data = {
+    oneofKind: 'reqVerifyForgotPassword',
+    reqVerifyForgotPassword: requestVerifyForgotpass
+  };
+  console.log(packet);
+  WS.send(packet);
+  sessionStorage.removeItem('email');
+};
 </script>
 
 <template>
   <MDBContainer fluid class="bg-image">
-    <TheCommonHeader/>
+    <TheCommonHeader />
     <MDBContainer xxl class="card-container">
       <MDBCard class="col-lg-4 mx-auto">
         <MDBCardBody>
           <MDBCardTitle class="text-center"> Enter code</MDBCardTitle>
           <form>
             <MDBRow class="g-3 mt-3 mb-2">
-              <MDBCol>
-                <InputOtp
-                    class="mx-5"
-                    :numInputs="6"
-                    v-model="value"
-                    :length="6"
-                    integer-only
-                    :inputStyle="{
-                  width: '2rem',
-                  height: '2rem',
-                  fontSize: '1.5rem',
-                  textAlign: 'center',
-                  borderRadius: '4px',
-                  border: '1px solid #ced4da',
-                  backgroundColor: '#fff',
-                  color: '#495057'
-                }"
-                    :focusStyle="{
-                  borderColor: '#80bdff',
-                  boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)'
-                }"
-                    :disabledStyle="{
-                  backgroundColor: '#e9ecef'
-                }"
-                    :errorStyle="{
-                  borderColor: '#dc3545',
-                  backgroundColor: '#f8d7da'
-                }"
-                />
+              <MDBCol class="text-center">
+                <input v-for="(value, index) in otp" :key="index" type="text" ref="otpInput" v-model="otp[index]"
+                  @input="onInput($event, index)" @keydown="onKeyDown($event, index)" class="otp-input" />
               </MDBCol>
             </MDBRow>
             <MDBRow class="g-0 mt-3 mb-2">
-              <MDBBtn color="secondary" type="submit">Submit</MDBBtn>
+              <MDBBtn color="secondary" @click="onSubmitVerifyEmail">Submit</MDBBtn>
             </MDBRow>
           </form>
         </MDBCardBody>
@@ -70,5 +106,15 @@ const value = ref('');
 .card-container {
   margin-top: 15%;
   margin-bottom: 17%;
+}
+
+.otp-input {
+  width: 35px;
+  height: 35px;
+  margin: 0 5px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  text-align: center;
 }
 </style>

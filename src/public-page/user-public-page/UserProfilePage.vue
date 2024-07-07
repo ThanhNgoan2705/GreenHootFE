@@ -1,5 +1,5 @@
 <script setup  lang="ts">
-import TheHeader from "@/components/single-instance-components/profile-component/TheHeader.vue";
+import TheHeader from "@/public-page/user-public-page/components/profile-component/TheHeader.vue";
 import {
   MDBTabs,
   MDBTabNav,
@@ -15,7 +15,7 @@ import {
   MDBBtn,
   MDBIcon,
 } from 'mdb-vue-ui-kit';
-import TheMenuSideBar from "@/components/single-instance-components/profile-component/TheMenuSideBar.vue";
+import TheMenuSideBar from "@/public-page/user-public-page/components/profile-component/TheMenuSideBar.vue";
 import {ref} from 'vue';
 
 const activeTabId5 = ref('ex5-1');
@@ -31,18 +31,79 @@ const types = ref([
   {value: '3', text: 'Parent'},
 ])
 const isChecked = ref(true);
-import {useUserStore} from "@/stores/userStore";
+import {useUserStore} from "@/states/UserStore";
+import { Packet, ReqChangePassword } from "@/proto/Proto";
+import { WS } from "@/socket/WS";
+
 const userStore = useUserStore();
-const userName = ref(userStore.user?.username);
-const phoneNumber = ref(userStore.user?.phone);
-const userEmail = ref(userStore.user?.email);
+const token = userStore.user?.token;
+const userName = userStore.user?.username;
+const phoneNumber = userStore.user?.phone;
+const userEmail = userStore.user?.email;
+
+const oldPassword = ref('');
+const newPassword = ref('');
+const confirmPassword = ref('');
+
+
+const sendReqChangePassword = (event: Event) => {
+   event.preventDefault();
+   oldPassword.value = oldPassword.value.trim();
+    newPassword.value = newPassword.value.trim();
+    confirmPassword.value = confirmPassword.value.trim();
+    if (newPassword.value !== confirmPassword.value) {
+      alert('New password and confirm password do not match');
+      return;
+    }
+   let reqChangePass = ReqChangePassword.create({oldPassword: oldPassword.value, newPassword: newPassword.value});
+   console.log(reqChangePass);
+   let packet = Packet.create();
+    packet.data = {
+      oneofKind: 'reqChangePassword',
+      reqChangePassword: reqChangePass
+    };
+    console.log(packet);
+    WS.send(packet);
+}
+const handleButtonSave = (event: Event) => {
+  event.preventDefault();
+  console.log('Save');
+}
+const imageUrl = ref('');
+
+const uploadImage = (event: Event) => {
+  event.preventDefault();
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.onchange = (e: any) => {
+    const file = e.target.files[0];
+    console.log(file);
+    // Create an instance of FormData
+    const formData = new FormData();
+    // Append the file to the formData object
+    formData.append('file', file);
+    fetch('http://localhost:8080/upload', {
+      method: 'POST',
+      headers: {
+        Authorization: 'Client-ID',
+      },
+      body: formData,
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        imageUrl.value = data;
+        console.log(data);
+      });
+  };
+  input.click();
+}
 </script>
 
 <template>
   <MDBContainer fluid class="user-home-page">
     <TheHeader/>
     <MDBContainer fluid class="user-home-page_content d-inline-flex ">
-      <TheMenuSideBar/>
       <MDBContainer class="w-100 ">
         <div class="w-100 my-lg-4">
           <h3 class="ms-4">Settings</h3>
@@ -59,9 +120,6 @@ const userEmail = ref(userStore.user?.email);
             <MDBTabItem class="custom-tab" tabId="ex5-3" href="ex5-3">
               Change Password
             </MDBTabItem>
-            <MDBTabItem class="custom-tab" tabId="ex5-4" href="ex5-4">
-              Billing
-            </MDBTabItem>
           </MDBTabNav>
           <!-- Tabs navs -->
           <!-- Tabs content -->
@@ -74,13 +132,17 @@ const userEmail = ref(userStore.user?.email);
                       <MDBCardBody>
                         <div class="title-box align-items-center">
                           <MDBCardTitle>User Information</MDBCardTitle>
-                          <button  class="save-btn disabled" >Save</button>
                         </div>
                         <div>
                           <MDBRow>
                             <MDBCol col="4">
-                              <img src="https://mdbootstrap.com/img/new/standard/nature/184.jpg" class="img-fluid mt-3"
-                                   alt="..."/>
+                              <button @click="uploadImage" >
+                                <img :src="imageUrl" class="img-fluid mt-3"
+                                alt="..."/>
+                                <span class="d-block text-center mt-2 upload-image">Change Image</span>
+                              </button>
+                             
+                                   
                             </MDBCol>
                             <MDBCol col="8">
                               <label for="username" class="fw-bold">UserName</label>
@@ -89,7 +151,7 @@ const userEmail = ref(userStore.user?.email);
                                       v-model="userName"
                                      class=" form-control mt-1 mb-3"/>
                               <label for="Name" class="fw-bold">Phone</label>
-                              <input type="number"
+                              <input type="text"
                                      id="phone"
                                       v-model="phoneNumber"
                                      class="form-control mt-1 mb-3"/>
@@ -247,7 +309,9 @@ const userEmail = ref(userStore.user?.email);
                           <MDBCol class="col-md-6">
                             <label for="current-password">Current Password</label>
                             <div class="input-icon-container">
-                              <input type="password" id="current-password" class="form-control"/>
+                              <input type="password" 
+                              v-model="oldPassword"
+                              id="current-password" class="form-control"/>
                               <MDBIcon icon="eye" class="input-icon"/>
                             </div>
                           </MDBCol>
@@ -256,21 +320,25 @@ const userEmail = ref(userStore.user?.email);
                           <MDBCol class="col-md-6">
                             <label for="new-password">New Password</label>
                             <div class="input-icon-container">
-                              <input type="password" id="new-password" class="form-control"/>
+                              <input type="password"
+                              v-model="newPassword"
+                               id="new-password" class="form-control"/>
                               <MDBIcon icon="eye" class="input-icon"/>
                             </div>
                           </MDBCol>
                           <MDBCol class="col-md-6">
                             <label for="confirm-password">Confirm Password</label>
                             <div class="input-icon-container">
-                              <input type="password" id="confirm-password" class="form-control"/>
+                              <input type="password" 
+                              v-model="confirmPassword"
+                              id="confirm-password" class="form-control"/>
                               <MDBIcon icon="eye" class="input-icon"/>
                             </div>
                           </MDBCol>
                         </MDBRow>
                         <MDBRow class="my-3">
                           <MDBCol class="col-md-6">
-                            <MDBBtn disabled="disabled" class="save-btn">Save</MDBBtn>
+                            <MDBBtn color="primary" class="save-btn " @click="sendReqChangePassword">Save</MDBBtn>
                           </MDBCol>
                         </MDBRow>
                       </MDBCardBody>
@@ -422,5 +490,8 @@ input:checked + .slider:before {
   top: 45%;
   transition: inset-inline-start 0.125s ease-out 0s;
   inset-inline-start: 7px;
+}
+.upload-image{
+  @apply text-center text-gray-500 text-sm mt-2 mb-3 
 }
 </style>

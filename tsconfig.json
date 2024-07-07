@@ -17,6 +17,7 @@
     "src/**/*.vue",
   ],
   "compilerOptions": {
+    "noEmit": false, 
     "baseUrl": ".",
     "paths": {
       "@/*": [

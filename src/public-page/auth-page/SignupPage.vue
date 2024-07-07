@@ -11,24 +11,26 @@ import {AuthHandler} from "@/handler/AuthHandler";
 
 const userName = ref('');
 const password = ref('');
+const email = ref('');
 const checkbox3 = ref(false);
-const sendRegister = (event) => {
+const sendRegister = (event:Event) => {
   let reqRegister = ReqRegister.create();
   event.preventDefault();
   reqRegister.username = userName.value;
   reqRegister.password = password.value;
-  console.log(userName.value);
-  console.log(password.value);
+  reqRegister.email = email.value;
   reqRegister.sponsor = '';
   reqRegister.phone = '';
   let packet = Packet.create();
   packet.data = {
     oneofKind: 'reqRegister',
-    reqRegister: {username: userName.value, password: password.value, sponsor: '', phone: '',}
+    reqRegister: {username: userName.value, password: password.value, sponsor: '', phone: '',email: email.value}
   };
+  console.log(packet);
   WS.send(packet);
-
+  sessionStorage.setItem('email', email.value);
 }
+
 
 </script>
 <template>
@@ -50,7 +52,7 @@ const sendRegister = (event) => {
             <MDBRow class="g-3 mt-3 mb-2">
               <MDBCol>
                 <MDBInput
-                    label="user name"
+                    label="User name"
                     v-model="userName"
                     invalidFeedback="Please provide your Email address"
                     validFeedback="Looks good!"
@@ -62,7 +64,19 @@ const sendRegister = (event) => {
             <MDBRow class="g-3 mt-3 mb-2">
               <MDBCol>
                 <MDBInput
-                    label="password"
+                    label="Email"
+                    v-model="email"
+                    invalidFeedback="Please provide your Email address"
+                    validFeedback="Looks good!"
+                    isValid
+                    required
+                />
+              </MDBCol>
+            </MDBRow>
+            <MDBRow class="g-3 mt-3 mb-2">
+              <MDBCol>
+                <MDBInput
+                    label="Password"
                     v-model="password"
                     type="password"
                     invalidFeedback="Please provide your password"
@@ -92,7 +106,7 @@ const sendRegister = (event) => {
 
           </form>
           <MDBRow class="g-3 mt-3 mb-2">
-            <MDBBtn><img src="../../assets/google.svg" alt="Google" class="float-start">Continue With Google</MDBBtn>
+            <MDBBtn><img src="../../assets/img/google.svg" alt="Google" class="float-start">Continue With Google</MDBBtn>
           </MDBRow>
           <MDBRow class="g-3 mt-3 mb-2">
             <p class="text-center">Already have an account?<a role="button" class="text-primary ms-1"> <u>

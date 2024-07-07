@@ -12,8 +12,8 @@ import hostRoutes from "@/router/host.routes";
 
 const routes = [
     {path: '/Home', name: 'Home', component: Home, meta: {showHeader: true}},
-    {path: '/SignInPage', component: SignInPage, meta: {showHeader: false}},
-    {path: '/SignupPage', component: SignupPage, meta: {showHeader: false}},
+    {path: '/SignInPage', name:'Login', component: SignInPage, meta: {showHeader: false}},
+    {path: '/SignupPage',name:'Register', component: SignupPage, meta: {showHeader: false}},
     {path: '/EmailVerification', component: EmailVerification, meta: {showHeader: false}},
     {path: '/PasswordForgottenPage', component: PasswordForgottenPage, meta: {showHeader: false}},
     {path: '/ConfirmationPage', component: ConfirmationPage, meta: {showHeader: false}},

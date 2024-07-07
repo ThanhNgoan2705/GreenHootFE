@@ -1,9 +1,31 @@
 <script setup lang="ts">
 import TheLanguageSelector from "@/components/single-instance-components/public-component/TheLanguageSelector.vue";
+import { Packet, ReqJoinRoom } from "@/proto/Proto";
+import router from "@/router";
+import { showWarningAlert } from "@/service/Alert";
+import { WS } from "@/socket/WS";
+import { ref } from "vue";
 
 const removePlacehoder = (event: FocusEvent) => {
   (event.target as HTMLInputElement).placeholder = '';
 
+}
+const pinRoom = ref('');
+
+
+
+const sendJoinRoomRequest = (event: Event) => {
+  event.preventDefault();
+  const roomId = Number(pinRoom.value);
+  let reqJoinRoom = ReqJoinRoom.create();
+  reqJoinRoom.roomId = roomId;
+  let packet = Packet.create();
+  packet.data = { oneofKind: 'reqJoinRoom', reqJoinRoom: reqJoinRoom };
+  console.log("sent join room to server");
+  sessionStorage.setItem('roomId', JSON.stringify(roomId));
+  WS.send(packet);
+
+ 
 }
 </script>
 
@@ -23,13 +45,15 @@ const removePlacehoder = (event: FocusEvent) => {
           <form class="form flex flex-col w-[20rem] h-[3rem] bg-transparent content-center">
             <div class="input-code ">
               <input class="input-field" type="text"
+                      v-model="pinRoom"
                   aria-label="Game pin"
                      placeholder="Game pin"
                      @focus="removePlacehoder">
               <button class="enter-code"
                       type="submit"
                       aria-label="Enter"
-                     >Enter
+                      @click="sendJoinRoomRequest($event)">
+                     Enter
               </button>
             </div>
           </form>

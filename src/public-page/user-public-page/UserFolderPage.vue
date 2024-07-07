@@ -1,27 +1,44 @@
 <script setup lang="ts">
-import TheHeader from "@/components/single-instance-components/profile-component/TheHeader.vue";
-import TheMenuSideBar from "@/components/single-instance-components/profile-component/TheMenuSideBar.vue";
+import TheHeader from "@/public-page/user-public-page/components/profile-component/TheHeader.vue";
+import TheMenuSideBar from "@/public-page/user-public-page/components/profile-component/TheMenuSideBar.vue";
 import {
   MDBRow, MDBCol,
   MDBCard, MDBCardBody, MDBBtn, MDBIcon, MDBListGroup,
-  MDBListGroupItem
+  MDBListGroupItem, MDBContainer
 } from 'mdb-vue-ui-kit';
-import CardGreenHoot from "@/public-page/user-common-component/CardGreenHoot.vue";
-import {userStore} from '@/stores/Auth'; // Import the exported store
-const user = userStore(); // Create a reactive reference to the store
+import CardGreenHoot from "@/public-page/user-public-page/components/greenhot-component/CardGreenHoot.vue";
+import {useUserStore} from "@/states/UserStore";
+import {onMounted, onUnmounted, ref} from "vue";
+
+const userStore = useUserStore();
+const token = userStore.token;
+const user = userStore.user;
+console.log("token" + token);
+console.log("user" + user);
+const isMobile = ref(window.innerWidth <= 767);
+const updateIsMobile = () => {
+  isMobile.value = window.innerWidth <= 767;
+}
+updateIsMobile();
+onMounted(() => {
+  window.addEventListener('resize', updateIsMobile);
+})
+onUnmounted(() => {
+  window.removeEventListener('resize', updateIsMobile);
+})
 </script>
 <template>
-  <div class="main max-h-full max-w-full flex">
-    <TheHeader/>
-    <TheMenuSideBar/>
-    <div class="user-home-page overflow-auto">
-      <div class="main-page max-w-full ">
-        <div class="d-inline-flex  right-main-contain ms-[5rem]  overflow-auto"
-             style="--main-element-scrollbar-width: 16px">
-          <div class="content-page content-inside flex justify-between mt-[7rem] me-2rem">
+  <MDBContainer fluid class="m-0 p-0">
+    <div class="main-page w-full  ">
+      <TheMenuSideBar />
+      <div class="right-main-contain "
+           style="--main-element-scrollbar-width: 16px">
+        <TheHeader/>
+        <main class="content-container">
+          <div class="content-inside content-page flex flex-wrap lg:flex-nowrap xl:flex-nowrap">
             <!--         left-content-->
-            <div class="ifo-container-left w-1/5 ">
-              <MDBCard class="w-100 info-card ">
+            <div  class="sm:w-full md:w-full lg:w-[25%] xl:w-[25%] px-2">
+              <MDBCard class="w-full info-card ">
                 <MDBCardBody>
                   <MDBRow>
                     <MDBCol class="col-md-10">
@@ -33,7 +50,7 @@ const user = userStore(); // Create a reactive reference to the store
                   </MDBRow>
                   <MDBRow>
                     <MDBCol class="col-md-7">
-                      <p>{{ user.getUserInfo().name }} </p>
+                      <p>{{ user?.username }}</p>
                     </MDBCol>
                   </MDBRow>
                   <MDBRow class="m-auto bg-color">
@@ -56,14 +73,15 @@ const user = userStore(); // Create a reactive reference to the store
               </MDBCard>
             </div>
             <!--         center-content-->
-            <div class="main-content w-1/2">
-              <div class="d-flex justify-content-between">
-                <CardGreenHoot/>
-                <CardGreenHoot/>
-              </div>
+            <div  class="sm:w-full md:w-full lg:w-[50%] xl:w-[50%] px-2 ">
+              <MDBRow class="flex flex-row">
+                <MDBCol class="col-md-6" v-for="(item,index) in 2" :key="index">
+                  <component class="main-card" :is="CardGreenHoot"/>
+                </MDBCol>
+              </MDBRow>
             </div>
             <!--         right-content-->
-            <div class="list-room-right w-1/4">
+            <div class=" sm:w-full md:w-full lg:w-[25%] xl:w-[25%] px-2">
               <MDBCard class="create-box">
                 <MDBCardBody>
                   <MDBRow>
@@ -98,7 +116,7 @@ const user = userStore(); // Create a reactive reference to the store
                 <MDBCardBody>
                   <MDBRow>
                     <MDBCol class="col-md-10">
-                      <h5>Latest Reports</h5>
+                      <h5>Latest ReportStore</h5>
                     </MDBCol>
                   </MDBRow>
                   <MDBListGroup light>
@@ -119,123 +137,108 @@ const user = userStore(); // Create a reactive reference to the store
               </MDBCard>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     </div>
-  </div>
+  </MDBContainer>
 </template>
-<style>
-.user-home-page {
-  @apply max-h-full max-w-full m-0 p-0 flex flex-col items-center justify-center;
-}
-
+<style scoped>
 .main-page {
   display: flex;
   box-sizing: border-box;
 
 }
-
 .right-main-contain {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  max-height: 100svh;
-  overflow: hidden;
-  position: relative;
-  background-color: rgb(250, 250, 250);
+  @apply flex w-full flex-col max-h-[svh] h-[calc(0rem+100vh)] overflow-hidden relative
+}
+.content-container{
+  @apply overflow-auto flex-[1_1_0%]
 }
 
 .content-inside {
-  display: flex;
-  background-color: rgb(250, 250, 250);
-  min-height: 100vh;
-  z-index: 2;
+  @apply box-border min-w-0 my-0 mx-auto w-full max-w-[1280px] flex-nowrap h-fit
 }
 
 .content-page {
-  box-sizing: border-box;
-  min-width: 0;
-  width: 100%;
-  max-width: 1280px;
-  flex-wrap: nowrap;
-  height: fit-content;
+  @apply pt-[2rem] pb-[5rem] bg-gray-50 z-[2]
+}
+.ifo-container-left {
+  @apply box-border min-w-0 w-full my-0 mx-[16px] flex-[1_1_auto]
 }
 
-.ifo-container-left, .main-content, .list-room-right {
-  box-sizing: border-box;
-  margin-right: 5px;
-  min-width: 0;
+.main-content {
+  @apply box-border my-0 mx-[1rem] min-w-0 w-full flex-[1_1_auto]
 }
+.list-room-right {
+  @apply box-border min-w-0 w-full my-0 mx-[16px] flex-[1_1_auto]
+}
+@media  screen and (min-width: 1280px){
+  .content-page{
+    @apply overflow-auto flex flex-row
+  }
+  .ifo-container-left{
+    @apply w-[310px] m-0 flex-[0_0_auto]
+  }
+  .main-content{
+    @apply w-full
+  }
+  .list-room-right{
+    @apply w-[310px] m-0
+  }
 
+}
+/* For devices with screen width greater than 1100px */
 @media screen and (min-width: 1100px) {
+
   .ifo-container-left {
-    width: 350px;
-    margin: 0 0 0 13px;
-    flex: 0 0 auto;
+    @apply w-[308px] m-0 flex-[0_0_auto]
+  }
+  .list-room-right{
+    @apply w-[308px] my-0 ms-[16px] me-0
+  }
+  .main-content{
+    @apply w-full
   }
 }
-
 @media screen and (min-width: 768px) {
-  .ifo-container-left {
-    width: 350px;
-    margin: 0 0 0 13px;
-    flex: 0 0 auto;
+  .ifo-container-left{
+    @apply w-[308px] my-0 ms-[16px] me-0 flex-[0_0_auto]
+  }
+  .main-content{
+    @apply w-full
+  }
+  .list-room-right{
+    @apply w-[308px] m-0 flex-[0_0_auto]
   }
 }
 
+/* For devices with screen width less than 768px */
 @media screen and (min-width: 375px) {
-  .ifo-container-left {
+  .ifo-container-left{
+    @apply w-full my-0 ms-[16px] me-0 flex-[1_1_auto]
+  }
+  .list-room-right{
+    @apply w-full my-0 ms-[16px] me-0 flex-[1_1_auto]
+  }
+  .content-page {
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    min-width: 0;
     width: 100%;
-    margin: 0 13px;
-    flex: 1 1 auto;
   }
-}
 
-@media screen and (min-width: 1100px) {
-  .main-content {
-    width: 400px;
-    margin: 0 16px;
-    flex: 1 1 auto;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .main-content {
+  .info-card {
     width: 100%;
-    margin: 0 16px;
-    flex: 1 1 auto;
   }
-}
 
-@media screen and (min-width: 375px) {
   .main-content {
     width: 100%;
-    margin: 0 16px;
-    flex: 1 1 auto;
+    flex-wrap: wrap;
   }
-}
 
-@media screen and (min-width: 1100px) {
-  .list-room-right {
-    width: 350px;
-    margin: 0 16px 0 0;
-    flex: 0 0 auto;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .list-room-right {
-    width: 250px;
-    margin: 0;
-    flex: 0 0 auto;
-  }
-}
-
-@media screen and (min-width: 375px) {
-  .list-room-right {
+  .main-card {
     width: 100%;
-    margin: 0;
-    flex: 1 1 auto;
+    height: auto;
   }
 }
 
@@ -294,4 +297,4 @@ const user = userStore(); // Create a reactive reference to the store
   height: auto;
   border-radius: 3px;
 }
-</style>
+</style>@/stores/UserStore

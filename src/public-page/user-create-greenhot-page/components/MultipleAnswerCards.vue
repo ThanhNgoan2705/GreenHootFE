@@ -1,13 +1,20 @@
 <script setup lang="ts">
 
-import {nextTick, onMounted, ref} from 'vue'
-import {MDBIcon} from 'mdb-vue-ui-kit'
+import { PropType, computed, nextTick, onMounted, reactive, ref, watch, watchEffect } from 'vue'
+import { MDBIcon } from 'mdb-vue-ui-kit'
+
+import { Choice, Packet, Question, UpdateQuestionRequest } from '@/proto/Proto';
+import { WS } from '@/socket/WS';
+import { useQuestionStore } from '@/states/QuestionStore';
 
 const onClick = ref(false);
 const hasContent = ref(false);
 const hasImage = ref(false);
-let answerText = ref<HTMLElement | null>(null);
-const savedAnswer = ref<HTMLElement | null>(null);
+const isTrueAnswer = ref(false);
+let savedAnswer = ref<HTMLElement>();
+const correctAnswerIndex = ref(null);
+
+
 const symbol = ref({
   0: 'heart',
   1: 'square-full',
@@ -16,7 +23,6 @@ const symbol = ref({
 })
 const MAX_CHARACTER = 80;
 
-const isSetTextColor = ref(false);
 onMounted(() => {
   const answerOption = document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
   const limitNumber = document.querySelectorAll('.limitTime-number') as NodeListOf<HTMLElement>;
@@ -30,11 +36,12 @@ onMounted(() => {
   });
 });
 const makeEditable = (index: number) => {
+
   const answerOption = document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
   const limitNumber = document.querySelectorAll('.limitTime-number') as NodeListOf<HTMLElement>;
   savedAnswer.value = answerOption[index];
   // Make it editable
-  if (answerOption[index].innerText.trim() === 'Add answer ' + (index + 1)) {
+  if (answerOption[index].innerText.trim() === 'Enter your answer here' ){
     answerOption[index].style.color = 'black ';
     answerOption[index].innerText = '';
   }
@@ -56,9 +63,9 @@ const setStatus = (index: number) => {
     const answerOption = document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
     const limitNumber = document.querySelectorAll('.limitTime-number') as NodeListOf<HTMLElement>;
     answerOption.forEach((answer, i) => {
-      if (i === index && answerText.value ) {
+      if (i === index && answerTextRefs.value[index]) {
         if (answer.innerText.trim() === '' && hasImage.value === false) {
-          answer.innerText = 'Add answer ' + (index + 1);
+          answer.innerText = 'Enter your answer here';
           answer.contentEditable = 'false';
           limitNumber[index].style.display = 'none';
         } else if (answer.innerText.trim() !== '') {
@@ -153,17 +160,20 @@ onMounted(() => {
 const markTrueAnswer = (index: number) => {
   const radioBtn = document.querySelectorAll('.radio-btn') as NodeListOf<HTMLElement>;
   const iconTick = document.querySelectorAll('.icon-tick') as NodeListOf<HTMLElement>;
+  correctAnswerIndex.value = index;
   radioBtn.forEach((radio, i) => {
     if (i === index) {
       radio.style.backgroundColor = 'rgb(102, 191, 57)';
       iconTick[i].style.display = 'block';
       onClick.value = true;
+      isTrueAnswer.value = index === correctAnswerIndex.value;
     } else {
       radio.style.backgroundColor = 'transparent';
       iconTick[i].style.display = 'none';
       onClick.value = false;
     }
   });
+  return onClick.value;
 }
 const removeAnswerImage = (index: number) => {
   const answerContain = document.querySelectorAll('.answer-option-container') as NodeListOf<HTMLElement>;
@@ -185,29 +195,116 @@ const removeAnswerImage = (index: number) => {
     }
   });
 }
+
+const props = defineProps({
+  items: {
+    type: Object as PropType<Choice[]>,
+    required: true,
+  },
+  questionTitle: {
+    type: String,
+    required: true
+  },
+  questionId: {
+    type: Number,
+    required: true
+  },
+  questionIndex: {
+    type: Number,
+    required: true
+  }
+})
+console.log(props.items+ 'items')
+console.log(props.questionTitle+ 'questionTitle')
+console.log(props.questionId)
+
+const answerTextRefs = ref<HTMLParagraphElement[]>([]);
+
+
+const setAnswerTextRef = (index: number, el: HTMLParagraphElement) => {
+  if (el) {
+    answerTextRefs.value[index] = el;
+  }
+};
+const updateAnswerText = (event: InputEvent) => {
+  const target = event.target as HTMLParagraphElement;
+  const index = answerTextRefs.value.indexOf(target);
+  if (index !== -1) {
+    answerTextRefs.value[index] = target;
+  }
+};
+
+const getListAnswerText = () => {
+  return document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
+};
+
+
+const saveQuestion = (event: Event) => {
+  event.preventDefault();
+  let question = Question.create();
+  const examId = sessionStorage.getItem('examId');
+  question.questionId = props.questionId;
+  question.questionText = props.questionTitle;
+  question.examId = parseInt(examId);
+  question.questionIndex = props.questionIndex;
+  const answers = getListAnswerText();
+  question.choices = Array.from(answers).map((answer, index) => {
+    let choice = Choice.create();
+    choice.choiceText = answer.textContent;
+    choice.choiceIndex = index + 1;
+    choice.isCorrect = correctAnswerIndex.value === index;
+    choice.questionId = props.questionId;
+    return choice;
+  });
+  let requestUpdateQuestion = UpdateQuestionRequest.create();
+  requestUpdateQuestion.question = question;
+  let packet = Packet.create();
+  packet.data = { oneofKind: "updateQuestionRequest", updateQuestionRequest: requestUpdateQuestion };
+  WS.send(packet);
+  sessionStorage.setItem('question', JSON.stringify(question));
+}
+
+watch(() => props.items, (newItems) => {
+ for (let i = 0; i < newItems.length; i++) {
+  console.log(newItems[i].choiceText)
+    if (newItems[i].choiceText.trim() !== ''|| newItems[i].choiceText.trim() !== 'Enter your answer here'){
+        if(newItems[i].isCorrect){
+          markTrueAnswer(i);
+          changeBGColor(i);
+          changeBgColorOnInput(i);
+        }
+        changeBGColor(i);
+        changeBgColorOnInput(i);
+      }
+    else {
+      hasContent.value = false;
+      onClick.value = false;
+    }
+  }
+  
+  
+},{deep:true});
 </script>
 
 <template>
-  <div class="answer-options w-full flex  flex-[4_1_0%] flex-wrap h-full content-stretch">
-    <div v-for="(item , index) in 4" :key="index"
-         :class="`answer-option-${index}`"
-         ref="cardAnswers"
-         class="answer-option-container  asw-res py-0.5 px-0.5 my-0.5 mx-0.5">
+  <div class="answer-options w-full  h-full">
+    <div v-for="(item, index) in items" :key="index" :class="`answer-option-${index}`" ref="cardAnswers"
+      class="answer-option-container  asw-res py-0.5 px-0.5 my-0.5 mx-0.5">
       <div class="answer-option-sign" ref="sign">
-        <span class=" sign-icon inline-block align-middle w-10 h-10 "/>
+        <span class=" sign-icon inline-block align-middle w-10 h-10 " />
       </div>
-      <MDBIcon :icon="symbol[index as keyof typeof symbol]" size="xl" class="text-white absolute left-4 top-1/2"/>
+      <MDBIcon :icon="symbol[index as keyof typeof symbol]" size="xl" class="text-white absolute left-4 top-1/2" />
       <div class=" flex flex-1 items-center content-end w-full relative h-full " style="max-width: calc(100% - 3rem);">
         <div class="ans-contain  w-full h-full">
-          <div class="answer-option-edit whitespace-pre-wrap break-words box-border"
-               @click="makeEditable(index)"
-               @blur="setStatus(index)">
-            <p class="answer-option-text relative w-full"
-               ref="answerText">
-              Add answer {{ index + 1 }}
+          <div class="answer-option-edit whitespace-pre-wrap break-words box-border" @click="makeEditable(index)"
+            @blur="setStatus(index)">
+
+            <p class="answer-option-text relative w-full" ref="el => setAnswerTextRef(index, el)"
+              @input="updateAnswerText">
+              {{ item.choiceText }}
             </p>
-            <span class="limitTime-number   absolute right-1 top-0 rounded-full text-gray "
-                  ref="limitCharacterNumber">{{ MAX_CHARACTER }}</span>
+            <span class="limitTime-number   absolute right-1 top-0 rounded-full text-gray " ref="limitCharacterNumber">{{
+              MAX_CHARACTER }}</span>
           </div>
           <div class=" absolute right-1/3 bottom-1 ">
             <button class=" remove-btn hidden bg-white rounded-2 " @click="removeAnswerImage(index)">
@@ -215,34 +312,37 @@ const removeAnswerImage = (index: number) => {
             </button>
           </div>
         </div>
-        <button class="add-img-btn"
-                style="display:block"
-                @click="uploadImage(index)">
-          <MDBIcon icon="image" size="2xl" class="text-gray-400"/>
+        <button class="add-img-btn" style="display:block" @click="uploadImage(index)">
+          <MDBIcon icon="image" size="2xl" class="text-gray-400" />
         </button>
-        <button role="switch"
-                aria-checked="false"
-                aria-label="Add audio"
-                class=" radio-btn add-audio-btn "
-                @click="markTrueAnswer(index)"
-                style="display:none">
+        <button role="switch" aria-checked="false" aria-label="Add audio" class=" radio-btn add-audio-btn "
+          @click="markTrueAnswer(index)" style="display:none">
           <span class="icon-tick hidden">
-            <MDBIcon icon="check" size="2xl" class="text-white"/>
-            </span>
+            <MDBIcon icon="check" size="2xl" class="text-white" />
+          </span>
         </button>
       </div>
     </div>
   </div>
+  <button class="add-answer-btn m-auto content-center justify-center " @click="saveQuestion">
+    Save Question
+  </button>
 </template>
 
 <style scoped>
+.answer-options {
+  display: grid;
+  grid-template: 1fr 1fr / 1fr 1fr;
+  row-gap: 0.5rem;
+  column-gap: 0.5rem;
+}
+
 .answer-option-container {
-  @apply items-center w-1/2 p-1 relative overflow-visible justify-start flex flex-grow transition-all duration-200 ease-in-out rounded-md h-[7rem] min-h-[2.25rem] max-w-full bg-white text-gray-500 fill-current
+  @apply items-center p-1 relative overflow-visible justify-start flex flex-grow transition-all duration-200 ease-in-out rounded-md h-[7rem] min-h-[2.25rem] max-w-full bg-white text-gray-500 fill-current
 }
 
 .answer-option-container {
   box-shadow: rgba(0, 0, 0, 0.15) 0 -0.25rem 0 0 inset;
-  width: calc(50% - 3rem);
 }
 
 .answer-option-edit {
@@ -276,21 +376,28 @@ const removeAnswerImage = (index: number) => {
   align-items: center;
   transition: box-shadow 0.2s ease 0s, background 0.2s ease 0s, opacity 0.2s ease 0s;
 }
+
 .answer-option-text {
   color: black;
 }
+
 .answer-option-text:focus {
   @apply outline-none border-none text-lg;
 }
+
 .answer-option-text img {
   object-fit: contain;
-  width: calc(100% - 2 * 10px); /* Subtracting twice the padding from the width */
-  height: calc(100% - 2 * 10px); /* Subtracting twice the padding from the height */
+  width: calc(100% - 2 * 10px);
+  /* Subtracting twice the padding from the width */
+  height: calc(100% - 2 * 10px);
+  /* Subtracting twice the padding from the height */
   padding: 10px
 }
+
 .sign-icon svg {
   fill: white;
 }
+
 @media (min-width: 600px) {
 
   .asw-res {
@@ -318,24 +425,31 @@ const removeAnswerImage = (index: number) => {
   0% {
     transform: translateY(0px) scaleX(1) scaleY(1);
   }
+
   5% {
     transform: translateY(0px) scaleX(1.1) scaleY(0.9);
   }
+
   10% {
     transform: translateY(-10px) scaleX(0.9) scaleY(1.1);
   }
+
   15% {
     transform: translateY(0px) scaleX(1.1) scaleY(0.9);
   }
+
   20% {
     transform: translateY(-5px) scaleX(0.95) scaleY(1.05);
   }
+
   25% {
     transform: translateY(0px) scaleX(1.05) scaleY(0.95);
   }
+
   30% {
     transform: translateY(-2.5px) scaleX(0.95) scaleY(1.05);
   }
+
   35% {
     transform: translateY(0px) scaleX(1.05) scaleY(0.95);
   }
@@ -393,5 +507,4 @@ const removeAnswerImage = (index: number) => {
   padding: 0 8px 4px;
   line-height: 32px;
 }
-
 </style>

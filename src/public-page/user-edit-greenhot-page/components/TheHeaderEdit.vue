@@ -68,7 +68,7 @@ const sendUpdateExamRequest= (event:Event)=>{
 
 const completeExam = () => {
   showConfirmAlert("Are you sure you want to exit?", () => {
-    router.push("/UserHomePage");
+    router.push({name: 'userHome'});
     
   });
   

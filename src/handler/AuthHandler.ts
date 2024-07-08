@@ -29,7 +29,7 @@ export class AuthHandler extends AbsHandler {
                 console.log(resLogin.status);
 
                 if (resLogin.status === 200) {
-                    router.push('/UserHomePage');
+                    router.push({name:'userHome'});
                     showToastTopRight("Login successfully")
                     userStore.setToken(resLogin.token);
                     sessionStorage.setItem("auth-token", resLogin.token);
@@ -66,7 +66,7 @@ export class AuthHandler extends AbsHandler {
                     console.log(resRegister.status);
                     respone = resRegister.status;
                     if (resRegister.status === 200) {
-                        router.push('/ConfirmationPage');
+                        router.push({name:'confirmPage'});
                     }
                     if (resRegister.status === 400) {
                         showErrorAlert("Username already exists");
@@ -87,7 +87,7 @@ export class AuthHandler extends AbsHandler {
                     console.log(resVerify.status);
                     respone = resVerify.status;
                     if (resVerify.status === 200) {
-                        router.push('/SignInPage');
+                        router.push({name:'SignInPage'});
                         showToastTopRight("Verify successfully");
                     }
                     if (resVerify.status === 400) {
@@ -106,7 +106,7 @@ export class AuthHandler extends AbsHandler {
                     console.log(resLogout.status);
                     respone = resLogout.status;
                     if (resLogout.status === 200) {
-                        router.push('/SignInPage');
+                        router.push({name:'SignInPage'});
                         showToastTopRight("Logout successfully");
                     }
                 }
@@ -119,7 +119,7 @@ export class AuthHandler extends AbsHandler {
                     console.log(resForgotPassword.status);
                     respone = resForgotPassword.status;
                     if (resForgotPassword.status === 200) {
-                        router.push({ name: "ForgotPassword", query: { type: "verifyForgotPassword" } });
+                        router.push({ name: "forgotPass", query: { type: "verifyForgotPassword" } });
                     } else {
                         showErrorAlert("Invalid email");
                     }
@@ -132,7 +132,7 @@ export class AuthHandler extends AbsHandler {
                     let resVerifyForgotPassword = packet.data.resVerifyForgotPassword;
                     respone = resVerifyForgotPassword.status;
                     if (resVerifyForgotPassword.status === 200) {
-                        router.push('/ConfirmationPage');
+                        router.push({name:'confirmPage'});
                     } else {
                         showErrorAlert("Invalid email");
                     }

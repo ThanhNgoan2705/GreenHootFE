@@ -14,6 +14,7 @@ export const useQuestionStore = defineStore('question', {
         isUpdateQuestion: false,
         isNewQuestion: false,
         totalQuestion: 0,
+        updateQuestionList: [] as Question[],
     }),
     actions: {
         addFirstQuestion(firstQuestionId: number, examId: number) {
@@ -144,6 +145,9 @@ export const useQuestionStore = defineStore('question', {
             this.isUpdateQuestion = true;
             this.isNewQuestion = false;
         },
+        setUpdateQuestionList(question: Question) {
+            this.updateQuestionList.push(question);
+        },
         setSelectQuestion(questionId: number, questionIndex: number) {
             this.selectedQuestionId= questionId;
             this.questionIndex = questionIndex;
@@ -164,6 +168,7 @@ export const useQuestionStore = defineStore('question', {
         getQuestion: (state) => state.questions.find((q) => q.questionId === state.activeQuestionId),
         getNextQuestion: (state) => state.nextQuestion,
         getQuestionSelected: (state) => state.question,
+        getUpdateQuestionList: (state) => state.updateQuestionList,
     },
 });
 

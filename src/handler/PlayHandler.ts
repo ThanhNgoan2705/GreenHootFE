@@ -29,9 +29,9 @@ export class PlayHandler extends AbsHandler {
                     sessionStorage.removeItem('player-answer');
                     console.log(isHost);
                     if (isHost === 'true') {
-                        router.push('/host-play');
+                        router.push({name: 'hostPlay'});
                     }else {
-                        router.push('/greenhoot-play');
+                        router.push({name: 'userPlay'});
                     }
                 }
             }
@@ -44,7 +44,7 @@ export class PlayHandler extends AbsHandler {
                     resultStore.setUserScores(roomScore.userScores);
                     console.log(roomScore+" day la roomScore");
                     console.log(roomScore.userScores+" day la userScores");
-                    router.push('/result-exam');
+                    router.push({name: 'resultExam'});
                     resultStore.setIsEndExam(true);
                     showInfoAlert("End exam");
                 }

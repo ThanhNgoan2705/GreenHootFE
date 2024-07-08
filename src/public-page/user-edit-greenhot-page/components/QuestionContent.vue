@@ -112,6 +112,7 @@ let activeQsDemo = ref(0);
 const handleImageUpdate = (newImage: string, questionId: number) => {
   if (questionId === activeQsDemo.value) {
     qsImage.value = newImage;
+    console.log(qsImage.value);
   }
 }
 
@@ -173,6 +174,7 @@ watchEffect(async() => {
  await nextTick();
  console.log(questionData.value);
 });
+
 
 
 

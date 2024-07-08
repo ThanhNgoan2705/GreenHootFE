@@ -79,10 +79,10 @@ const checkTokenHandler = () => {
 const handleJoinRoom = () => {
   if (!checkTokenHandler) {
     showWarningAlert("Please login to play game");
-    router.push('/Home');
+    router.push({name: 'Login'})
     return;
   }
-  router.push('/enter-pin');
+  router.push({name: 'enterPin'});
 }
 
 </script>
@@ -99,14 +99,14 @@ const handleJoinRoom = () => {
           </button>
         </MDBNavbarNav>
         <div v-if="checkTokenHandler" class="nav-brand cursor-pointer">
-          <MDBNavbarBrand @click="router.push('/UserHomepage')">
+          <MDBNavbarBrand @click="router.push({name: 'userHome'});">
             <img src="../../../../components/single-instance-components/logo/green.png" height="50" width="150" alt=""
               loading="lazy" />
           </MDBNavbarBrand>
 
         </div>
         <div v-else class="nav-brand">
-          <MDBNavbarBrand @click="router.push('/Home')" class="cursor-pointer">
+          <MDBNavbarBrand @click="router.push({name: 'Home'});" class="cursor-pointer">
             <img src="../../../../components/single-instance-components/logo/green.png" height="50" width="150" alt=""
               loading="lazy" />
           </MDBNavbarBrand>

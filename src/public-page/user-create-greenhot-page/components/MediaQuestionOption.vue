@@ -12,18 +12,35 @@ const upLoadImage = () => {
   input.type = 'file';
   input.accept = 'image/*';
   input.onchange = (e) => {
+    const img = document.createElement('img');
+   
     const file = (e.target as HTMLInputElement).files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        const img = document.createElement('img');
-        img.src = e.target?.result as string;
-        emit('update:backgroundImage', img.src);
+        const formData = new FormData();
+    // Append the file to the formData object
+    formData.append('file', file);
+    fetch('http://localhost:8080/upload', {
+      method: 'POST',
+      headers: {
+        Authorization: 'Client-ID',
+      },
+      body: formData,
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        img.src = data;
+        sessionStorage.setItem('imageQuestion',data);
+        console.log(data);
+     
+      })
         // Remove the existing img element if it exists
         const existingImg = backgroundImage.querySelector('img');
         if (existingImg) {
           backgroundImage.removeChild(existingImg);
         }
+        emit('update:backgroundImage', img.src);
         // Append the new img element
         backgroundImage.append(img);
         hasBackgroundImage.value = true;

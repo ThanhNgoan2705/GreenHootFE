@@ -92,7 +92,7 @@ export class ExamHandler extends AbsHandler {
                     if (exam !== null && exam !== undefined) {
                         examStore.setExam(exam);
                         sessionStorage.setItem("exam", JSON.stringify(exam));
-                        router.push("/GreenHootEditPage");
+                        router.push({name:'userEdit'});
                     }
             }
             if (packet.data.oneofKind === "createQuestionResponse") {
@@ -118,7 +118,7 @@ export class ExamHandler extends AbsHandler {
                     if (question !== null && question !== undefined) {
                         questionStore.setQuestion(question);
                         sessionStorage.setItem("question", JSON.stringify(question));
-                        router.push("/GreenHootEditPage");
+                        router.push({name:'userEdit'});
                     }
             }
             if (packet.data.oneofKind === "updateQuestionResponse") {
@@ -130,6 +130,7 @@ export class ExamHandler extends AbsHandler {
                     console.table(question);
                     if (resUpdateQuestion.success) {
                         questionStore.updateQuestion(question);
+                        questionStore.setUpdateQuestionList(question);
                         showToastTopRight("Update Question Success");
                     } else {
                         showWarningAlert("Update Question Fail");

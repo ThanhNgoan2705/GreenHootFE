@@ -140,7 +140,7 @@ const previousPage = () => {
                   </MDBRow>
                 </div>
                 <div class="flex justify-center">
-                  <MDBBtn color="primary" @click="router.push('/UserLibraryPage')">
+                  <MDBBtn color="primary" @click="router.push({name: 'userLibrary'});">
                     See more
                     <MDBIcon icon="angle-right" size="xl" />
                   </MDBBtn>
@@ -161,7 +161,7 @@ const previousPage = () => {
                     
                     <button
                       class="btn btn-primary"
-                      @click="router.push('/UserLibraryPage')">Host Exam</button>
+                      @click="router.push({name: 'userLibrary'})">Host Exam</button>
                   </div>
                 </MDBListGroup>
 

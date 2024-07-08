@@ -6,13 +6,13 @@ import path from "path";
 const routes = [
     {
         path:"/enter-pin",
-        name: "EnterPage",
+        name: "enterPin",
         component: EnterPinPage,
         meta: { showHeader: false },
     },
     {
         path:"/greenhoot-play",
-        name: "GreenHootPlay",
+        name: "userPlay",
         component: GreenHootPlay,
         meta: { showHeader: false },
     },
@@ -24,7 +24,7 @@ const routes = [
     },
     {
         path:"/result-exam",
-        name: "ResultExam",
+        name: "resultExam",
         component: ResultExampage,
         meta: { showHeader: false },
     }

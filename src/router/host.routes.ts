@@ -3,13 +3,13 @@ import HostPlay from "@/public-page/user-play-page/host-page/HostDisplayQuestion
 const routes = [
     {
         path: "/waiting-players",
-        name: "WaitingPlayersPage",
+        name: "waitingPlayers",
         component: WaitingPlayersPage,
         meta: { showHeader: false },
     },
     {
         path:"/host-play",
-        name: "HostPlay",
+        name: "hostPlay",
         component: HostPlay,
         meta: { showHeader: false },
     }

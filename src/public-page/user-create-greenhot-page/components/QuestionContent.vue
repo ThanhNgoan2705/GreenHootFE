@@ -157,8 +157,6 @@ const saveText = () => {
     console.log(savedText.value);
   });
 };
-
-
 const questionStore = useQuestionStore();
 const selectedQuestion = ref(questionStore.selectQuestion);
 watchEffect(async () => {
@@ -167,6 +165,22 @@ watchEffect(async () => {
   // Thực hiện các hành động cần thiết với câu hỏi mới
   console.log("Câu hỏi mới: ", selectedQuestion.value);
 });
+const updateQuestionList = ref(questionStore.getUpdateQuestionList);
+watchEffect(async () => {
+  updateQuestionList.value = questionStore.getUpdateQuestionList;
+  await nextTick();
+  // Thực hiện các hành động cần thiết với câu hỏi mới
+  console.log("Câu hỏi mới: ", updateQuestionList.value);
+});
+
+const checkListQuestionUpdated = () => {
+  // lay ra nhung cau hoi chua update dua tren id
+  const listQuestionNotUpdate = questionStore.getQuestions.filter((question) => {
+    return !updateQuestionList.value.includes(question.questionId);
+  });
+    
+}
+
 
 
 

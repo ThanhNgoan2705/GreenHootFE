@@ -40,8 +40,7 @@ const handleGetExam = () => {
 }
 
 const togglePopup = () => {
-  openPopup.value =
-   !openPopup.value;
+  openPopup.value =false;
 }
 
 const examStore = useExamStore();
@@ -68,24 +67,20 @@ const sendUpdateExamRequest= (event:Event)=>{
 
 const completeExam = () => {
   showConfirmAlert("Are you sure you want to exit?", () => {
-    router.push("/UserHomePage");
+    router.push({name: 'userHome'});
     
   });
   
 };
 const saveExam = () => {
-  if(questionStore.questions.length === 1&& questionStore.isUpdateQuestion=== false){
-    showWarningAlert("Please add at  question content to save the exam.");
-    return;
-  }
+
   if(questionStore.isUpdateQuestion == true){
     showSuccessAlert("Exam saved successfully.");
-    router.push("/UserHomePage");
+    router.push({name: 'userHome'});
   }
-  if (questionStore.isNewQuestion) {
+ else  {
     showWarningAlert("Please add content and  save the question before saving the exam.");
     return;
-    
   }
 
 };

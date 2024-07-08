@@ -27,7 +27,7 @@ export class ReportHandler extends AbsHandler {
                 console.log(reports);
                 if (reports.length === 0) {
                     showWarningAlert("No report found! You have not participated in any exam yet!");
-                    router.push('/UserReportsPage');
+                    router.push({name: 'userReports'});
                 }else{
                     reportStore.setReports(reports);
                 }
@@ -37,7 +37,7 @@ export class ReportHandler extends AbsHandler {
                 console.log(report);
                 if (report) {
                     reportStore.setReport(report);
-                    router.push('/UserReportDetailPage');
+                    router.push({name: 'userReportsDetail'});
                 }else{
                     showWarningAlert("No report found");
                 }

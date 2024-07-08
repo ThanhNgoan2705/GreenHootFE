@@ -246,6 +246,7 @@ const saveQuestion = (event: Event) => {
   question.questionId = props.questionId;
   question.questionText = props.questionTitle;
   question.examId = parseInt(examId);
+  question.imageUrl = sessionStorage.getItem('imageQuestion') as string;
   question.questionIndex = props.questionIndex;
   const answers = getListAnswerText();
   question.choices = Array.from(answers).map((answer, index) => {

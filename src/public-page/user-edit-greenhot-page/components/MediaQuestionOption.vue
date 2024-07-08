@@ -35,7 +35,6 @@ const upLoadImage = () => {
         console.log(data);
      
       });
-        emit('update:backgroundImage',  img.src);
         // Remove the existing img element if it exists
         const existingImg = backgroundImage.querySelector('img');
         if (existingImg) {

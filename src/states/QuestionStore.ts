@@ -16,6 +16,9 @@ export const useQuestionStore = defineStore('question', {
         totalQuestion: 0,
     }),
     actions: {
+        addQuestion(question: Question) {
+            this.questions.push(question);
+        },
         addFirstQuestion(firstQuestionId: number, examId: number) {
             if (firstQuestionId) {
                 console.log("co firstQuestionId la " + firstQuestionId)
@@ -132,10 +135,6 @@ export const useQuestionStore = defineStore('question', {
         setQuestion(question: Question) {
             this.question = question;
         },
-        setNextQuestion(question: Question) {
-            this.nextQuestion = question;
-        },
-    
         updateQuestion(updatedQuestion: Partial<Question>) {
             const index = this.questions.findIndex((q) => q.questionId === this.activeQuestionId);
             if (index > -1) {
@@ -150,9 +149,6 @@ export const useQuestionStore = defineStore('question', {
         },
         deleteQuestion(questionId: number) {
             this.questions = this.questions.filter((q) => q.questionId !== questionId);
-        },
-        duplicateQuestion(context: any, question: Question) {
-            context.state.questions.push(question);
         },
         setTotalQuestion(totalQuestion: number) {
             this.totalQuestion = totalQuestion;

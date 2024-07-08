@@ -1,21 +1,16 @@
 <script setup lang="ts">
-import { defineProps, PropType } from "vue";
-import { MDBIcon } from "mdb-vue-ui-kit";
+import {type DefineComponent, nextTick, onMounted, onUnmounted, ref, watchEffect} from "vue";
+import {MDBIcon} from "mdb-vue-ui-kit";
 import MultipleAnswerCards from "../components/MultipleAnswerCards.vue";
-import TrueFalseAnswerCards from "../components/TrueFalseAnswerCards.vue";
-import TypeAnswerCards from "../components/TypeAnswerCards.vue";
 import MediaQuestionOption from "../components/MediaQuestionOption.vue";
-import { type DefineComponent, nextTick, onMounted, onUnmounted, ref, watchEffect } from "vue";
-import { watch } from "vue";
 import MultipleChoiceIcon from "@/assets/icon/MultipleChoiceIcon.vue";
 import TrueFalseIcon from "@/assets/icon/TrueFalseIcon.vue";
 import TypeAnswerIcon from "@/assets/icon/TypeAnswerIcon.vue";
 import PuzzleIcon from "@/assets/icon/PuzzleIcon.vue";
 import QuestionTypeIcon from "@/assets/icon/QuestionTypeIcon.vue";
 import AnswerSelectIcon from "@/assets/icon/AnswerSelectIcon.vue";
-import type {Exam, Question} from "@/proto/Proto";
+import type {Question} from "@/proto/Proto";
 import {useQuestionStore} from "@/states/QuestionStore";
-
 
 
 const isMobile = ref(window.innerWidth <= 767);
@@ -126,8 +121,10 @@ const makeEditable = () => {
 
       // Use setTimeout to defer focus until after the DOM updates
       setTimeout(() => {
-        guildText.value.focus();
-        guildText.value.textContent = ''
+        if (guildText.value) {
+          guildText.value.focus();
+          guildText.value.textContent = ''
+        }
       }, 0); // A timeout of 0 ms defers the execution until the stack is clear
     } else {
       guildText.value.focus();

@@ -7,9 +7,9 @@ import { Packet, ReqStartExam } from "@/proto/Proto";
 import { WS } from "@/socket/WS";
 
 
-const roomId = JSON.parse(sessionStorage.getItem('roomId'));
-const examId = JSON.parse(sessionStorage.getItem('examId'));
-const hostId = JSON.parse(sessionStorage.getItem('auth-user')).userId;
+const roomId = JSON.parse(sessionStorage.getItem('roomId')as string | '');
+const examId = JSON.parse(sessionStorage.getItem('examId')as string | '');
+const hostId = JSON.parse(sessionStorage.getItem('auth-user')as string | '').userId;
 
 const pinCode = parseInt(roomId);
 console.log(pinCode);

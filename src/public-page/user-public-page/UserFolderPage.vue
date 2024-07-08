@@ -2,9 +2,15 @@
 import TheHeader from "@/public-page/user-public-page/components/profile-component/TheHeader.vue";
 import TheMenuSideBar from "@/public-page/user-public-page/components/profile-component/TheMenuSideBar.vue";
 import {
-  MDBRow, MDBCol,
-  MDBCard, MDBCardBody, MDBBtn, MDBIcon, MDBListGroup,
-  MDBListGroupItem, MDBContainer
+  MDBBtn,
+  MDBCard,
+  MDBCardBody,
+  MDBCol,
+  MDBContainer,
+  MDBIcon,
+  MDBListGroup,
+  MDBListGroupItem,
+  MDBRow
 } from 'mdb-vue-ui-kit';
 import CardGreenHoot from "@/public-page/user-public-page/components/greenhot-component/CardGreenHoot.vue";
 import {useUserStore} from "@/states/UserStore";

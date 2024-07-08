@@ -1,6 +1,6 @@
 <script setup  lang="ts">
 import { useRoomStore } from '@/states/RoomStore';
-const playerName = sessionStorage.getItem('player-name');
+const playerName = sessionStorage.getItem('player-name')as string | '';
 console.log(playerName);
 
 </script>

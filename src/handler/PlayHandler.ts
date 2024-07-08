@@ -26,7 +26,7 @@ export class PlayHandler extends AbsHandler {
                     if (question) {
                     questionStore.setQuestion(question);
                     console.log(question);
-                    const isHost = sessionStorage.getItem('isHost');
+                    const isHost = sessionStorage.getItem('isHost')as string | '';
                     sessionStorage.removeItem('player-answer');
                     console.log(isHost);
                     if (isHost === 'true') {

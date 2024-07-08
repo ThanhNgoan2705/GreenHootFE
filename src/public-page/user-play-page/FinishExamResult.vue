@@ -28,9 +28,9 @@ const data = ref([
 
 
 const resultStore = useResultStore();
-const roomId = JSON.parse(sessionStorage.getItem('roomId'));
-const examId = JSON.parse(sessionStorage.getItem('examId'));
-const hostId = JSON.parse(sessionStorage.getItem('auth-user')).userId;
+const roomId = JSON.parse(sessionStorage.getItem('roomId')as string | '');
+const examId = JSON.parse(sessionStorage.getItem('examId')as string | '');
+const hostId = JSON.parse(sessionStorage.getItem('auth-user')as string | '').userId;
 const resultRoomScore = ref(resultStore.roomScore);
 const resultUserScores = ref(resultStore.userScores);
 

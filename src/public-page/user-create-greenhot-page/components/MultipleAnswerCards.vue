@@ -1,18 +1,16 @@
 <script setup lang="ts">
 
-import { PropType, computed, nextTick, onMounted, reactive, ref, watch, watchEffect } from 'vue'
-import { MDBIcon } from 'mdb-vue-ui-kit'
-
-import { Choice, Packet, Question, UpdateQuestionRequest } from '@/proto/Proto';
-import { WS } from '@/socket/WS';
-import { useQuestionStore } from '@/states/QuestionStore';
+import {nextTick, onMounted, ref, watch} from 'vue'
+import {MDBIcon} from 'mdb-vue-ui-kit'
+import {Choice, Packet, Question, UpdateQuestionRequest} from '@/proto/Proto';
+import {WS} from '@/socket/WS';
 
 const onClick = ref(false);
 const hasContent = ref(false);
 const hasImage = ref(false);
 const isTrueAnswer = ref(false);
 let savedAnswer = ref<HTMLElement>();
-const correctAnswerIndex = ref(null);
+const correctAnswerIndex = ref(0);
 
 
 const symbol = ref({
@@ -196,24 +194,12 @@ const removeAnswerImage = (index: number) => {
   });
 }
 
-const props = defineProps({
-  items: {
-    type: Object as PropType<Choice[]>,
-    required: true,
-  },
-  questionTitle: {
-    type: String,
-    required: true
-  },
-  questionId: {
-    type: Number,
-    required: true
-  },
-  questionIndex: {
-    type: Number,
-    required: true
-  }
-})
+const props = defineProps<{
+  items:  Choice[],
+  questionTitle: string,
+  questionId:  number,
+  questionIndex: number,
+}>();
 console.log(props.items+ 'items')
 console.log(props.questionTitle+ 'questionTitle')
 console.log(props.questionId)
@@ -250,7 +236,9 @@ const saveQuestion = (event: Event) => {
   const answers = getListAnswerText();
   question.choices = Array.from(answers).map((answer, index) => {
     let choice = Choice.create();
-    choice.choiceText = answer.textContent;
+    if(answer.textContent){
+      choice.choiceText = answer.textContent;
+    }
     choice.choiceIndex = index + 1;
     choice.isCorrect = correctAnswerIndex.value === index;
     choice.questionId = props.questionId;

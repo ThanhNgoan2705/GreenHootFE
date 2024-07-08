@@ -1,13 +1,13 @@
 <script setup lang="ts">
 
 import { MDBIcon } from "mdb-vue-ui-kit";
-import { PropType, nextTick, onMounted, onUnmounted, ref, watchEffect } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
+import type { PropType } from 'vue';
 import { useQuestionStore } from "@/states/QuestionStore";
-import { computed } from "vue";
 import { CreateQuestionRequest, DeleteQuestionRequest, Exam, GetQuestionRequest, Packet } from "@/proto/Proto";
 import { WS } from "@/socket/WS";
 import { useExamStore } from "@/states/ExamStore";
-import { showWarningAlert } from "@/service/Alert";
+
 const questionStore = useQuestionStore();
 const questionList = ref(questionStore.getQuestions);
 const isUpdateQuestion = ref(questionStore.isUpdateQuestion);
@@ -32,18 +32,21 @@ const selectedQuestionId = computed(() => questionStore.getSelectedQuestion);
 const questionIndex = computed(() => questionStore.getQuestionSelected.questionIndex);
 
 const selectQuestionDemo = (questionId: number, index: number) => {
-   let getQuestionRequest = GetQuestionRequest.create();
-    getQuestionRequest.questionId = questionId;
-    let packet = Packet.create();
-    packet.data = { oneofKind: 'getQuestionRequest', getQuestionRequest: getQuestionRequest };
-    WS.send(packet);
+  let getQuestionRequest = GetQuestionRequest.create();
+  getQuestionRequest.questionId = questionId;
+  let packet = Packet.create();
+  packet.data = { oneofKind: 'getQuestionRequest', getQuestionRequest: getQuestionRequest };
+  WS.send(packet);
 }
 
 
 const deleteQuestion = () => {
   let deleteQuestionRequest = DeleteQuestionRequest.create();
-  deleteQuestionRequest.questionId = selectedQuestionId.value.questionId;
-  sessionStorage.setItem('questionId', JSON.stringify(selectedQuestionId.value.questionId));
+  if(selectedQuestionId.value?.questionId){
+    deleteQuestionRequest.questionId = selectedQuestionId.value.questionId;
+  }
+  
+  sessionStorage.setItem('questionId', JSON.stringify(selectedQuestionId.value?.questionId));
   deleteQuestionRequest.userId = parseInt(userId);
   let packet = Packet.create();
   packet.data = { oneofKind: 'deleteQuestionRequest', deleteQuestionRequest: deleteQuestionRequest };
@@ -52,12 +55,12 @@ const deleteQuestion = () => {
   WS.send(packet);
 }
 const handleAddQuestion = (event: Event) => {
-    let addQuestionRequest = CreateQuestionRequest.create();
-    addQuestionRequest.examId = examId.value;
-    let packet = Packet.create();
-    packet.data = { oneofKind: "createQuestionRequest", createQuestionRequest: addQuestionRequest };
-    console.log("Packet", packet);
-    WS.send(packet);
+  let addQuestionRequest = CreateQuestionRequest.create();
+  addQuestionRequest.examId = examId.value;
+  let packet = Packet.create();
+  packet.data = { oneofKind: "createQuestionRequest", createQuestionRequest: addQuestionRequest };
+  console.log("Packet", packet);
+  WS.send(packet);
 };
 
 // // Sử dụng watchEffect để phản hồi với sự thay đổi của câu hỏi
@@ -70,7 +73,7 @@ const handleAddQuestion = (event: Event) => {
 //   console.log("Câu hỏi mới: ", questionList);
 // });
 // questionListUpdate = questionList.value;
- 
+
 
 
 const isMobile = ref(window.innerWidth <= 920);
@@ -90,10 +93,9 @@ const examId = computed(() => examStore.examId);
 </script>
 <template>
   <div v-for="question in questionListUpdate" :key="question.questionId"
-      class="question-demo bg-white border border-gray-300 rounded-md shadow-sm mb-2 cursor-pointer"
-      @click="selectQuestionDemo(question.questionId, question.questionIndex)"
-      :class="{ 'active-background': question.questionIndex == questionIndex }"
-      >
+    class="question-demo bg-white border border-gray-300 rounded-md shadow-sm mb-2 cursor-pointer"
+    @click="selectQuestionDemo(question.questionId, question.questionIndex)"
+    :class="{ 'active-background': question.questionIndex == questionIndex }">
     <div v-if="!isMobile" class="sidebar-block" aria-label="question block">
       <div class="qs-demo-title">
         <div class="qs-number  text-sm fw-normal text-gray-500 w-1.5 text-right ms-4">{{ question.questionIndex }}</div>

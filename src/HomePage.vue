@@ -6,17 +6,7 @@ import { ref} from 'vue';
 import TheHomePageFooter from "@/components/single-instance-components/public-component/TheHomePageFooter.vue";
 import IconAware from "@/components/icons/IconAware.vue";
 import IconStream from "@/components/icons/IconStream.vue";
-// import {decodeCredential, googleOneTap} from "vue3-google-login";
-import { useOneTap, type CredentialResponse } from "vue3-google-signin";
 
-
-useOneTap({
-  onSuccess: (response: CredentialResponse) => {
-    console.log("Success:", response);
-  },
-  onError: () => console.error("Error with One Tap Login"),
-  // options
-});
 const cardItems = ref([
   {
     id: 1,

@@ -83,7 +83,7 @@ export const answerCards = defineStore({
             const colorMap = new Map(this.colorBg.map((color, index) => [index, color.bgColor]));
             let colorBG = 'white';
             if (index < this.answerCards.length && this.answerCards[index].text !== 'Add your answer' + ' ' + (index + 1)&& this.answerCards[index].answerText !== '') {
-                colorBG = colorMap.get(index) || 'white';
+                colorBG = colorMap.get(index) as string || 'white';
             }
             return colorBG;
         },

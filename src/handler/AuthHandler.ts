@@ -1,12 +1,8 @@
 import AbsHandler from "./AbsHandler";
-import type { PacketWrapper, ReqUpdateUserInfo } from "@/proto/Proto";
+import type {PacketWrapper} from "@/proto/Proto";
 import router from "@/router";
-import { useUserStore } from "@/states/UserStore";
-import { showToastTopRight } from "@/service/Alert";
-import { showErrorAlert } from "@/service/Alert";
-import { showWarningAlert } from "@/service/Alert";
-import { onMounted } from "vue";
-import { on } from "events";
+import {useUserStore} from "@/states/UserStore";
+import {showErrorAlert, showToastTopRight, showWarningAlert} from "@/service/Alert";
 
 
 export class AuthHandler extends AbsHandler {

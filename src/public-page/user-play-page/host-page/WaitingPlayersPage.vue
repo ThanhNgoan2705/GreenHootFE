@@ -1,10 +1,11 @@
 <script setup  lang="ts">
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 import QrcodeVue, { type Level, type RenderAs } from "qrcode.vue";
 import wsConfig from "@/config/Config";
 import { showToastTopRight } from "@/service/Alert";
 import { Packet, ReqStartExam } from "@/proto/Proto";
 import { WS } from "@/socket/WS";
+import { useRoomStore } from "@/states/RoomStore";
 
 
 const roomId = JSON.parse(sessionStorage.getItem('roomId')as string | '');
@@ -28,6 +29,12 @@ const startGameRequest = () => {
   console.log("sent start game request to server");
   WS.send(packet);
 }
+const roomstore = useRoomStore();
+let totalPlayer = ref(roomstore.totalPlayer);
+watchEffect(()=>{
+  totalPlayer.value = roomstore.getTotalPlayer;
+  console.log("so luong nguoi choi trong phong"+totalPlayer.value)
+})
 </script>
 
 <template>
@@ -51,6 +58,9 @@ const startGameRequest = () => {
         <div class="player-showing w-full flex content-center justify-center mt-[5rem]">
           <button class="start-button" @click="startGameRequest">Start Game</button>
         </div>
+        <div class="mx-auto mt-[2rem] w-1/5 h-[5rem] bg-white rounded content-center item-center">
+            <p class="text-center text-4xl text-black text-bold ">Number player in room : {{totalPlayer}}</p>
+          </div>
       </div>
     </main>
     <div class="setting-option">

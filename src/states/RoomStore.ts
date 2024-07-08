@@ -22,6 +22,7 @@ export const useRoomStore = defineStore('Room', {
         examSessionId: 0,
         totalQuestion: 0,
         userScores: [] as UserScore[],
+        totalPlayer: 0,
     }),
     actions: {
         setRoomId(roomId: number) {
@@ -66,6 +67,9 @@ export const useRoomStore = defineStore('Room', {
         setUserScores(userScores: UserScore[]) {
             this.userScores = userScores;
         },
+        setTotalPlayer(total:number){
+            this.totalPlayer = total;
+        }
     },
     getters: {
         getRoomId: (state) => {
@@ -89,6 +93,9 @@ export const useRoomStore = defineStore('Room', {
         getUserScores: (state) => {
             return state.userScores;
         },
+        getTotalPlayer:(state) =>{
+            return state.totalPlayer;
+        }
     }
 });
 

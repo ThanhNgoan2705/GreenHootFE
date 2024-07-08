@@ -156,10 +156,10 @@ const saveText = () => {
 };
 
 const questionStore = useQuestionStore();
-const selectedQuestion = ref(questionStore.selectQuestion);
-const questionData = ref(questionStore.question);
+let selectedQuestion = ref(questionStore.getSelectedQuestion);
+let questionData = ref(questionStore.question);
 watchEffect(async () => {
-  selectedQuestion.value = questionStore.getSelectedQuestion;
+  selectedQuestion.value  = questionStore.getSelectedQuestion;
   await nextTick();
   // Thực hiện các hành động cần thiết với câu hỏi mới
   console.log("Câu hỏi mới: ", selectedQuestion.value);
@@ -191,8 +191,10 @@ watchEffect(async() => {
       </div>
       <MediaQuestionOption @update:backgroundImage="handleImageUpdate" />
       <div class="flex flex-col w-full items-center">
-        <MultipleAnswerCards  :items="questionData.choices"
-          :questionTitle="questionTitle" :questionId="questionData.questionId"
+        <MultipleAnswerCards 
+         :items="questionData.choices"
+          :questionTitle="questionTitle" 
+          :questionId="questionData.questionId"
           :question-index="questionData.questionIndex" />
         <!-- <TrueFalseAnswerCards v-if="selectedQuestionType.text === 'True or False'" />
         <TypeAnswerCards v-if="selectedQuestionType.text === 'Type answer'" /> -->

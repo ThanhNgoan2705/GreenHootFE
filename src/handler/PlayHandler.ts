@@ -15,7 +15,6 @@ export class PlayHandler extends AbsHandler {
         const questionStore = useQuestionStore();
         const resultStore = useResultStore();
         const roomStore = useRoomStore();
-        console.log(packets.packet.length+"  mong muon la 2");
         for (let packet of packets.packet) {
             console.log(packet.data.oneofKind);
             if (packet.data.oneofKind === "resStartExam") {

@@ -1,7 +1,5 @@
-import { RoomScore, UserScore } from "@/proto/Proto";
-import { get } from "http";
-import { defineStore } from "pinia";
-import { isEnumDeclaration } from "typescript";
+import {RoomScore, UserScore} from "@/proto/Proto";
+import {defineStore} from "pinia";
 
 
 export const useResultStore = defineStore('resultStore', {

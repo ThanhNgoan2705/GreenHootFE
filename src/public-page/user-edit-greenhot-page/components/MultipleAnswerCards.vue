@@ -1,18 +1,16 @@
 <script setup lang="ts">
 
-import { PropType, computed, nextTick, onMounted, reactive, ref, watch, watchEffect } from 'vue'
-import { MDBIcon } from 'mdb-vue-ui-kit'
-
-import { Choice, Packet, Question, UpdateQuestionRequest } from '@/proto/Proto';
-import { WS } from '@/socket/WS';
-import { useQuestionStore } from '@/states/QuestionStore';
+import {nextTick, onMounted, ref, watch} from 'vue';
+import {MDBIcon} from 'mdb-vue-ui-kit'
+import {Choice, Packet, Question, UpdateQuestionRequest} from '@/proto/Proto';
+import {WS} from '@/socket/WS';
 
 const onClick = ref(false);
 const hasContent = ref(false);
 const hasImage = ref(false);
 const isTrueAnswer = ref(false);
 let savedAnswer = ref<HTMLElement>();
-const correctAnswerIndex = ref(null);
+const correctAnswerIndex = ref(0);
 
 
 const symbol = ref({
@@ -118,11 +116,28 @@ const uploadImage = (index: number) => {
   fileInput.type = 'file';
   fileInput.accept = 'image/*';
   fileInput.click();
+  let imageURL = ref('')
   fileInput.onchange = (e) => {
     if (e.target && e.target instanceof HTMLInputElement && e.target.files?.length) {
       const file = e.target.files[0];
       const reader = new FileReader();
       reader.onload = (e) => {
+        const formData = new FormData();
+    // Append the file to the formData object
+    formData.append('file', file);
+    fetch('http://localhost:8080/upload', {
+      method: 'POST',
+      headers: {
+        Authorization: 'Client-ID',
+      },
+      body: formData,
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        imageURL.value= data;
+        console.log(data);
+        console.log(imageURL.value)
+      });
         if (e.target) {
           const answerOption = document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
           const wrappImage = document.querySelectorAll('.answer-option-edit') as NodeListOf<HTMLElement>;
@@ -138,15 +153,15 @@ const uploadImage = (index: number) => {
               radioBtn[i].style.display = 'block';
               removeBtn[i].style.display = 'block';
               answerText[i].classList.add('hidden');
-              wrappImage[i].style.backgroundImage = `url(${(e.target as FileReader).result})`;
+              wrappImage[i].style.backgroundImage = `url(${imageURL.value})`;
             }
           });
         }
       };
-      reader.readAsDataURL(file);
     }
     hasImage.value = true;
   };
+  fileInput.onclick;
 }
 
 onMounted(() => {
@@ -195,25 +210,12 @@ const removeAnswerImage = (index: number) => {
     }
   });
 }
-
-const props = defineProps({
-  items: {
-    type: Object as PropType<Choice[]>,
-    required: true,
-  },
-  questionTitle: {
-    type: String,
-    required: true
-  },
-  questionId: {
-    type: Number,
-    required: true
-  },
-  questionIndex: {
-    type: Number,
-    required: true
-  }
-})
+const props = defineProps<{
+  items:  Choice[],
+  questionTitle: string,
+  questionId:  number,
+  questionIndex: number,
+}>();
 console.log(props.items+ 'items')
 console.log(props.questionTitle+ 'questionTitle')
 console.log(props.questionId)
@@ -247,6 +249,7 @@ const saveQuestion = (event: Event) => {
   question.questionText = props.questionTitle;
   question.examId = parseInt(examId);
   question.questionIndex = props.questionIndex;
+  question.imageUrl = sessionStorage.getItem('imageQuestion') as string | '';
   const answers = getListAnswerText();
   question.choices = Array.from(answers).map((answer, index) => {
     let choice = Choice.create();

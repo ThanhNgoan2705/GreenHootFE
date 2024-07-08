@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { PropType, defineEmits } from 'vue';
+import {  defineEmits } from 'vue';
+import type { PropType } from 'vue';
 import { MDBIcon } from 'mdb-vue-ui-kit';
 import { DeleteExamRequest, Exam, GetExamRequest, Packet, ReqCreateRoom, UpdateExamRequest } from '@/proto/Proto';
 import { useUserStore } from '@/states/UserStore';

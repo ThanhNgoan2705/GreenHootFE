@@ -72,7 +72,7 @@ export class ExamHandler extends AbsHandler {
                     console.log("da vao duoc ExamHandler.onMessageHandler:::ResDeleteExam");
                     let resDeleteExam = packet.data.deleteExamResponse;
                     console.log(resDeleteExam.success);
-                    const examId = sessionStorage.getItem("examId");
+                    const examId = sessionStorage.getItem("examId") as string | '';
                     if (resDeleteExam.success) {
                         showSuccessAlert("Delete Exam Success");
                         if (examId !== null) {
@@ -100,13 +100,18 @@ export class ExamHandler extends AbsHandler {
                     let resCreateQuestion = packet.data.createQuestionResponse;
                     console.log(resCreateQuestion.questionId);
                     respone = resCreateQuestion.questionId;
-                    const examId = sessionStorage.getItem("examId");
-                    if (examId !== null && resCreateQuestion.success ) {
+                    const examId = sessionStorage.getItem("examId")as string | '';
+                    if (examId !== null) {
+                        questionStore.questionIndex++;
                         questionStore.selectedQuestionId = respone;
                         questionStore.addNewQuestion(respone, parseInt(examId));
                         questionStore.isNewQuestion = true;
                     }
-                     else {
+                    if (resCreateQuestion.success) {
+
+                        showSuccessAlert("Create Question Success");
+
+                    } else {
                         showWarningAlert("Create Question Fail");
                     }
             }

@@ -15,8 +15,8 @@ import { WS } from "@/socket/WS";
 import { useReportStore } from "@/states/ReportStore";
 
 
-const token = sessionStorage.getItem("auth-token");
-const user = JSON.parse(sessionStorage.getItem("auth-user"));
+const token = sessionStorage.getItem("auth-token")as string | '';
+const user = JSON.parse(sessionStorage.getItem("auth-user")as string | '');
 const userId = parseInt(user?.userId);
 
 console.log("token" + token);

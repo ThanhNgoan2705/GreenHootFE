@@ -259,7 +259,7 @@ const getListAnswerText = () => {
 const saveQuestion = (event: Event) => {
   event.preventDefault();
   let question = Question.create();
-  const examId = sessionStorage.getItem('examId');
+  const examId = sessionStorage.getItem('examId')as string | '';
   question.questionId = props.questionId;
   question.questionText = props.questionTitle;
   question.examId = parseInt(examId);
@@ -268,7 +268,7 @@ const saveQuestion = (event: Event) => {
   const answers = getListAnswerText();
   question.choices = Array.from(answers).map((answer, index) => {
     let choice = Choice.create();
-    choice.choiceText = answer.textContent;
+    choice.choiceText = answer.textContent as string;
     choice.choiceIndex = index + 1;
     choice.isCorrect = correctAnswerIndex.value === index;
     choice.questionId = props.questionId;

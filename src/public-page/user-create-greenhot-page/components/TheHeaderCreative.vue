@@ -18,7 +18,7 @@ const openPopup = ref(false);
 const examTitle = ref('');
 const examDescription = ref('');
 
-const examId = sessionStorage.getItem('examId');
+const examId = sessionStorage.getItem('examId')as string | '';
 const isMobile = ref(window.innerWidth <= 767);
 const updateIsMobile = () => {
   isMobile.value = window.innerWidth <= 767;
@@ -48,7 +48,7 @@ const examStore = useExamStore();
 const questionStore = useQuestionStore();
 
 
-const userId = sessionStorage.getItem('userId');
+const userId = sessionStorage.getItem('userId')as string | '';
 
 const sendUpdateExamRequest= (event:Event)=>{
   event.preventDefault();

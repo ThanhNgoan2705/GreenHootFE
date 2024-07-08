@@ -11,8 +11,8 @@ import MyCard from "@/public-page/user-public-page/components/greenhot-component
 import MyDraftCards from "@/public-page/user-public-page/components/greenhot-component/MyDraftCards.vue";
 
 
-const token = sessionStorage.getItem("auth-token");
-const user = JSON.parse(sessionStorage.getItem("auth-user"));
+const token = sessionStorage.getItem("auth-token")as string | '';
+const user = JSON.parse(sessionStorage.getItem("auth-user")as string | '');
 const userId = parseInt(user?.userId);
 
 

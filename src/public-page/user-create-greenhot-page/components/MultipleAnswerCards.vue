@@ -242,7 +242,7 @@ const getListAnswerText = () => {
 const saveQuestion = (event: Event) => {
   event.preventDefault();
   let question = Question.create();
-  const examId = sessionStorage.getItem('examId');
+  const examId = sessionStorage.getItem('examId')as string | '';
   question.questionId = props.questionId;
   question.questionText = props.questionTitle;
   question.examId = parseInt(examId);

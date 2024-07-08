@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { PropType, ref } from 'vue';
-import { MDBIcon } from 'mdb-vue-ui-kit';
-import { ReqGetReport } from '@/proto/Proto';
-import { Packet, Report } from '@/proto/Proto';
-import { WS } from '@/socket/WS';
+import type {PropType} from 'vue';
+import {MDBIcon} from 'mdb-vue-ui-kit';
+import {Packet, Report, ReqGetReport} from '@/proto/Proto';
+import {WS} from '@/socket/WS';
+
 const props = defineProps({
   report: {
     type: Object as PropType<Report>,

@@ -25,7 +25,7 @@ export class HandlerManage{
         this.handles.push(new ReportHandler());
     }
     onMessageHandler(packets: PacketWrapper) {
-   
+        console.log("so packet nhan duoc tu server : "+packets.packet.length);
         this.handles?.forEach(handle => {
             // console.log("HandlerManage.onMessageHandler:::handle.onMessageHandle" );
             handle.onMessageHandle(packets);

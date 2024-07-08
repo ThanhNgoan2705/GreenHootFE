@@ -29,7 +29,7 @@ const userId = JSON.parse(sessionStorage.getItem('auth-user') || '{}').userId;
 
 const selectedQuestionId = computed(() => questionStore.getSelectedQuestion);
 
-const questionIndex = computed(() => questionStore.questionIndex);
+const questionIndex = computed(() => questionStore.getQuestionSelected.questionIndex);
 
 const selectQuestionDemo = (questionId: number, index: number) => {
    let getQuestionRequest = GetQuestionRequest.create();
@@ -51,30 +51,26 @@ const deleteQuestion = () => {
   console.log("deleteQuestionRequest", deleteQuestionRequest);
   WS.send(packet);
 }
-
-
 const handleAddQuestion = (event: Event) => {
-  if (isUpdateQuestion.value == false && isNewQuestion.value == true) {
-    showWarningAlert("You must save the question before adding a new one!");
-  } else {
     let addQuestionRequest = CreateQuestionRequest.create();
     addQuestionRequest.examId = examId.value;
     let packet = Packet.create();
     packet.data = { oneofKind: "createQuestionRequest", createQuestionRequest: addQuestionRequest };
     console.log("Packet", packet);
     WS.send(packet);
-  }
 };
 
-// Sử dụng watchEffect để phản hồi với sự thay đổi của câu hỏi
-watchEffect(async () => {
-  questionList.value = questionStore.questions;
-  isUpdateQuestion.value = questionStore.isUpdateQuestion;
-  isNewQuestion.value = questionStore.isNewQuestion;
-  await nextTick();
-  // Thực hiện các hành động cần thiết với câu hỏi mới
-  console.log("Câu hỏi mới: ", questionList);
-});
+// // Sử dụng watchEffect để phản hồi với sự thay đổi của câu hỏi
+// watchEffect(async () => {
+//   questionList.value = questionStore.questions;
+//   isUpdateQuestion.value = questionStore.isUpdateQuestion;
+//   isNewQuestion.value = questionStore.isNewQuestion;
+//   await nextTick();
+//   // Thực hiện các hành động cần thiết với câu hỏi mới
+//   console.log("Câu hỏi mới: ", questionList);
+// });
+// questionListUpdate = questionList.value;
+ 
 
 
 const isMobile = ref(window.innerWidth <= 920);

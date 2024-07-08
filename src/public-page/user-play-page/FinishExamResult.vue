@@ -27,10 +27,14 @@ const data = ref([
 
 
 
+
 const resultStore = useResultStore();
 const roomId = JSON.parse(sessionStorage.getItem('roomId'));
 const examId = JSON.parse(sessionStorage.getItem('examId'));
 const hostId = JSON.parse(sessionStorage.getItem('auth-user')).userId;
+
+const isHost = sessionStorage.getItem('isHost');
+
 const resultRoomScore = ref(resultStore.roomScore);
 const resultUserScores = ref(resultStore.userScores);
 
@@ -77,7 +81,7 @@ const getRankbyPlayerName = (playerName: string) => {
                         <span class="text-5xl ms-2 font-bold cursor-pointer ">{{ pinCode
                         }}</span>
                     </div>
-                    <button class="start-button w-1/5 m-auto" @click="startGameRequest">ReStart Game</button>
+                    <button v-if="isHost==='true' " class="start-button w-1/5 m-auto" @click="startGameRequest">ReStart Game</button>
                 </div>
             </div>
         </div>

@@ -101,17 +101,12 @@ export class ExamHandler extends AbsHandler {
                     console.log(resCreateQuestion.questionId);
                     respone = resCreateQuestion.questionId;
                     const examId = sessionStorage.getItem("examId");
-                    if (examId !== null) {
-                        questionStore.questionIndex++;
+                    if (examId !== null && resCreateQuestion.success ) {
                         questionStore.selectedQuestionId = respone;
                         questionStore.addNewQuestion(respone, parseInt(examId));
                         questionStore.isNewQuestion = true;
                     }
-                    if (resCreateQuestion.success) {
-
-                        showSuccessAlert("Create Question Success");
-
-                    } else {
+                     else {
                         showWarningAlert("Create Question Fail");
                     }
             }

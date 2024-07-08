@@ -118,11 +118,28 @@ const uploadImage = (index: number) => {
   fileInput.type = 'file';
   fileInput.accept = 'image/*';
   fileInput.click();
+  let imageURL = ref('')
   fileInput.onchange = (e) => {
     if (e.target && e.target instanceof HTMLInputElement && e.target.files?.length) {
       const file = e.target.files[0];
       const reader = new FileReader();
       reader.onload = (e) => {
+        const formData = new FormData();
+    // Append the file to the formData object
+    formData.append('file', file);
+    fetch('http://localhost:8080/upload', {
+      method: 'POST',
+      headers: {
+        Authorization: 'Client-ID',
+      },
+      body: formData,
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        imageURL.value= data;
+        console.log(data);
+        console.log(imageURL.value)
+      });
         if (e.target) {
           const answerOption = document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
           const wrappImage = document.querySelectorAll('.answer-option-edit') as NodeListOf<HTMLElement>;
@@ -138,15 +155,15 @@ const uploadImage = (index: number) => {
               radioBtn[i].style.display = 'block';
               removeBtn[i].style.display = 'block';
               answerText[i].classList.add('hidden');
-              wrappImage[i].style.backgroundImage = `url(${(e.target as FileReader).result})`;
+              wrappImage[i].style.backgroundImage = `url(${imageURL.value})`;
             }
           });
         }
       };
-      reader.readAsDataURL(file);
     }
     hasImage.value = true;
   };
+  fileInput.onclick;
 }
 
 onMounted(() => {
@@ -247,6 +264,7 @@ const saveQuestion = (event: Event) => {
   question.questionText = props.questionTitle;
   question.examId = parseInt(examId);
   question.questionIndex = props.questionIndex;
+  question.imageUrl = sessionStorage.getItem('imageQuestion') as string | '';
   const answers = getListAnswerText();
   question.choices = Array.from(answers).map((answer, index) => {
     let choice = Choice.create();

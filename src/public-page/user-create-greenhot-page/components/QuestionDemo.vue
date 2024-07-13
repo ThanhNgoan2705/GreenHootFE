@@ -1,12 +1,13 @@
 <script setup lang="ts">
 
-import {MDBIcon} from "mdb-vue-ui-kit";
-import {computed, nextTick, onMounted, onUnmounted, ref, watchEffect} from "vue";
-import {useQuestionStore} from "@/states/QuestionStore";
-import {CreateQuestionRequest, DeleteQuestionRequest, Packet} from "@/proto/Proto";
-import {WS} from "@/socket/WS";
-import {useExamStore} from "@/states/ExamStore";
-import {showWarningAlert} from "@/service/Alert";
+import { MDBIcon } from "mdb-vue-ui-kit";
+import { nextTick, onMounted, onUnmounted, ref, watchEffect } from "vue";
+import { useQuestionStore } from "@/states/QuestionStore";
+import { computed } from "vue";
+import { CreateQuestionRequest, DeleteQuestionRequest, Exam, Packet } from "@/proto/Proto";
+import { WS } from "@/socket/WS";
+import { useExamStore } from "@/states/ExamStore";
+import { showWarningAlert } from "@/service/Alert";
 
 
 const questionStore = useQuestionStore();
@@ -36,10 +37,8 @@ const selectQuestionDemo = (questionId: number, index: number) => {
 
 const deleteQuestion = () => {
   let deleteQuestionRequest = DeleteQuestionRequest.create();
-  if(selectedQuestionId.value!==undefined){
   deleteQuestionRequest.questionId = selectedQuestionId.value.questionId;
-  }
-  sessionStorage.setItem('questionId', JSON.stringify(selectedQuestionId.value?.questionId));
+  sessionStorage.setItem('questionId', JSON.stringify(selectedQuestionId.value.questionId));
   deleteQuestionRequest.userId = parseInt(userId);
   let packet = Packet.create();
   packet.data = { oneofKind: 'deleteQuestionRequest', deleteQuestionRequest: deleteQuestionRequest };

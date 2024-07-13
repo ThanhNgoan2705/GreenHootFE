@@ -24,7 +24,6 @@ export const useQuestionStore = defineStore('question', {
                 console.log("co firstQuestionId la " + firstQuestionId)
                 this.activeQuestionId = firstQuestionId;
                 this.selectedQuestionId = firstQuestionId;
-
                 if (this.questions.length === 0) {
                     this.questions.push({
                         questionText: "Start entering your question here",
@@ -68,7 +67,7 @@ export const useQuestionStore = defineStore('question', {
                             }
                         ],
                         questionId: firstQuestionId,
-                        questionIndex: 1,
+                        questionIndex: this.questionIndex,
                         time: 20,
                         examId:examId,
                         status: 1, 

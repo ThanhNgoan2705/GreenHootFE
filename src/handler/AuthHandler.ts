@@ -15,8 +15,7 @@ export class AuthHandler extends AbsHandler {
         let respone = 0;
         const userStore = useUserStore();
         let count = 0;
-        
-        for (let packet of packets.packet) {
+        for (const packet of packets.packet) {
             // console.log("AuthHandler.onMessageHandler:::packet");
             if (packet.data.oneofKind === "resLogin") {
                 console.log("da vao duoc AuthHandler.onMessageHandler:::ResLogin");

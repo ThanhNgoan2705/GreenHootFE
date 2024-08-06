@@ -1,24 +1,21 @@
 <script setup lang="ts">
-import {
-  MDBNavbar,
-  MDBNavbarBrand,
-  MDBIcon,
-} from 'mdb-vue-ui-kit';
+import {MDBIcon, MDBNavbar, MDBNavbarBrand,} from 'mdb-vue-ui-kit';
 import {PhotoIcon} from "@heroicons/vue/16/solid/index.js";
-import {computed, onMounted, onUnmounted, PropType, ref} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import {Exam, GetExamRequest, Packet, UpdateExamRequest} from "@/proto/Proto";
-import { WS } from '@/socket/WS';
-import { useExamStore } from '@/states/ExamStore';
-import { showConfirmAlert, showWarningAlert } from '@/service/Alert';
-import { useQuestionStore } from '@/states/QuestionStore';
+import {WS} from '@/socket/WS';
+import {useExamStore} from '@/states/ExamStore';
+import {showConfirmAlert, showWarningAlert} from '@/service/Alert';
+import {useQuestionStore} from '@/states/QuestionStore';
 import router from '@/router';
 
 
 const openPopup = ref(false);
 const examTitle = ref('');
 const examDescription = ref('');
+const imageUrl = ref('');
 
-const examId = sessionStorage.getItem('examId');
+const examId = sessionStorage.getItem('examId')as string | '';
 const isMobile = ref(window.innerWidth <= 767);
 const updateIsMobile = () => {
   isMobile.value = window.innerWidth <= 767;
@@ -48,7 +45,7 @@ const examStore = useExamStore();
 const questionStore = useQuestionStore();
 
 
-const userId = sessionStorage.getItem('userId');
+const userId = sessionStorage.getItem('userId')as string | '';
 
 const sendUpdateExamRequest= (event:Event)=>{
   event.preventDefault();
@@ -56,6 +53,7 @@ const sendUpdateExamRequest= (event:Event)=>{
   exam.userId = parseInt(userId);
   exam.title = examTitle.value;
   exam.description = examDescription.value;
+  exam.imageUrl = imageUrl.value;
   let request = UpdateExamRequest.create();
   request.exam = exam;
   let packet = Packet.create();
@@ -89,6 +87,34 @@ const saveExam = () => {
   }
 
 };
+
+const uploadImage = (event: Event) => {
+  event.preventDefault();
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.onchange = (e: any) => {
+    const file = e.target.files[0];
+    console.log(file);
+    // Create an instance of FormData
+    const formData = new FormData();
+    // Append the file to the formData object
+    formData.append('file', file);
+    fetch('http://localhost:8080/upload', {
+      method: 'POST',
+      headers: {
+        Authorization: 'Client-ID',
+      },
+      body: formData,
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        imageUrl.value = data;
+        console.log(data);
+      });
+  };
+  input.click();
+}
 
 </script>
 <template>
@@ -173,9 +199,9 @@ const saveExam = () => {
                       <div class="mt-4 flex text-sm leading-6 text-gray-600">
                         <label for="file-upload"
                                class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                          <span>Upload a file</span>
-                          <input id="file-upload" name="file-upload" type="file" />
-                    
+                          <button @click="uploadImage" class="text-indigo-600">Upload a file</button>
+                          <img v-if="imageUrl" :src="imageUrl" alt="cover photo" class="h-auto w-full"/>
+                          
                         </label>
                         <p class="pl-1">or drag and drop</p>
                       </div>

@@ -1,24 +1,21 @@
 <script setup lang="ts">
-import {
-  MDBNavbar,
-  MDBNavbarBrand,
-  MDBIcon,
-} from 'mdb-vue-ui-kit';
+import {MDBIcon, MDBNavbar, MDBNavbarBrand,} from 'mdb-vue-ui-kit';
 import {PhotoIcon} from "@heroicons/vue/16/solid/index.js";
-import {computed, onMounted, onUnmounted, PropType, ref} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import {Exam, GetExamRequest, Packet, UpdateExamRequest} from "@/proto/Proto";
-import { WS } from '@/socket/WS';
-import { useExamStore } from '@/states/ExamStore';
-import { showConfirmAlert, showWarningAlert,showSuccessAlert } from '@/service/Alert';
-import { useQuestionStore } from '@/states/QuestionStore';
+import {WS} from '@/socket/WS';
+import {useExamStore} from '@/states/ExamStore';
+import {showConfirmAlert, showSuccessAlert, showWarningAlert} from '@/service/Alert';
+import {useQuestionStore} from '@/states/QuestionStore';
 import router from '@/router';
 import { handleRequestListExam } from '@/service/UserService';
 
 const openPopup = ref(false);
 const examTitle = ref('');
 const examDescription = ref('');
+const imageUrl = ref('');
 
-const examId = sessionStorage.getItem('examId');
+const examId = sessionStorage.getItem('examId')as string | '';
 const isMobile = ref(window.innerWidth <= 767);
 const updateIsMobile = () => {
   isMobile.value = window.innerWidth <= 767;
@@ -47,7 +44,9 @@ const examStore = useExamStore();
 const questionStore = useQuestionStore();
 
 
+
 const userId = JSON.parse(sessionStorage.getItem("auth-user")as string | '').userId;
+
 
 const sendUpdateExamRequest= (event:Event)=>{
   event.preventDefault();
@@ -55,6 +54,7 @@ const sendUpdateExamRequest= (event:Event)=>{
   exam.userId = userId;
   exam.title = examTitle.value;
   exam.description = examDescription.value;
+  exam.imageUrl = imageUrl.value;
   let request = UpdateExamRequest.create();
   request.exam = exam;
   let packet = Packet.create();
@@ -80,8 +80,8 @@ const saveExam = () => {
     showWarningAlert("Please add content and  save the question before saving the exam.");
     return;
   }
-
 };
+
 const coverPhoto = ref('');
 const uploadImage = (event: Event) => {
   event.preventDefault();
@@ -104,13 +104,13 @@ const uploadImage = (event: Event) => {
     })
       .then((response) => response.text())
       .then((data) => {
+
         coverPhoto.value = data;
         console.log(data);
       });
   };
   input.click();
 }
-
 </script>
 <template>
   <MDBNavbar expand="xl" light bg="white" position="top" class="nav-container ">
@@ -199,7 +199,7 @@ const uploadImage = (event: Event) => {
                             a file</button> 
                             <img v-if="coverPhoto" :src="coverPhoto" class="w-1/2 h-auto m-auto" alt="cover photo" />
                         </label>
-                        <p class="pl-1">or drag and drop</p>
+
                       </div>
                       <p class="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
                     </div>

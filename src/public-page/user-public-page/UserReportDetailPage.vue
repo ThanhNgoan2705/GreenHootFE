@@ -1,19 +1,12 @@
 <script setup lang="ts">
 import TheHeader from "@/public-page/user-public-page/components/profile-component/TheHeader.vue";
 import TheMenuSideBar from "@/public-page/user-public-page/components/profile-component/TheMenuSideBar.vue";
-import {
-    MDBContainer, MDBTabItem, MDBTabNav, MDBTabContent, MDBTabPane, MDBTabs
-} from 'mdb-vue-ui-kit';
-import { useReportStore } from "@/states/ReportStore";
-import { computed, nextTick, onMounted, onUnmounted, PropType, ref, watchEffect } from "vue";
-import { Report } from "@/proto/Proto";
-
-
-const token = sessionStorage.getItem("auth-token");
-const user = JSON.parse(sessionStorage.getItem("auth-user"));
+import {MDBContainer} from 'mdb-vue-ui-kit';
+import {useReportStore} from "@/states/ReportStore";
+import {nextTick, onMounted, onUnmounted, ref, watchEffect} from "vue";
+const token = sessionStorage.getItem("auth-token")as string | '';
+const user = JSON.parse(sessionStorage.getItem("auth-user")as string | '');
 const userId = parseInt(user?.userId);
-
-
 const isMobile = ref(window.innerWidth <= 767);
 const updateIsMobile = () => {
     isMobile.value = window.innerWidth <= 767;
@@ -62,7 +55,7 @@ console.log("report tu store", reportData);
                                         <td>{{ report.examTitle }}</td>
                                         <td>{{ rep.userName }}</td>
                                         <td>{{ rep.score }}</td>
-                                        <td>{{ report.roomScore.totalQuestion }}</td>
+                                        <td>{{ reportData.roomScore?.totalQuestion }}</td>
                                     </tr>
                                 </tbody>
                             </table>

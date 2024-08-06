@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { MDBIcon } from 'mdb-vue-ui-kit';
-import { defineProps, PropType } from 'vue';
+import { defineProps } from 'vue';
+import type {PropType} from 'vue';
 import { Packet, Report, ReqGetReport } from '@/proto/Proto';
 import { WS } from '@/socket/WS';
 const props = defineProps({

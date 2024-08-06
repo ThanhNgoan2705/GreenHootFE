@@ -16,7 +16,7 @@ const pinRoom = ref('');
 
 const sendJoinRoomRequest = (event: Event) => {
   event.preventDefault();
-  const roomId = Number(pinRoom.value);
+  const roomId = parseInt(pinRoom.value);
   let reqJoinRoom = ReqJoinRoom.create();
   reqJoinRoom.roomId = roomId;
   let packet = Packet.create();

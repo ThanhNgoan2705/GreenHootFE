@@ -10,6 +10,7 @@ import ReportCard from "@/public-page/user-public-page/components/greenhot-compo
 import MyDraftCards from "@/public-page/user-public-page/components/greenhot-component/MyDraftCards.vue";
 import { WS } from "@/socket/WS";
 import { Packet, ReqGetAllReportByHostId, ReqGetAllReportByPlayerId } from "@/proto/Proto";
+import { getAllExameJoinedReport, getAllHostedReport } from "@/service/UserService";
 
 
 const token = sessionStorage.getItem("auth-token")as string | '';
@@ -29,26 +30,10 @@ onUnmounted(() => {
   window.removeEventListener('resize', updateIsMobile);
 })
 
-const getAllExameJoinedReport = () => {
-  console.log('get all report request');
-    let getAllReportRequest = ReqGetAllReportByPlayerId.create();
-    getAllReportRequest.userId = userId;
-    let packet = Packet.create();
-    packet.data = { oneofKind: 'reqGetAllReportByPlayerId', reqGetAllReportByPlayerId: getAllReportRequest };
-    console.log(packet);
-    console.log('sent get all exam');
-    WS.send(packet);
-};
-const getAllHostedReport = () => {
-  console.log('get all report request');
-  let getAllReportRequest = ReqGetAllReportByHostId.create();
-    getAllReportRequest.hostId = userId;
-    let packet = Packet.create();
-    packet.data = { oneofKind: 'reqGetAllReportByHostId', reqGetAllReportByHostId: getAllReportRequest };
-    console.log(packet);
-    console.log('sent get all exam');
-    WS.send(packet);
-};
+onMounted(() => {
+  getAllHostedReport(userId);
+  getAllExameJoinedReport(userId);
+});
 const reportStore = useReportStore();
 const listReport = ref(reportStore.getAllreports);
 watchEffect(async () => {

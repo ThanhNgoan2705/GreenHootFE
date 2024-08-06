@@ -14,9 +14,9 @@ const routes = [
     {path: '/Home', name: 'Home', component: Home, meta: {showHeader: true}},
     {path: '/SignInPage', name:'Login', component: SignInPage, meta: {showHeader: false}},
     {path: '/SignupPage',name:'Register', component: SignupPage, meta: {showHeader: false}},
-    {path: '/EmailVerification', component: EmailVerification, meta: {showHeader: false}},
-    {path: '/PasswordForgottenPage', component: PasswordForgottenPage, meta: {showHeader: false}},
-    {path: '/ConfirmationPage', component: ConfirmationPage, meta: {showHeader: false}},
+    {path: '/EmailVerification',name:'verifyEmail', component: EmailVerification, meta: {showHeader: false}},
+    {path: '/PasswordForgottenPage',name:'forgotPass', component: PasswordForgottenPage, meta: {showHeader: false}},
+    {path: '/ConfirmationPage', name:'confirmPage', component: ConfirmationPage, meta: {showHeader: false}},
     {path: '/', redirect: '/Home'},
     {path: '/:pathMatch(.*)*', redirect: '/Home'},
     ...userRoutes,
@@ -25,7 +25,7 @@ const routes = [
     ...hostRoutes
 ];
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory((import.meta as any).env.BASE_URL),
     routes,
 });
 export default router

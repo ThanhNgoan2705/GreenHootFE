@@ -27,13 +27,15 @@ onUnmounted(() => {
 })
 const questionTitle = ref('Question');
 const guildText = ref<HTMLElement | null>(null);
-const savedText = ref('Starting typing your question');
+const savedText = ref('');
 const isEditable = ref(false);
 const updateText = () => {
   if (guildText.value) {
     savedText.value = guildText.value.innerText;
   }
 }
+
+
 
 const qsContent = ref(false);
 const openQuestionType = ref(false);
@@ -65,35 +67,33 @@ const timeSetting = ref([
   { value: 7, text: '2 minutes', time: 120 },
   { value: 8, text: '2 minutes 30 seconds', time: 150 },
 ]);
-const selectedTime = ref();
+const selectedTime = ref('');
 const openTime = ref(false);
-const selectTime = (time: string) => {
-  selectedTime.value = time;
+const selectTime = () => {
+
   openTime.value = false;
 }
 
 // point setting function
-const selectedPoint = ref();
+const selectedPoint = ref('');
 const openPoint = ref(false);
 const pointSetting = ref([
   { value: 1, text: 'Standard', description: 'Award points based on correct answers', score: 1000 },
   { value: 2, text: 'Double points', description: 'Give twice as many points for correct answers', score: 2000 },
   { value: 3, text: 'No points', description: 'Lower the stakes by not awarding points', score: 0 },
 ]);
-const selectPoint = (point: string) => {
-  selectedPoint.value = point;
+const selectPoint = () => {
   openPoint.value = false;
 }
 
 // answer setting function
 const openAnswer = ref(false);
-const selectedAnswer = ref();
+const selectedAnswer = ref('');
 const answerSetting = ref([
   { value: 1, text: 'Single select', description: 'Allow players to select only one answer' },
   { value: 2, text: 'Multiples', description: 'Allow players to select multiple answers' },
 ]);
-const selectAnswer = (answer: string) => {
-  selectedAnswer.value = answer;
+const selectAnswer = () => {
   openAnswer.value = false;
 }
 
@@ -112,52 +112,41 @@ const handleImageUpdate = (newImage: string, questionId: number) => {
   }
 }
 
-
 // add animation when click on question title
 const makeEditable = () => {
+  console.log("click");
   isEditable.value = true;
   if (guildText.value) {
+    console.log(guildText.value.textContent);
     guildText.value.contentEditable = "true";
     if (guildText.value.textContent === 'Start entering your question here') {
       guildText.value.textContent = '';
-
-      // Use setTimeout to defer focus until after the DOM updates
-      setTimeout(() => {
-        if (guildText.value) {
-          guildText.value.focus();
-          guildText.value.textContent = ''
-        }
-      }, 0); // A timeout of 0 ms defers the execution until the stack is clear
-    } else {
       guildText.value.focus();
-      guildText.value.textContent = savedText.value;
-
+       savedText.value = guildText.value.textContent;
     }
-  }
+    else if (guildText.value.textContent === '') {
+      guildText.value.textContent = 'Start entering your question here';
+    }
 
+  }
 
 }
 const saveText = () => {
-  console.log(guildText.value?.innerText);
+  isEditable.value = false;
   qsContent.value = true;
   nextTick(() => {
     const question = document.getElementById('guild-content') as HTMLElement;
     savedText.value = question.innerText;
     questionTitle.value = savedText.value;
-    if (question.innerText === '' && guildText.value) {
+    if (question.innerText === '' ) {
+      question.innerText = 'Start entering your question here';
       guildText.value.contentEditable = "false";
-      savedText.value = 'Question';
-      question.innerText = 'Start typing your question';
     }
-    if (savedText.value.length > 15) {
-      savedText.value = savedText.value.substring(0, 10) + '...';
+    else {
+      guildText.value.contentEditable = "false";
     }
-    console.log(savedText.value);
-    console.log(savedText.value);
   });
 };
-
-
 const questionStore = useQuestionStore();
 const selectedQuestion = ref(questionStore.selectQuestion);
 watchEffect(async () => {
@@ -167,8 +156,13 @@ watchEffect(async () => {
   console.log("Câu hỏi mới: ", selectedQuestion.value);
 });
 
-
-
+const updateQuestionList = ref(questionStore.getUpdateQuestionList);
+watchEffect(async () => {
+  updateQuestionList.value = questionStore.getUpdateQuestionList;
+  await nextTick();
+  // Thực hiện các hành động cần thiết với câu hỏi mới
+  console.log("List question: ", updateQuestionList.value);
+});
 
 
 </script>
@@ -188,12 +182,17 @@ watchEffect(async () => {
       </div>
       <MediaQuestionOption @update:backgroundImage="handleImageUpdate" />
       <div class="flex flex-col w-full items-center">
-        <MultipleAnswerCards v-if="selectedQuestionType.text === 'Multiple choice'"
-         :items="selectedQuestion.choices"
-          :questionTitle="questionTitle" 
+        <MultipleAnswerCards v-if="selectedQuestionType.text === 'Multiple choice'" :items="selectedQuestion.choices"
+          :questionTitle="questionTitle" :questionId="selectedQuestion.questionId"
+          :question-index="selectedQuestion.questionIndex"
+         
+           />
+        <TrueFalseAnswerCards v-if="selectedQuestionType.text === 'True or False'"
+          :question-index="selectedQuestion.questionIndex"
           :questionId="selectedQuestion.questionId"
-          :question-index="selectedQuestion.questionIndex" />
-        <TrueFalseAnswerCards v-if="selectedQuestionType.text === 'True or False'" />
+          :questionTitle="questionTitle"
+          :items="selectedQuestion.choices"
+         />
         <TypeAnswerCards v-if="selectedQuestionType.text === 'Type answer'" />
       </div>
     </div>
@@ -236,11 +235,11 @@ watchEffect(async () => {
                 <MDBIcon icon="stopwatch" size="lg" />
               </span>
               Time Limit
-              <div class="dropdown select-box relative box-border mt-[10px]" @click="openTime = !openTime">
+              <div class="dropdown select-box relative box-border mt-[10px]" @click=" openTime = !openTime">
                 <div class="dropdown-selected w-full box-content ">
                   <div
                     class="box-content-inner overflow-hidden text-ellipsis relative flex items-center ms-1 font-normal text-gray-500">
-                    {{ selectedTime ? selectedTime.text : 'Select a time' }}
+                    {{ selectedTime ? selectedTime : 'Select a time' }}
                   </div>
                   <div class="box-dropdown items-center self-stretch flex shrink-0 box-border">
                     <div class="box-dropdown-icon p-2">
@@ -249,7 +248,7 @@ watchEffect(async () => {
                   </div>
                 </div>
                 <div v-if="openTime" class="dropdown-options ">
-                  <div v-for="time in timeSetting" :key="time.value" @click="selectTime(time.text)"
+                  <div v-for="time in timeSetting" :key="time.value" @click="selectTime , selectedTime = time.text"
                     class="dropdown-option p-2">
                     {{ time.text }}
                   </div>
@@ -267,15 +266,14 @@ watchEffect(async () => {
                 <div class="dropdown-selected w-full box-content ">
                   <div
                     class="box-content-inner overflow-hidden text-ellipsis relative flex items-center ms-1 font-normal text-gray-500">
-                    {{ selectedPoint ? selectedPoint.text : 'Select a point' }}
+                    {{ selectedPoint ? selectedPoint : 'Select a point' }}
                   </div>
                   <div class="dropdown-icon p-2">
                     <MDBIcon icon="chevron-down" size="lg" />
                   </div>
-                  <div v-if="selectedPoint" class="  text-xs text-gray-400 ">{{ selectedPoint.description }}</div>
                 </div>
                 <div v-if="openPoint" class="dropdown-options ">
-                  <div v-for="point in pointSetting" :key="point.value" @click="selectPoint(point.text)"
+                  <div v-for="point in pointSetting" :key="point.value" @click="selectPoint, selectedPoint = point.text"
                     class="dropdown-option p-2">
                     {{ point.text }}
                     <div class=" text-xs text-gray-400 font-normal">{{ point.description }}</div>
@@ -294,18 +292,14 @@ watchEffect(async () => {
                 <div class="dropdown-selected w-full box-content ">
                   <div
                     class="box-content-inner overflow-hidden text-ellipsis relative flex items-center ms-1 font-normal text-gray-500">
-                    {{ selectedAnswer ? selectedAnswer.text : 'Select an answer' }}
+                    {{ selectedAnswer ? selectedAnswer : 'Select an answer' }}
                   </div>
                   <div class="dropdown-icon p-2">
                     <MDBIcon icon="chevron-down" size="lg" />
                   </div>
-                  <div v-if="selectedAnswer" class="  text-xs text-gray-400 ">{{
-                    selectedAnswer.description
-                  }}
-                  </div>
                 </div>
                 <div v-if="openAnswer" class="dropdown-options ">
-                  <div v-for="answer in answerSetting" :key="answer.value" @click="selectAnswer(answer.text)"
+                  <div v-for="answer in answerSetting" :key="answer.value" @click="selectAnswer, selectedAnswer = answer.text"
                     class="dropdown-option p-2">
                     {{ answer.text }}
                     <div class=" text-xs text-gray-400 font-normal">{{ answer.description }}</div>

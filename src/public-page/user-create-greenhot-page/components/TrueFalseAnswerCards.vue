@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { onMounted, ref} from 'vue'
-import {MDBIcon} from 'mdb-vue-ui-kit'
+import { onMounted, ref } from 'vue'
+import { MDBIcon } from 'mdb-vue-ui-kit'
 
 const onClick = ref(false);
 const symbol = ref({
@@ -12,15 +12,15 @@ const cardText = ref({
   1: 'False'
 })
 onMounted(() => {
-    const answerContainer = document.querySelectorAll('.answer-option-container') as NodeListOf<HTMLElement>;
-    const  iconTick = document.querySelectorAll('.icon-tick') as NodeListOf<HTMLElement>;
-    const color = ['rgb(226,27,60)', 'rgb(19,104,206)'];
-    let i = 0;
-    while (i < answerContainer.length) {
-      answerContainer[i].style.backgroundColor = color[i];
-      iconTick[i].classList.add('hidden');
-      i++;
-    }
+  const answerContainer = document.querySelectorAll('.answer-option-container') as NodeListOf<HTMLElement>;
+  const iconTick = document.querySelectorAll('.icon-tick') as NodeListOf<HTMLElement>;
+  const color = ['rgb(226,27,60)', 'rgb(19,104,206)'];
+  let i = 0;
+  while (i < answerContainer.length) {
+    answerContainer[i].style.backgroundColor = color[i];
+    iconTick[i].classList.add('hidden');
+    i++;
+  }
 });
 const markTrueAnswer = (index: number) => {
   const radioBtn = document.querySelectorAll('.radio-btn') as NodeListOf<HTMLElement>;
@@ -40,55 +40,65 @@ const markTrueAnswer = (index: number) => {
 </script>
 
 <template>
-  <div class="answer-options w-full  h-full mb-[3rem]">
-    <div v-for="(item , index) in 2" :key="index"
-         :class="`answer-option-${index}`"
-         ref="cardAnswers"
-         class="answer-option-container asw-res py-0.5 px-0.5 my-0.5 mx-0.5"
-    >
-      <div class="answer-option-sign" ref="sign">
-        <span class=" sign-icon inline-block align-middle w-10 h-10 "/>
-      </div>
-      <MDBIcon :icon="symbol[index as keyof typeof symbol]" size="xl" class="text-white absolute left-4 top-1/2"/>
-      <div class=" flex flex-1 items-center content-end w-full relative h-full " style="max-width: calc(100% - 3rem);">
-        <div class="ans-contain  w-full h-full">
-          <div class="answer-option-edit whitespace-pre-wrap break-words box-border">
-            <p class="answer-option-text relative w-full"
-               ref="answerText" >
-              <span class="text-black text-lg true-false-text"
-              >
-                {{ cardText[index as keyof typeof cardText] }}
-              </span>
-            </p>
-          </div>
+  <div class="answer-containers">
+    <div class="answer-options grid-cols-2 w-full h-2/3">
+      <div v-for="(item, index) in 2" :key="index" :class="`answer-option-${index}`" ref="cardAnswers"
+        class="answer-option-container asw-res py-0.5 px-0.5 my-0.5 mx-0.5">
+        <div class="answer-option-sign" ref="sign">
+          <span class=" sign-icon inline-block align-middle w-10 h-10 " />
         </div>
-        <button role="switch"
-                aria-checked="false"
-                aria-label="Add audio"
-                class=" radio-btn add-audio-btn "
-                @click="markTrueAnswer(index)">
-          <span class="icon-tick">
-            <MDBIcon icon="check" size="2xl"  class=" text-white" />
+        <MDBIcon :icon="symbol[index as keyof typeof symbol]" size="xl" class="text-white absolute left-4 top-1/2" />
+        <div class=" flex flex-1 items-center content-end w-full relative h-full " style="max-width: calc(100% - 3rem);">
+          <div class="ans-contain  w-full h-full">
+            <div class="answer-option-edit whitespace-pre-wrap break-words box-border">
+              <p class="answer-option-text relative w-full" ref="answerText">
+                <span class="text-black text-lg true-false-text">
+                  {{ cardText[index as keyof typeof cardText] }}
+                </span>
+              </p>
+            </div>
+          </div>
+          <button role="switch" aria-checked="false" aria-label="Add audio" class=" radio-btn add-audio-btn "
+            @click="markTrueAnswer(index)">
+            <span class="icon-tick">
+              <MDBIcon icon="check" size="2xl" class=" text-white" />
             </span>
-        </button>
+          </button>
+        </div>
       </div>
+    </div>
+    <div class="btn-container">
+      <button class="add-answer-btn m-auto   content-center justify-center " @click="saveQuestion">
+        Save Question
+      </button>
     </div>
   </div>
 </template>
 
 <style scoped>
+.answer-containers {
+  @apply flex flex-col items-center justify-center w-full h-full;
+}
+
 .answer-options {
   display: grid;
-  grid-template: 1fr 1fr / 1fr 1fr;
   row-gap: 0.5rem;
   column-gap: 0.5rem;
+  margin-bottom: 1rem;
 }
+.btn-container {
+  @apply flex justify-center items-center w-full h-1/3;
+}
+
 .answer-option-container {
-  @apply items-center  p-1 relative overflow-visible justify-start flex flex-grow transition-all duration-200 ease-in-out rounded-md h-[7rem] min-h-[2.25rem] max-w-full text-gray-500 fill-current
+  @apply items-center p-1 relative overflow-visible justify-start flex flex-grow transition-all duration-200 ease-in-out rounded-md h-[7rem] min-h-[2.25rem] max-w-full text-gray-500 fill-current
 }
+
 .answer-option-container {
   box-shadow: rgba(0, 0, 0, 0.15) 0 -0.25rem 0 0 inset;
 }
+
+
 
 .answer-option-edit {
   height: 100%;
@@ -121,21 +131,28 @@ const markTrueAnswer = (index: number) => {
   align-items: center;
   transition: box-shadow 0.2s ease 0s, background 0.2s ease 0s, opacity 0.2s ease 0s;
 }
+
 .answer-option-text {
   color: black;
 }
+
 .answer-option-text:focus {
   @apply outline-none border-none text-lg;
 }
+
 .answer-option-text img {
   object-fit: contain;
-  width: calc(100% - 2 * 10px); /* Subtracting twice the padding from the width */
-  height: calc(100% - 2 * 10px); /* Subtracting twice the padding from the height */
+  width: calc(100% - 2 * 10px);
+  /* Subtracting twice the padding from the width */
+  height: calc(100% - 2 * 10px);
+  /* Subtracting twice the padding from the height */
   padding: 10px
 }
+
 .sign-icon svg {
   fill: white;
 }
+
 @media (min-width: 600px) {
 
   .asw-res {
@@ -143,7 +160,7 @@ const markTrueAnswer = (index: number) => {
   }
 }
 
-.answer-option-0 .answer-option-sign  {
+.answer-option-0 .answer-option-sign {
   background-color: rgb(226, 27, 60);
 }
 
@@ -156,24 +173,31 @@ const markTrueAnswer = (index: number) => {
   0% {
     transform: translateY(0px) scaleX(1) scaleY(1);
   }
+
   5% {
     transform: translateY(0px) scaleX(1.1) scaleY(0.9);
   }
+
   10% {
     transform: translateY(-10px) scaleX(0.9) scaleY(1.1);
   }
+
   15% {
     transform: translateY(0px) scaleX(1.1) scaleY(0.9);
   }
+
   20% {
     transform: translateY(-5px) scaleX(0.95) scaleY(1.05);
   }
+
   25% {
     transform: translateY(0px) scaleX(1.05) scaleY(0.95);
   }
+
   30% {
     transform: translateY(-2.5px) scaleX(0.95) scaleY(1.05);
   }
+
   35% {
     transform: translateY(0px) scaleX(1.05) scaleY(0.95);
   }
@@ -184,6 +208,7 @@ const markTrueAnswer = (index: number) => {
   background: transparent;
   margin: 0 0.5rem;
 }
+
 .radio-btn {
   display: inline-block;
   position: relative;
@@ -196,5 +221,4 @@ const markTrueAnswer = (index: number) => {
   transform-origin: center bottom;
   box-shadow: transparent 0 0 0 0.125rem, rgba(0, 0, 0, 0.35) 0px 0.125rem 0.125rem, rgba(0, 0, 0, 0.35) 0px 0px 0px 0.0625rem;
   animation: radioAnimation 4s infinite;
-}
-</style>
+}</style>

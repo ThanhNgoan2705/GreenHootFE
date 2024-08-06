@@ -1,7 +1,7 @@
 import AbsHandler from "@/handler/AbsHandler";
 import type { PacketWrapper } from "@/proto/Proto";
 import router from "@/router";
-import { showSuccessAlert, showToastTopRight, showWarningAlert } from "@/service/Alert";
+import { showSuccessAlert, showSuccessAlertWithReLoad, showToastTopRight, showWarningAlert } from "@/service/Alert";
 import { useExamStore } from "@/states/ExamStore";
 import { useQuestionStore } from "@/states/QuestionStore";
 export class ExamHandler extends AbsHandler {
@@ -32,11 +32,14 @@ export class ExamHandler extends AbsHandler {
                         const questions = questionStore.getQuestions;
                         console.log(questions);
                         examStore.setQuestions(questions);
+                        
                     }
                     if (resGetExam.success) {
                         examStore.setPopUpState(false);
                         examStore.setExamId(respone);
+                        
                         showSuccessAlert("Create Exam Success");
+
                     } else {
                         showWarningAlert("Create Exam Fail");
                     }
@@ -54,8 +57,8 @@ export class ExamHandler extends AbsHandler {
             }
             if (packet.data.oneofKind === "getAllExamResponse") {
           
-                    console.log("da vao duoc ExamHandler.onMessageHandler:::ResDeleteExam");
-                    const resGetAllExam = packet.data.getAllExamResponse;
+                    console.log("da vao duoc ExamHandler.onMessageHandler:::ResgetAllExam");
+                    let resGetAllExam = packet.data.getAllExamResponse;
                     console.log(resGetAllExam.exam);
                     const listExam = resGetAllExam.exam;
                     const listExamCurrent = examStore.getExams;
@@ -74,12 +77,12 @@ export class ExamHandler extends AbsHandler {
                     console.log(resDeleteExam.success);
                     const examId = sessionStorage.getItem("examId") as string | '';
                     if (resDeleteExam.success) {
-                        showSuccessAlert("Delete Exam Success");
                         if (examId !== null) {
                             examStore.removeExam(parseInt(examId));
-                            examStore.updateListExam(examStore.getExams);
+                            // examStore.updateListExam(examStore.getExams);
                             console.log(examStore.getExams);
                         }
+                        showSuccessAlert("Delete Exam Success");
                     } else {
                         showWarningAlert("Delete Exam Fail");
                     }
@@ -92,7 +95,7 @@ export class ExamHandler extends AbsHandler {
                     if (exam !== null && exam !== undefined) {
                         examStore.setExam(exam);
                         sessionStorage.setItem("exam", JSON.stringify(exam));
-                        router.push("/GreenHootEditPage");
+                        router.push({name:'userEdit'});
                     }
             }
             if (packet.data.oneofKind === "createQuestionResponse") {
@@ -121,7 +124,7 @@ export class ExamHandler extends AbsHandler {
                     if (question !== null && question !== undefined) {
                         questionStore.setQuestion(question);
                         sessionStorage.setItem("question", JSON.stringify(question));
-                        router.push("/GreenHootEditPage");
+                        router.push({name:'userEdit'});
                     }
             }
             if (packet.data.oneofKind === "updateQuestionResponse") {
@@ -133,6 +136,7 @@ export class ExamHandler extends AbsHandler {
                     console.table(question);
                     if (resUpdateQuestion.success) {
                         questionStore.updateQuestion(question);
+                        questionStore.setUpdateQuestionList(question);
                         showToastTopRight("Update Question Success");
                     } else {
                         showWarningAlert("Update Question Fail");
@@ -148,7 +152,7 @@ export class ExamHandler extends AbsHandler {
                     if (questionId !== null){
                         if (resDeleteQuestion.success) {
                             questionStore.deleteQuestion(parseInt(questionId));
-                            console.log(questionStore.getQuestions);
+                            questionStore.updateQuestion(questionIndex);
                             showSuccessAlert("Delete Question Success");
                         } else {
                             showWarningAlert("Delete Question Fail");

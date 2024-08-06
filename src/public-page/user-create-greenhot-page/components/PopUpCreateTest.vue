@@ -19,7 +19,6 @@ const description = ref('');
 
 
 const handleCreateExam = (event: Event) => {
-
   event.preventDefault();
   let requestCreateExam = CreateExamRequest.create();
   let exam = Exam.create();
@@ -64,6 +63,7 @@ const uploadImage = (event: Event) => {
   };
   input.click();
 }
+
 
 
 </script>

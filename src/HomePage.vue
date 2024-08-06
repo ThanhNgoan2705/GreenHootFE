@@ -6,7 +6,6 @@ import { ref} from 'vue';
 import TheHomePageFooter from "@/components/single-instance-components/public-component/TheHomePageFooter.vue";
 import IconAware from "@/components/icons/IconAware.vue";
 import IconStream from "@/components/icons/IconStream.vue";
-
 const cardItems = ref([
   {
     id: 1,

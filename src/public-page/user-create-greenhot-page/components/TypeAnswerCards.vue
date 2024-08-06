@@ -29,7 +29,11 @@ const cardText = ref({
         </div>
       </div>
     </div>
-
+    <div class="btn-container">
+      <button class="add-answer-btn m-auto   content-center justify-center " @click="saveQuestion">
+        Save Question
+      </button>
+    </div>
   </div>
 </template>
 
@@ -40,6 +44,10 @@ const cardText = ref({
 .correct-answer{
 @apply w-full;
 }
+.btn-container {
+  @apply flex justify-center items-center w-full h-1/3;
+}
+
 
 .answer-option-text {
   width: 100%;

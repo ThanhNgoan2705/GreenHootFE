@@ -6,25 +6,25 @@ import ResultExampage from "@/public-page/user-play-page/FinishExamResult.vue";
 const routes = [
     {
         path:"/enter-pin",
-        name: "EnterPage",
+        name: "enterPin",
         component: EnterPinPage,
         meta: { showHeader: false },
     },
     {
         path:"/greenhoot-play",
-        name: "GreenHootPlay",
+        name: "userPlay",
         component: GreenHootPlay,
         meta: { showHeader: false },
     },
     {
         path:"/waiting-start",
-        name: "WaitingStart",
+        name: "waitingStart",
         component: WaitingRoomPage,
         meta: { showHeader: false },
     },
     {
         path:"/result-exam",
-        name: "ResultExam",
+        name: "resultExam",
         component: ResultExampage,
         meta: { showHeader: false },
     }

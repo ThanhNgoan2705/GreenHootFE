@@ -11,22 +11,6 @@ const columns = ref([
     { label: 'Score', field: 'score' },
     { label: 'Rank', field: 'rank' }
 ])
-
-const data = ref([
-    { playerName: 'John Doe', score: 100, rank: 1 },
-    { playerName: 'Jane Doe', score: 80, rank: 2 },
-    { playerName: 'Bob Smith', score: 120, rank: 3 },
-    { playerName: 'John Doe', score: 100, rank: 1 },
-    { playerName: 'Jane Doe', score: 80, rank: 2 },
-    { playerName: 'Bob Smith', score: 120, rank: 3 },
-    { playerName: 'John Doe', score: 100, rank: 1 },
-    { playerName: 'Jane Doe', score: 80, rank: 2 },
-    { playerName: 'Bob Smith', score: 120, rank: 3 },
-    //...
-])
-
-
-
 const resultStore = useResultStore();
 const roomId = JSON.parse(sessionStorage.getItem('roomId')as string | '');
 const examId = JSON.parse(sessionStorage.getItem('examId')as string | '');
@@ -100,6 +84,7 @@ const getRankbyPlayerName = (playerName: string) => {
                         </tbody>
                     </table>
                 </div>
+                <router-link to="/UserHomePage" class="finish-button"> Finish Exam</router-link>
             </div>
         </main>
     </div>
@@ -174,4 +159,8 @@ const getRankbyPlayerName = (playerName: string) => {
 
 .pagination {
     @apply w-full h-[3rem] flex justify-center items-center mt-[2rem]
-}</style>
+}
+.finish-button {
+    @apply w-1/5 h-1/5 bg-blue-500 text-white text-center rounded-md text-2xl font-bold cursor-pointer
+}
+</style>

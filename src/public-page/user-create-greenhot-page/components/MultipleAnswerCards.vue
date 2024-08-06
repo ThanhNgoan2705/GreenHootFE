@@ -1,14 +1,20 @@
 <script setup lang="ts">
 
+
+
+import { defineProps } from 'vue'
+import type { PropType } from 'vue'
+import { MDBIcon } from 'mdb-vue-ui-kit'
+import { Choice, Packet, Question, UpdateQuestionRequest } from '@/proto/Proto';
+import { WS } from '@/socket/WS';
+import { useQuestionStore } from '@/states/QuestionStore';
 import {nextTick, onMounted, ref, watch} from 'vue'
-import {MDBIcon} from 'mdb-vue-ui-kit'
-import {Choice, Packet, Question, UpdateQuestionRequest} from '@/proto/Proto';
-import {WS} from '@/socket/WS';
 
 const onClick = ref(false);
 const hasContent = ref(false);
 const hasImage = ref(false);
 const isTrueAnswer = ref(false);
+const hasBGColor = ref(false);
 let savedAnswer = ref<HTMLElement>();
 const correctAnswerIndex = ref(0);
 
@@ -19,6 +25,7 @@ const symbol = ref({
   2: 'circle',
   3: 'star'
 })
+const color = ['rgb(226,27,60)', 'rgb(19,104,206)', 'rgb(0,128,0)', 'rgb(216, 158, 0)'];
 const MAX_CHARACTER = 80;
 
 onMounted(() => {
@@ -39,7 +46,7 @@ const makeEditable = (index: number) => {
   const limitNumber = document.querySelectorAll('.limitTime-number') as NodeListOf<HTMLElement>;
   savedAnswer.value = answerOption[index];
   // Make it editable
-  if (answerOption[index].innerText.trim() === 'Enter your answer here' ){
+  if (answerOption[index].innerText.trim() === 'Enter your answer here') {
     answerOption[index].style.color = 'black ';
     answerOption[index].innerText = '';
   }
@@ -85,11 +92,12 @@ onMounted(() => {
   });
 });
 const changeBGColor = (index: number) => {
-  const color = ['rgb(226,27,60)', 'rgb(19,104,206)', 'rgb(0,128,0)', 'rgb(216, 158, 0)'];
+
   const answerContainer = document.querySelectorAll('.answer-option-container') as NodeListOf<HTMLElement>;
   answerContainer.forEach((answer, i) => {
     if (i === index) {
       answer.style.backgroundColor = color[i];
+
     }
   });
 }
@@ -98,7 +106,6 @@ const changeBgColorOnInput = (index: number) => {
   const answerContainer = document.querySelectorAll('.answer-option-container') as NodeListOf<HTMLElement>;
   const actionButton = document.querySelectorAll('.add-img-btn') as NodeListOf<HTMLElement>;
   const radioBtn = document.querySelectorAll('.radio-btn') as NodeListOf<HTMLElement>;
-  console.log(answerOption.length)
   answerOption.forEach((answer, i) => {
     if (i === index && answer.innerText !== '') {
       changeBGColor(index);
@@ -194,19 +201,30 @@ const removeAnswerImage = (index: number) => {
   });
 }
 
-const props = defineProps<{
-  items:  Choice[],
-  questionTitle: string,
-  questionId:  number,
-  questionIndex: number,
-}>();
+
+const props = defineProps({
+  items: {
+    type: Array as PropType<Choice[]>,
+    required: true,
+  },
+  questionTitle: {
+    type: String,
+    required: true
+  },
+  questionId: {
+    type: Number,
+    required: true
+  },
+  questionIndex: {
+    type: Number,
+    required: true
+  }
+})
 console.log(props.items+ 'items')
 console.log(props.questionTitle+ 'questionTitle')
 console.log(props.questionId)
 
 const answerTextRefs = ref<HTMLParagraphElement[]>([]);
-
-
 const setAnswerTextRef = (index: number, el: HTMLParagraphElement) => {
   if (el) {
     answerTextRefs.value[index] = el;
@@ -220,6 +238,7 @@ const updateAnswerText = (event: InputEvent) => {
   }
 };
 
+
 const getListAnswerText = () => {
   return document.querySelectorAll('.answer-option-text') as NodeListOf<HTMLElement>;
 };
@@ -232,9 +251,14 @@ const saveQuestion = (event: Event) => {
   question.questionId = props.questionId;
   question.questionText = props.questionTitle;
   question.examId = parseInt(examId);
+  question.imageUrl = sessionStorage.getItem('imageQuestion') as string;
   question.questionIndex = props.questionIndex;
   const answers = getListAnswerText();
   question.choices = Array.from(answers).map((answer, index) => {
+    if (answer.textContent.trim() === 'Enter your answer here') {
+      answer.textContent = '';
+      return;
+    }
     let choice = Choice.create();
     if(answer.textContent){
       choice.choiceText = answer.textContent;
@@ -252,36 +276,17 @@ const saveQuestion = (event: Event) => {
   sessionStorage.setItem('question', JSON.stringify(question));
 }
 
-watch(() => props.items, (newItems) => {
- for (let i = 0; i < newItems.length; i++) {
-  console.log(newItems[i].choiceText)
-    if (newItems[i].choiceText.trim() !== ''|| newItems[i].choiceText.trim() !== 'Enter your answer here'){
-        if(newItems[i].isCorrect){
-          markTrueAnswer(i);
-          changeBGColor(i);
-          changeBgColorOnInput(i);
-        }
-        changeBGColor(i);
-        changeBgColorOnInput(i);
-      }
-    else {
-      hasContent.value = false;
-      onClick.value = false;
-    }
-  }
-  
-  
-},{deep:true});
 </script>
 
 <template>
   <div class="answer-options w-full  h-full">
     <div v-for="(item, index) in items" :key="index" :class="`answer-option-${index}`" ref="cardAnswers"
+   
       class="answer-option-container  asw-res py-0.5 px-0.5 my-0.5 mx-0.5">
       <div class="answer-option-sign" ref="sign">
-        <span class=" sign-icon inline-block align-middle w-10 h-10 " />
+        <span class=" sign-icon inline-block align-middle w-12 h-10 " />
       </div>
-      <MDBIcon :icon="symbol[index as keyof typeof symbol]" size="xl" class="text-white absolute left-4 top-1/2" />
+      <MDBIcon :icon="symbol[index as keyof typeof symbol]" size="2xl" class="text-white absolute left-4 top-1/2" />
       <div class=" flex flex-1 items-center content-end w-full relative h-full " style="max-width: calc(100% - 3rem);">
         <div class="ans-contain  w-full h-full">
           <div class="answer-option-edit whitespace-pre-wrap break-words box-border" @click="makeEditable(index)"
@@ -289,7 +294,7 @@ watch(() => props.items, (newItems) => {
 
             <p class="answer-option-text relative w-full" ref="el => setAnswerTextRef(index, el)"
               @input="updateAnswerText">
-              {{ item.choiceText }}
+              {{ item?.choiceText }}
             </p>
             <span class="limitTime-number   absolute right-1 top-0 rounded-full text-gray " ref="limitCharacterNumber">{{
               MAX_CHARACTER }}</span>

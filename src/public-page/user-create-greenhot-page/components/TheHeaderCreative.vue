@@ -8,7 +8,7 @@ import {useExamStore} from '@/states/ExamStore';
 import {showConfirmAlert, showSuccessAlert, showWarningAlert} from '@/service/Alert';
 import {useQuestionStore} from '@/states/QuestionStore';
 import router from '@/router';
-
+import { handleRequestListExam } from '@/service/UserService';
 
 const openPopup = ref(false);
 const examTitle = ref('');
@@ -37,20 +37,21 @@ const handleGetExam = () => {
 }
 
 const togglePopup = () => {
-  openPopup.value =
-   !openPopup.value;
+  openPopup.value =false;
 }
 
 const examStore = useExamStore();
 const questionStore = useQuestionStore();
 
 
-const userId = sessionStorage.getItem('userId')as string | '';
+
+const userId = JSON.parse(sessionStorage.getItem("auth-user")as string | '').userId;
+
 
 const sendUpdateExamRequest= (event:Event)=>{
   event.preventDefault();
   let exam = Exam.create();
-  exam.userId = parseInt(userId);
+  exam.userId = userId;
   exam.title = examTitle.value;
   exam.description = examDescription.value;
   exam.imageUrl = imageUrl.value;
@@ -62,30 +63,26 @@ const sendUpdateExamRequest= (event:Event)=>{
   WS.send(packet);
 }
 
-
-
 const completeExam = () => {
   showConfirmAlert("Are you sure you want to exit?", () => {
-    router.push("/UserHomePage");
+    router.push({name: 'userHome'});
     
   });
   
 };
 const saveExam = () => {
-  if(questionStore.questions.length === 1&& questionStore.isUpdateQuestion=== false){
-    showWarningAlert("Please add at  question content to save the exam.");
-    return;
-  }
   if(questionStore.isUpdateQuestion == true){
     showSuccessAlert("Exam saved successfully.");
-    router.push("/UserHomePage");
+    router.push({name: 'userHome'});
+    handleRequestListExam(userId);
   }
-  if (questionStore.isNewQuestion) {
+ else  {
     showWarningAlert("Please add content and  save the question before saving the exam.");
     return;
-    
   }
 };
+
+const coverPhoto = ref('');
 const uploadImage = (event: Event) => {
   event.preventDefault();
   const input = document.createElement('input');
@@ -107,14 +104,13 @@ const uploadImage = (event: Event) => {
     })
       .then((response) => response.text())
       .then((data) => {
-        imageUrl.value = data;
+
+        coverPhoto.value = data;
         console.log(data);
       });
   };
   input.click();
 }
-
-
 </script>
 <template>
   <MDBNavbar expand="xl" light bg="white" position="top" class="nav-container ">
@@ -197,9 +193,11 @@ const uploadImage = (event: Event) => {
                       <PhotoIcon class="mx-auto h-12 w-12 text-gray-300" aria-hidden="true"/>
                       <div class="mt-4 flex text-sm leading-6 text-gray-600">
                         <label for="file-upload"
-                               class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                               <button @click="uploadImage" class="text-indigo-600">Upload a file</button>
-                               <img v-if="imageUrl" :src="imageUrl" alt="cover photo" class="h-auto w-full"/>
+                          class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                          <span>Upload a file</span>
+                          <button @click="uploadImage" class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer">Upload
+                            a file</button> 
+                            <img v-if="coverPhoto" :src="coverPhoto" class="w-1/2 h-auto m-auto" alt="cover photo" />
                         </label>
 
                       </div>

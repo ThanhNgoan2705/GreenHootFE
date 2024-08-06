@@ -66,3 +66,12 @@ export function showToastTopRight(message: string) {
         timer: 1500
     });
 }
+export function showSuccessAlertWithReLoad(message: string) {
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: message,
+    }).then(() => {
+        window.location.reload();
+    });
+}

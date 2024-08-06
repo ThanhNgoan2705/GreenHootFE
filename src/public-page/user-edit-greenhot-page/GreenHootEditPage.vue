@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, ref, watchEffect} from "vue";
+import { computed, nextTick, onMounted, onUnmounted, ref, watch, watchEffect} from "vue";
 import TheHeaderEdit from "@/public-page/user-edit-greenhot-page/components/TheHeaderEdit.vue";
 import QuestionDemo from "@/public-page/user-edit-greenhot-page/components/QuestionDemo.vue";
 import PopUpEditTest from "./components/PopUpEditTest.vue";
 import {useQuestionStore} from "@/states/QuestionStore";
-import type {Question} from "@/models/Question";
 import QuestionContent from "@/public-page/user-edit-greenhot-page/components/QuestionContent.vue";
 import { useExamStore } from "@/states/ExamStore";
+import { Question } from "@/proto/Proto";
 // responsive for mobile
 // Responsive check
 const isMobile = ref(window.innerWidth <= 767);
@@ -25,13 +25,13 @@ onUnmounted(() => {
 
 // Exam store
 const examStore = useExamStore();
-const exam = ref(examStore.exam);
+const exam = computed(() => examStore.exam);  
+watch(() => exam,  (newVal) => {
+  nextTick(() => {
+    console.log("exam.value: ", exam.value);
+  });
+}, { deep: true });
 
-watchEffect(async () => {
-  exam.value = examStore.exam;
-  console.log(exam.value);
-  await nextTick();
-});
 
 const questionStore = useQuestionStore();
 let questionDataSelect = ref(questionStore.getQuestionSelected);
@@ -44,8 +44,9 @@ watchEffect(async () => {
 
 
 const selectQuestionDemo = (question:Question) => {
-  questionStore.selectQuestion;
+  questionStore.selectQuestion
 };
+
 
 
 </script>
@@ -56,11 +57,11 @@ const selectQuestionDemo = (question:Question) => {
       <TheHeaderEdit :exam="exam" />
       <div class="creator-sidebar box-border ">
         <div class="side-bar-content ">
-          <QuestionDemo :exam="exam" @selectQuestion="selectQuestionDemo"  />
+          <QuestionDemo :exam="exam" :selectQuestion="selectQuestionDemo"  />
         </div>
       </div>
       <main class="main-content-wrapp">
-        <QuestionContent  />
+        <QuestionContent :selectQuestion="questionDataSelect" />
       </main>
     </div>
   </div>

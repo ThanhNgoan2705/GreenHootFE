@@ -52,6 +52,9 @@ const makeEditable = (index: number) => {
     if (answerOption[index].innerText.length > 0 && answerOption[index].innerText.trim() !== '') {
       answerOption[index].style.color = 'white ';
     }
+    else if (answerOption[index].innerText.trim() === '') {
+      answerOption[index].style.color = 'black ';
+    }
   });
 }
 
@@ -210,12 +213,26 @@ const removeAnswerImage = (index: number) => {
     }
   });
 }
-const props = defineProps<{
-  items:  Choice[],
-  questionTitle: string,
-  questionId:  number,
-  questionIndex: number,
-}>();
+
+
+const props = defineProps({
+  items: {
+    type: Array as PropType<Choice[]>,
+    required: true,
+  },
+  questionTitle: {
+    type: String,
+    required: true
+  },
+  questionId: {
+    type: Number,
+    required: true
+  },
+  questionIndex: {
+    type: Number,
+    required: true
+  }
+})
 console.log(props.items+ 'items')
 console.log(props.questionTitle+ 'questionTitle')
 console.log(props.questionId)
@@ -269,19 +286,20 @@ const saveQuestion = (event: Event) => {
 
 watch(() => props.items, (newItems) => {
  for (let i = 0; i < newItems.length; i++) {
-  console.log(newItems[i].choiceText)
-    if (newItems[i].choiceText.trim() !== ''|| newItems[i].choiceText.trim() !== 'Enter your answer here'){
+  console.log("new item "+newItems[i].choiceText)
+    if ( newItems[i].choiceText.trim() !== 'Enter your answer here'){
         if(newItems[i].isCorrect){
           markTrueAnswer(i);
           changeBGColor(i);
           changeBgColorOnInput(i);
         }
-        changeBGColor(i);
-        changeBgColorOnInput(i);
+        else{changeBGColor(i);
+          changeBgColorOnInput(i);}
+        
       }
     else {
-      hasContent.value = false;
-      onClick.value = false;
+      hasContent.value = true;
+      onClick.value = true;
     }
   }
   

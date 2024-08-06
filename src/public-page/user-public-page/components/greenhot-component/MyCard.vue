@@ -20,9 +20,16 @@ const props = defineProps({
     required: true
   }
 });
+
 console.log(props.data);
 const testId = props.data.examId;
 console.log(testId);
+
+const emit = defineEmits(['deleteExam']);
+const removeExam = (event: Event) => {
+  event.preventDefault();
+  emit('deleteExam', props.data.examId);
+}
 
 const requestCreateRoom = (event: Event) => {
   event.preventDefault();
@@ -61,7 +68,7 @@ const EditExam = (event: Event) => {
   WS.send(packet);
 }
 
-const emit = defineEmits(['deleteExam'],);
+
 
 
 </script>

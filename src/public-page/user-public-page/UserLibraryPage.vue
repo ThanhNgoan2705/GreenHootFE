@@ -6,7 +6,7 @@ import {
 } from 'mdb-vue-ui-kit';
 import { useUserStore } from "@/states/UserStore";
 import { useExamStore } from "@/states/ExamStore";
-import { computed, nextTick, onMounted, onUnmounted, ref, watchEffect } from "vue";
+import { computed, nextTick, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
 import MyCard from "@/public-page/user-public-page/components/greenhot-component/MyCard.vue";
 import MyDraftCards from "@/public-page/user-public-page/components/greenhot-component/MyDraftCards.vue";
 
@@ -28,19 +28,16 @@ onUnmounted(() => {
   window.removeEventListener('resize', updateIsMobile);
 })
 
-
-
 const examStore = useExamStore();
 const deleteExam = (examId: number) => {
   examStore.removeExam(examId);
-
 }
-const listExam = ref(examStore.getExams);
-watchEffect( async() => {
-   listExam.value = examStore.getExams;
-      await nextTick();
-    });
-
+let listExam = computed(() => examStore.getExams);
+watch(() => listExam,  (newVal) => {
+  nextTick(() => {
+    console.log("listExam.value: ", listExam.value);
+  });
+}, { deep: true });
 const exams = listExam.value;
 console.log("exams: ", exams);
 const activeTabId = ref('Recent');

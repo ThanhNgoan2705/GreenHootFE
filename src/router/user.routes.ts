@@ -7,10 +7,10 @@ import GreenHootEditPage from "@/public-page/user-edit-greenhot-page/GreenHootEd
 const routes = [
     {path: '/UserHomePage', name:'userHomePage' , component: UserHomePage, meta: {showHeader: false}},
     {path: '/', redirect: '/UserHomePage'},
-    {path: '/UserProfilePage', component: UserProfilePage, meta: {showHeader: false}},
-    {path: '/UserSettingsPage', component: UserSettingsPage, meta: {showHeader: false}},
-    {path: '/GreenHootCreativePage', component: GreenHootCreativePage, meta: {showHeader: false}},
-    {path: '/GreenHootEditPage', component: GreenHootEditPage, meta: {showHeader: false}},
+    {path: '/UserProfilePage',name:'userProfile', component: UserProfilePage, meta: {showHeader: false}},
+    {path: '/UserSettingsPage',name:'userSetting', component: UserSettingsPage, meta: {showHeader: false}},
+    {path: '/GreenHootCreativePage',name:'userCreative', component: GreenHootCreativePage, meta: {showHeader: false}},
+    {path: '/GreenHootEditPage',name:'userEdit', component: GreenHootEditPage, meta: {showHeader: false}},
     {path: '/:pathMatch(.*)*', redirect: '/UserHomePage'},
 ];
 export default routes

@@ -106,15 +106,9 @@ const sendRegister = (event:Event) => {
 
           </form>
           <MDBRow class="g-3 mt-3 mb-2">
-            <MDBBtn><img src="../../assets/img/google.svg" alt="Google" class="float-start">Continue With Google</MDBBtn>
-          </MDBRow>
-          <MDBRow class="g-3 mt-3 mb-2">
             <p class="text-center">Already have an account?<a role="button" class="text-primary ms-1"> <u>
               <router-link to="/SignInPage">Log In</router-link>
             </u></a></p>
-            <p>
-              <router-link to="/EmailVerification"> verify email</router-link>
-            </p>
           </MDBRow>
         </MDBCardBody>
       </MDBCard>

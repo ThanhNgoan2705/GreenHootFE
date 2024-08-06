@@ -11,7 +11,7 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "server": "vue-cli-service serve"
+      "serve": "vite"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.2",

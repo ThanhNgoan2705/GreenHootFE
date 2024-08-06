@@ -58,8 +58,6 @@ export class WS {
     }
 
     onOpen = (event: any) => {
-        // console.log("WS.onOpen:::", event.data);
-        // console.debug("WS connected");
         console.log("WS connected");
         // viet ham relogin
         ReLogin();

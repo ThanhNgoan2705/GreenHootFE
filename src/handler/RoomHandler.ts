@@ -23,7 +23,7 @@ export class RoomHandler extends AbsHandler {
                 let roomId = resCreateRoom.roomId;
                 sessionStorage.setItem('roomId', roomId.toString());
                 console.log("roomId", resCreateRoom.roomId);
-                router.push('/waiting-players');
+                router.push({name: 'waitingPlayers'});
             }
             if (packet.data.oneofKind === "resJoinRoom") {
                 console.log("da vao duoc RoomHandler.onMessageHandler:::ResJoinRoom");
@@ -47,10 +47,10 @@ export class RoomHandler extends AbsHandler {
                         sessionStorage.setItem('player-name', playerName);
                         showToastTopRight("You joined room successfully");
                         console.log("status : " + respone + "vo phong thanh cong");
-                        router.push('/waiting-start');
+                        router.push({name: 'waitingStart'});
                     } else {
                         showWarningAlert("You must login to join room");
-                        router.push('/SignInPage');
+                        router.push({name: 'Login'});
                     }
                 }
             }

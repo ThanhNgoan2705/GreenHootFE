@@ -22,9 +22,6 @@ const userId = parseInt(user?.userId);
 console.log("token" + token);
 console.log("user" + user);
 
-
-
-
 const isMobile = ref(window.innerWidth <= 767);
 const updateIsMobile = () => {
   isMobile.value = window.innerWidth <= 767;
@@ -37,61 +34,20 @@ onUnmounted(() => {
   window.removeEventListener('resize', updateIsMobile);
 })
 
-
-const handleRequestListExam = () => {
-  console.log("userId" + userId);
-  let getAllExamByUserId = GetAllExamRequest.create({
-    userId: userId,
-  });
-  let packet = Packet.create();
-  packet.data = { oneofKind: 'getAllExamRequest', getAllExamRequest: getAllExamByUserId };
-  console.log(packet);
-  console.log("sent get all exam request to server");
-  WS.send(packet);
-}
-onMounted(() => {
-  handleRequestListExam();
-});
 const examStore = useExamStore();
-const listExam = ref(examStore.getExams);
-watchEffect(async () => {
-  listExam.value = examStore.getExams;
-  await nextTick();
-});
-const exams = listExam.value;
-
 const reportStore = useReportStore();
-const listReport = ref(reportStore.getAllreports);
-watchEffect(async () => {
-  listReport.value = reportStore.getAllreports;
-  await nextTick();
+
+const listExam = computed(() => examStore.getExams);
+watchEffect(() => {
+  console.log("listExam: ", listExam.value);
 });
-const reports = listReport.value.slice(0, 4);
+const exams = computed(() => listExam.value.slice(0, 4));
 
-// pagination
-const currentPage = ref(1);
-const pageSize = 4;
-let totalPages = Math.ceil(exams.length / pageSize);
-
-const paginationData = computed(() => {
-  const start = (currentPage.value - 1) * pageSize;
-  const end = start + pageSize;
-  return exams.slice(start, end);
+const listReport = computed(() => reportStore.getAllreports);
+watchEffect(() => {
+  console.log("listReport: ", listReport.value);
 });
-
-const nextPage = () => {
-  if (currentPage.value < totalPages) {
-    currentPage.value++;
-  }
-}
-
-const previousPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-  }
-}
-
-
+const reports = computed(() => listReport.value.slice(0, 4));
 
 
 </script>
@@ -129,7 +85,7 @@ const previousPage = () => {
               <div class="main-content">
                 <div class="content-list">
                   <MDBRow class="flex flex-row listTest">
-                    <MDBCol class="col-xl-5 col-lg-4  mb-4" v-for="(item, index) in paginationData" :key="index">
+                    <MDBCol class="col-xl-5 col-lg-4  mb-4" v-for="(item, index) in exams" :key="index">
                       <component class="main-card" :is="CardGreenHoot" :key="index" :data="item" />
                     </MDBCol>
 

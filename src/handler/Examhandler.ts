@@ -14,11 +14,11 @@ export class ExamHandler extends AbsHandler {
         let respone = 0;
         const examStore = useExamStore();
         const questionStore = useQuestionStore();
-        for (let packet of packets.packet) {
+        for (const packet of packets.packet) {
             // console.log("ExamHandler.onMessageHandler:::packet", packet);
             if (packet.data.oneofKind === "createExamResponse") {
                     console.log("da vao duoc ExamHandler.onMessageHandler:::ResGetExam");
-                    let resGetExam = packet.data.createExamResponse;
+                    const resGetExam = packet.data.createExamResponse;
                     respone = resGetExam.examId;
                     console.log(resGetExam.examId);
                     console.log(resGetExam.success);
@@ -47,7 +47,7 @@ export class ExamHandler extends AbsHandler {
             }
             if (packet.data.oneofKind === "updateExamResponse") {
                     console.log("da vao duoc ExamHandler.onMessageHandler:::ResUpdateExam");
-                    let resUpdateExam = packet.data.updateExamResponse;
+                    const resUpdateExam = packet.data.updateExamResponse;
                     if (resUpdateExam.success) {
                         examStore.setPopUpState(false);
                         showSuccessAlert("Update Exam Success");
@@ -62,7 +62,7 @@ export class ExamHandler extends AbsHandler {
                     console.log(resGetAllExam.exam);
                     const listExam = resGetAllExam.exam;
                     const listExamCurrent = examStore.getExams;
-                    for (let exam of listExam) {
+                    for (const exam of listExam) {
                         if (listExamCurrent.findIndex((item) => item.examId === exam.examId) === -1 && exam.status!==-1) {
                             listExamCurrent.push(exam);
                         }else{
@@ -73,9 +73,9 @@ export class ExamHandler extends AbsHandler {
 
             if (packet.data.oneofKind === "deleteExamResponse") {
                     console.log("da vao duoc ExamHandler.onMessageHandler:::ResDeleteExam");
-                    let resDeleteExam = packet.data.deleteExamResponse;
+                    const resDeleteExam = packet.data.deleteExamResponse;
                     console.log(resDeleteExam.success);
-                    const examId = sessionStorage.getItem("examId");
+                    const examId = sessionStorage.getItem("examId") as string | '';
                     if (resDeleteExam.success) {
                         if (examId !== null) {
                             examStore.removeExam(parseInt(examId));
@@ -89,7 +89,7 @@ export class ExamHandler extends AbsHandler {
             }
             if (packet.data.oneofKind === "getExamResponse") {
                     console.log("da vao duoc ExamHandler.onMessageHandler:::ResGetExam");
-                    let resGetExam = packet.data.getExamResponse;
+                    const resGetExam = packet.data.getExamResponse;
                     console.log(resGetExam.exam);
                     const exam = resGetExam.exam;
                     if (exam !== null && exam !== undefined) {
@@ -100,22 +100,25 @@ export class ExamHandler extends AbsHandler {
             }
             if (packet.data.oneofKind === "createQuestionResponse") {
                     console.log("da vao duoc ExamHandler.onMessageHandler:::ResCreateQuestion");
-                    let resCreateQuestion = packet.data.createQuestionResponse;
+                    const resCreateQuestion = packet.data.createQuestionResponse;
                     console.log(resCreateQuestion.questionId);
                     respone = resCreateQuestion.questionId;
-                    const examId = sessionStorage.getItem("examId");
-                    if (examId !== null && resCreateQuestion.success ) {
+                    const examId = sessionStorage.getItem("examId")as string | '';
+                    if (examId !== null && resCreateQuestion.success) {
+                        questionStore.questionIndex++;
                         questionStore.selectedQuestionId = respone;
                         questionStore.addNewQuestion(respone, parseInt(examId));
                         questionStore.isNewQuestion = true;
+                        showSuccessAlert("Create Question Success");
                     }
+
                      else {
                         showWarningAlert("Create Question Fail");
                     }
             }
             if (packet.data.oneofKind === "getQuestionResponse") {
                     console.log("da vao duoc ExamHandler.onMessageHandler:::ResGetQuestion");
-                    let resGetQuestion = packet.data.getQuestionResponse;
+                    const resGetQuestion = packet.data.getQuestionResponse;
                     console.log(resGetQuestion.question);
                     const question = resGetQuestion.question;
                     if (question !== null && question !== undefined) {
@@ -126,7 +129,7 @@ export class ExamHandler extends AbsHandler {
             }
             if (packet.data.oneofKind === "updateQuestionResponse") {
                     console.log("da vao duoc ExamHandler.onMessageHandler:::ResUpdateQuestion");
-                    let resUpdateQuestion = packet.data.updateQuestionResponse;
+                    const resUpdateQuestion = packet.data.updateQuestionResponse;
                     console.log(resUpdateQuestion.success);
                     console.log(resUpdateQuestion.message);
                     const question = JSON.parse(sessionStorage.getItem("question") || "{}");
@@ -141,7 +144,7 @@ export class ExamHandler extends AbsHandler {
             }
             if (packet.data.oneofKind === "deleteQuestionResponse") {
                     console.log("da vao duoc ExamHandler.onMessageHandler:::ResDeleteQuestion");
-                    let resDeleteQuestion = packet.data.deleteQuestionResponse;
+                    const resDeleteQuestion = packet.data.deleteQuestionResponse;
                     console.log(resDeleteQuestion.success);
                     const question = sessionStorage.getItem("question") || "{}";
                     const questionId = JSON.parse(question).questionId;

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { MDBIcon } from "mdb-vue-ui-kit";
+
 import { onMounted, onUnmounted, ref, watch } from "vue";
+
 import { useQuestionStore } from "@/states/QuestionStore";
 import { computed } from "vue";
 import { CreateQuestionRequest, DeleteQuestionRequest, Packet } from "@/proto/Proto";

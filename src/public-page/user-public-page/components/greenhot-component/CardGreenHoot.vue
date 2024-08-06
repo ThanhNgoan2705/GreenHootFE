@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import {MDBCard, MDBCardImg, MDBCardBody, MDBCardText,MDBCardFooter,MDBBtn,MDBCardTitle} from 'mdb-vue-ui-kit';
-import {PropType, ref} from "vue";
+import {MDBCard, MDBCardBody, MDBCardFooter} from 'mdb-vue-ui-kit';
+import type {PropType} from 'vue';
 import {useUserStore} from "@/states/UserStore";
-import {useExamStore} from "@/states/ExamStore";
 import {Exam, Packet, ReqCreateRoom} from "@/proto/Proto";
 import {WS} from "@/socket/WS";
 

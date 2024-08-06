@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 import { MDBIcon } from "mdb-vue-ui-kit";
+
 import { nextTick, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
 import type { PropType } from "vue";
 import { useQuestionStore } from "@/states/QuestionStore";
@@ -19,6 +20,7 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', updateIsMobile);
 })
+
 const questionStore = useQuestionStore();
 
 const props = defineProps({
@@ -43,6 +45,7 @@ const examId = computed(() => examStore.examId);
 
 
 
+
 const userId = JSON.parse(sessionStorage.getItem('auth-user') || '{}').userId;
 
 const questionIndex = computed(() => questionStore.getQuestionSelected.questionIndex);
@@ -53,6 +56,7 @@ const selectQuestionDemo = (questionId: number) => {
     packet.data = { oneofKind: 'getQuestionRequest', getQuestionRequest: getQuestionRequest };
     console.log(packet);
     WS.send(packet);
+
 }
 const deleteQuestion = ( questionId : number) => {
   let deleteQuestionRequest = DeleteQuestionRequest.create();
@@ -73,8 +77,6 @@ const handleAddQuestion = (event: Event) => {
     console.log("Packet", packet);
     WS.send(packet);
 };
-
-
 </script>
 <template>
   <div v-for="question in  props.exam.questions" :key="question.questionId"

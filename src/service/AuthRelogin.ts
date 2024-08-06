@@ -4,7 +4,7 @@ import { WS } from "@/socket/WS";
 const Relogin = async () => {
     // WS.me().connect();
     
-     let token = sessionStorage.getItem('auth-token') || '';
+     let token = sessionStorage.getItem('auth-token') as string | '';
      const user = JSON.parse(sessionStorage.getItem('auth-user') || '{}');
      const userName = user?.username || '';
      console.log('tokenRelogin', token);

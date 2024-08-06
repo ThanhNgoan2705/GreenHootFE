@@ -15,7 +15,7 @@ export interface Player{
 }
 export const useRoomStore = defineStore('Room', {
     state: () => ({
-        roomId: sessionStorage.getItem("roomId") ? JSON.parse(sessionStorage.getItem("roomId") || "") : 0,
+        roomId: sessionStorage.getItem("roomId") as string ? JSON.parse(sessionStorage.getItem("roomId") as string || "") : 0,
         room: {} as Room,
         players: [] as Player[],
         player: {} as Player,

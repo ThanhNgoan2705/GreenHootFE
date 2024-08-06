@@ -1,16 +1,13 @@
 <script setup lang="ts">
 
-import QuestionDemo from "@/public-page/user-create-greenhot-page/components/QuestionDemo.vue";
-import { MDBIcon } from "mdb-vue-ui-kit";
+import {MDBIcon} from "mdb-vue-ui-kit";
 import MultipleAnswerCards from "@/public-page/user-create-greenhot-page/components/MultipleAnswerCards.vue";
 import TrueFalseAnswerCards from "@/public-page/user-create-greenhot-page/components/TrueFalseAnswerCards.vue";
 import TypeAnswerCards from "@/public-page/user-create-greenhot-page/components/TypeAnswerCards.vue";
 import MediaQuestionOption from "@/public-page/user-create-greenhot-page/components/MediaQuestionOption.vue";
-import { type DefineComponent, nextTick, onMounted, onUnmounted, ref, PropType, computed, watchEffect } from "vue";
+import {type DefineComponent, nextTick, onMounted, onUnmounted, ref, watchEffect} from "vue";
 
-import { useQuestionStore } from "@/states/QuestionStore";
-import { watch } from "vue";
-import { Exam } from "@/proto/Proto";
+import {useQuestionStore} from "@/states/QuestionStore";
 import MultipleChoiceIcon from "@/assets/icon/MultipleChoiceIcon.vue";
 import TrueFalseIcon from "@/assets/icon/TrueFalseIcon.vue";
 import TypeAnswerIcon from "@/assets/icon/TypeAnswerIcon.vue";
@@ -153,7 +150,7 @@ const saveText = () => {
 const questionStore = useQuestionStore();
 const selectedQuestion = ref(questionStore.selectQuestion);
 watchEffect(async () => {
-  selectedQuestion.value = questionStore.getSelectedQuestion;
+  selectedQuestion.value = questionStore.selectQuestion;
   await nextTick();
   // Thực hiện các hành động cần thiết với câu hỏi mới
   console.log("Câu hỏi mới: ", selectedQuestion.value);

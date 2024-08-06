@@ -25,8 +25,8 @@ const sendLogInAccount=(event:Event)=>{
   console.log("sent login");
   WS.send(packet);
 }
-const token = sessionStorage.getItem("auth-token");
-const user = JSON.parse(sessionStorage.getItem("auth-user"));
+const token = sessionStorage.getItem("auth-token")as string | '';
+const user = JSON.parse(sessionStorage.getItem("auth-user")as string | '');
 if (user) {
   userName.value = user.username;
 }

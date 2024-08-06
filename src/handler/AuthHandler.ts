@@ -3,9 +3,8 @@ import type {PacketWrapper} from "@/proto/Proto";
 import router from "@/router";
 import {useUserStore} from "@/states/UserStore";
 import {showErrorAlert, showToastTopRight, showWarningAlert} from "@/service/Alert";
+
 import { getAllExameJoinedReport, getAllHostedReport, handleRequestListExam } from "@/service/UserService";
-
-
 export class AuthHandler extends AbsHandler {
 
     constructor() {
@@ -15,7 +14,8 @@ export class AuthHandler extends AbsHandler {
         let respone = 0;
         const userStore = useUserStore();
         let count = 0;
-        
+        const actionAfterLogin = sessionStorage.getItem("actionAfterLogin")as string |'';
+
         for (let packet of packets.packet) {
             // console.log("AuthHandler.onMessageHandler:::packet");
             if (packet.data.oneofKind === "resLogin") {

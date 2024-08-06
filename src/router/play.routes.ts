@@ -18,7 +18,7 @@ const routes = [
     },
     {
         path:"/waiting-start",
-        name: "WaitingStart",
+        name: "waitingStart",
         component: WaitingRoomPage,
         meta: { showHeader: false },
     },

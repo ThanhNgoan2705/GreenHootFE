@@ -1,36 +1,48 @@
 import AbsHandler from "./AbsHandler";
 import router from "@/router";
-import type { PacketWrapper } from "@/proto/Proto";
-import { showInfoAlert, showToastTopRight, showWarningAlert } from "@/service/Alert";
-import { useReportStore } from "@/states/ReportStore";
+import type {PacketWrapper} from "@/proto/Proto";
+import {showWarningAlert} from "@/service/Alert";
+import {useReportStore} from "@/states/ReportStore";
 
 export class ReportHandler extends AbsHandler {
     constructor() {
         super();
     }
     onMessageHandle(packets: PacketWrapper) {
-        let respone = 0;
         const reportStore = useReportStore();
-        for (let packet of packets.packet) {
+        for (const packet of packets.packet) {
             console.log(packet.data.oneofKind);
             if (packet.data.oneofKind === "resGetAllReportByHostId") {
                 const reports = packet.data.resGetAllReportByHostId.reports;
+                const hostReports = reportStore.getAllreports;
                 console.log(reports);
-                if (reports.length === 0) {
-                    showWarningAlert("No report found");
+                if (reports.length === 0 && router.currentRoute.value.path === '/UserReportsPage') {
+                    showWarningAlert  ("No report found");
                 } else {
-                    reportStore.setReports(reports);
+                    for (const report of reports) {
+                        if (hostReports.findIndex((r) => r.examSessionId === report.examSessionId) === -1) {
+                            hostReports.push(report);
+                        } else {
+                            hostReports.splice(hostReports.findIndex((r) => r.examSessionId === report.examSessionId), 1, report);
+                        }
+                    }
                 }
             }
             if (packet.data.oneofKind === "resGetAllReportByPlayerId") {
                 const reports = packet.data.resGetAllReportByPlayerId.reports;
+                const playerReports = reportStore.getAllreports;
                 console.log(reports);
                 if (reports.length === 0) {
-                    showWarningAlert("No report found! You have not participated in any exam yet!");
-                    router.push({name: 'userReports'});
-                }else{
-                    reportStore.setReports(reports);
+                    showWarningAlert("No report found! You have not participated in any exam yet!");   
+                } else {
+                    for (const report of reports) {
+                        if (playerReports.findIndex((r) => r.examSessionId === report.examSessionId) === -1) {
+                            playerReports.push(report);
+                        } else {
+                            playerReports.splice(playerReports.findIndex((r) => r.examSessionId === report.examSessionId), 1, report);
+                        }
                 }
+            }
             }
             if (packet.data.oneofKind === "resGetReport") {
                 const report = packet.data.resGetReport.report;
@@ -38,8 +50,11 @@ export class ReportHandler extends AbsHandler {
                 if (report) {
                     reportStore.setReport(report);
                     router.push({name: 'userReportsDetail'});
-                }else{
-                    showWarningAlert("No report found");
+                } else {
+                    if (router.currentRoute.value.path === '/UserReportsPage') {
+                        console.log("da vao day");
+                        showWarningAlert("No report found");
+                    }
                 }
             }
         }

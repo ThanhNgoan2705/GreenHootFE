@@ -1,12 +1,9 @@
 import AbsHandler from "./AbsHandler";
-import type { PacketWrapper, ReqUpdateUserInfo } from "@/proto/Proto";
+import type {PacketWrapper} from "@/proto/Proto";
 import router from "@/router";
-import { useUserStore } from "@/states/UserStore";
-import { showToastTopRight } from "@/service/Alert";
-import { showErrorAlert } from "@/service/Alert";
-import { showWarningAlert } from "@/service/Alert";
-import { onMounted } from "vue";
-import { on } from "events";
+import {useUserStore} from "@/states/UserStore";
+import {showErrorAlert, showToastTopRight, showWarningAlert} from "@/service/Alert";
+import { getAllExameJoinedReport, getAllHostedReport, handleRequestListExam } from "@/service/UserService";
 
 
 export class AuthHandler extends AbsHandler {
@@ -18,7 +15,7 @@ export class AuthHandler extends AbsHandler {
         let respone = 0;
         const userStore = useUserStore();
         let count = 0;
-        const actionAfterLogin = sessionStorage.getItem("actionAfterLogin");
+        
         for (let packet of packets.packet) {
             // console.log("AuthHandler.onMessageHandler:::packet");
             if (packet.data.oneofKind === "resLogin") {
@@ -29,18 +26,39 @@ export class AuthHandler extends AbsHandler {
                 console.log(resLogin.status);
 
                 if (resLogin.status === 200) {
-                    router.push({name:'userHome'});
+                    router.push('/UserHomePage');
                     showToastTopRight("Login successfully")
                     userStore.setToken(resLogin.token);
                     sessionStorage.setItem("auth-token", resLogin.token);
                     userStore.setUser(resLogin.user);
                     sessionStorage.setItem("auth-user", JSON.stringify(resLogin.user));
+                    if(resLogin.user?.userId){
+                        handleRequestListExam(resLogin.user?.userId);
+                        getAllHostedReport(resLogin.user?.userId);
+                    }    
                 }
                 if (resLogin.status === 201) {
+                    console.log("da vao duoc relogin va lay duoc userId");
+                    const currentRoute = router.currentRoute.value.name;
+                    console.log(currentRoute);
+
                    userStore.setToken(resLogin.token);
                    sessionStorage.setItem("auth-token", resLogin.token);
                    userStore.setUser(resLogin.user);
                    sessionStorage.setItem("auth-user", JSON.stringify(resLogin.user));
+                   sessionStorage.setItem("actionAfterLogin", 'Logined');
+                   if(router.currentRoute.value.name!=='Login'&& resLogin.user?.userId){
+                    handleRequestListExam(resLogin.user?.userId);
+                    getAllHostedReport(resLogin.user?.userId);
+                   }
+                   else{
+                    router.push('/UserHomePage');
+                    showToastTopRight("Login successfully")
+                    if(resLogin.user?.userId){
+                        handleRequestListExam(resLogin.user?.userId);
+                        getAllHostedReport(resLogin.user?.userId);
+                   }
+                }
                 }
                 if (resLogin.status === 400) {
                     showErrorAlert("Invalid username or password");
@@ -52,7 +70,7 @@ export class AuthHandler extends AbsHandler {
                     showErrorAlert("This account is not verified yet");
                 }
                 if (resLogin.status === 403) {
-                    showErrorAlert("User can not reLogin");
+                    console.log(" 403")
                 }
                 if (resLogin.status === 404) {
                     showWarningAlert("This account is logged in another device");
@@ -66,7 +84,7 @@ export class AuthHandler extends AbsHandler {
                     console.log(resRegister.status);
                     respone = resRegister.status;
                     if (resRegister.status === 200) {
-                        router.push({name:'confirmPage'});
+                        router.push('/ConfirmationPage');
                     }
                     if (resRegister.status === 400) {
                         showErrorAlert("Username already exists");
@@ -87,7 +105,7 @@ export class AuthHandler extends AbsHandler {
                     console.log(resVerify.status);
                     respone = resVerify.status;
                     if (resVerify.status === 200) {
-                        router.push({name:'SignInPage'});
+                        router.push('/SignInPage');
                         showToastTopRight("Verify successfully");
                     }
                     if (resVerify.status === 400) {
@@ -106,7 +124,7 @@ export class AuthHandler extends AbsHandler {
                     console.log(resLogout.status);
                     respone = resLogout.status;
                     if (resLogout.status === 200) {
-                        router.push({name:'SignInPage'});
+                        router.push('/SignInPage');
                         showToastTopRight("Logout successfully");
                     }
                 }
@@ -119,7 +137,7 @@ export class AuthHandler extends AbsHandler {
                     console.log(resForgotPassword.status);
                     respone = resForgotPassword.status;
                     if (resForgotPassword.status === 200) {
-                        router.push({ name: "forgotPass", query: { type: "verifyForgotPassword" } });
+                        router.push({ name: "ForgotPassword", query: { type: "verifyForgotPassword" } });
                     } else {
                         showErrorAlert("Invalid email");
                     }
@@ -132,7 +150,7 @@ export class AuthHandler extends AbsHandler {
                     let resVerifyForgotPassword = packet.data.resVerifyForgotPassword;
                     respone = resVerifyForgotPassword.status;
                     if (resVerifyForgotPassword.status === 200) {
-                        router.push({name:'confirmPage'});
+                        router.push('/ConfirmationPage');
                     } else {
                         showErrorAlert("Invalid email");
                     }

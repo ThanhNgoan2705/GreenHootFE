@@ -1,25 +1,22 @@
 <script setup lang="ts">
-
 import { MDBIcon } from "mdb-vue-ui-kit";
-import { PropType, nextTick, onMounted, onUnmounted, ref, watchEffect } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 import { useQuestionStore } from "@/states/QuestionStore";
 import { computed } from "vue";
-import { CreateQuestionRequest, DeleteQuestionRequest, Exam, Packet } from "@/proto/Proto";
+import { CreateQuestionRequest, DeleteQuestionRequest, Packet } from "@/proto/Proto";
 import { WS } from "@/socket/WS";
 import { useExamStore } from "@/states/ExamStore";
 import { showWarningAlert } from "@/service/Alert";
-
 
 const questionStore = useQuestionStore();
 const questionList = ref(questionStore.getQuestions);
 const isUpdateQuestion = ref(questionStore.isUpdateQuestion);
 // Sử dụng watchEffect để phản hồi với sự thay đổi của câu hỏi
-watchEffect(async () => {
-  questionList.value = questionStore.questions;
-  isUpdateQuestion.value = questionStore.isUpdateQuestion;
-  await nextTick();
-  // Thực hiện các hành động cần thiết với câu hỏi mới
-  console.log("Câu hỏi mới: ", questionList);
+watch(() => questionStore.isUpdateQuestion, (newValue) => {
+  isUpdateQuestion.value = newValue;
+});
+watch(() => questionStore.questions, (newValue) => {
+  questionList.value = newValue;
 });
 let questionListUpdated = questionList.value;
 

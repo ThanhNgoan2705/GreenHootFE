@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { defineProps, PropType } from "vue";
+import { defineProps } from "vue";
+import type { PropType } from "vue";
 import { MDBIcon } from "mdb-vue-ui-kit";
 import MultipleAnswerCards from "../components/MultipleAnswerCards.vue";
 import TrueFalseAnswerCards from "../components/TrueFalseAnswerCards.vue";
@@ -122,43 +123,10 @@ const makeEditable = () => {
   isEditable.value = true;
   if (guildText.value) {
     guildText.value.contentEditable = "true";
-    if (guildText.value.textContent === 'Start entering your question here') {
-      guildText.value.textContent = '';
-
-      // Use setTimeout to defer focus until after the DOM updates
-      setTimeout(() => {
-        guildText.value.focus();
-        guildText.value.textContent = ''
-      }, 0); // A timeout of 0 ms defers the execution until the stack is clear
-    } else {
       guildText.value.focus();
-      guildText.value.textContent = savedText.value;
-
+      savedText.value = guildText.value.textContent ;
     }
-  }
-
-
 }
-const saveText = () => {
-  console.log(guildText.value?.innerText);
-  qsContent.value = true;
-  nextTick(() => {
-    const question = document.getElementById('guild-content') as HTMLElement;
-    savedText.value = question.innerText;
-    questionTitle.value = savedText.value;
-    if (question.innerText === '' && guildText.value) {
-      guildText.value.contentEditable = "false";
-      savedText.value = 'Question';
-      question.innerText = 'Start typing your question';
-    }
-    if (savedText.value.length > 15) {
-      savedText.value = savedText.value.substring(0, 10) + '...';
-    }
-    console.log(savedText.value);
-    console.log(savedText.value);
-  });
-};
-
 const questionStore = useQuestionStore();
 const selectedQuestion = ref(questionStore.selectQuestion);
 const questionData = ref(questionStore.question);
@@ -169,16 +137,16 @@ watchEffect(async () => {
   console.log("Câu hỏi mới: ", selectedQuestion.value);
 });
 
-watchEffect(async() => {
- questionData.value = questionStore.question;
- await nextTick();
- console.log(questionData.value);
+const props = defineProps({
+  selectQuestion: {
+    type: Object as PropType<Question>,
+    required: true
+  }
 });
-
-
-
-
-
+watch(() => props.selectQuestion, (newVal) => {
+  questionData.value = newVal;
+  console.log(questionData.value);
+});
 </script>
 
 <template>
@@ -188,13 +156,13 @@ watchEffect(async() => {
         <div class="question-text-field w-full h-auto relative bg-white pb-1 rounded-2xl z-10">
           <div class="input-container  guild-text " @click="makeEditable">
             <p id="guild-content" class="text-center text-black text-lg  mt-2 border-none" ref="guildText"
-              @blur="saveText" @input="updateText">
+               @input="updateText">
               {{ questionData.questionText ? questionData.questionText : 'Start typing your question' }}
             </p>
           </div>
         </div>
       </div>
-      <MediaQuestionOption @update:backgroundImage="handleImageUpdate" />
+      <MediaQuestionOption :questionImage="questionData.imageUrl" @update:backgroundImage="handleImageUpdate"  />
       <div class="flex flex-col w-full items-center">
         <MultipleAnswerCards  :items="questionData.choices"
           :questionTitle="questionTitle" :questionId="questionData.questionId"

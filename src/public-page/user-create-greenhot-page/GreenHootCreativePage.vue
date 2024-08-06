@@ -3,11 +3,7 @@ import { computed, onMounted, onUnmounted, ref } from "vue";
 import TheHeaderCreative from "@/public-page/user-create-greenhot-page/components/TheHeaderCreative.vue";
 import QuestionDemo from "@/public-page/user-create-greenhot-page/components/QuestionDemo.vue";
 import PopUpCreateTest from "./components/PopUpCreateTest.vue";
-import { useQuestionStore } from "@/states/QuestionStore";
-import type { Question } from "@/models/Question";
 import QuestionContent from "@/public-page/user-create-greenhot-page/components/QuestionContent.vue";
-import { useExamStore } from "@/states/ExamStore";
-import { CreateQuestionRequest, Packet } from "@/proto/Proto";
 
 // responsive for mobile
 const isMobile = ref(window.innerWidth <= 767);

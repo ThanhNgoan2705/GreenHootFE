@@ -1,9 +1,21 @@
 <script setup  lang="ts">
 import { ref } from 'vue';
 import { MDBIcon } from 'mdb-vue-ui-kit';
+import { defineProps, defineEmits } from 'vue';
+import type { PropType } from 'vue';
 const hasBackgroundImage = ref(false);
+
+const props = defineProps({
+  questionImage: {
+    type: String ,
+    required: true
+  },
+});
+console.log(props.questionImage);
+
 const emit = defineEmits(['update:backgroundImage']);
 const upLoadImage = () => {
+
   const input = document.createElement('input') as HTMLInputElement;
   const imageWrap = document.querySelector('.media-img-wrap') as HTMLElement;
   const backgroundImage = document.querySelector('.media-img') as HTMLElement;
@@ -13,28 +25,27 @@ const upLoadImage = () => {
   input.accept = 'image/*';
   input.onchange = (e) => {
     const img = document.createElement('img');
-   
     const file = (e.target as HTMLInputElement).files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const formData = new FormData();
-    // Append the file to the formData object
-    formData.append('file', file);
-    fetch('http://localhost:8080/upload', {
-      method: 'POST',
-      headers: {
-        Authorization: 'Client-ID',
-      },
-      body: formData,
-    })
-      .then((response) => response.text())
-      .then((data) => {
-        img.src = data;
-        sessionStorage.setItem('imageQuestion',data);
-        console.log(data);
-     
-      });
+        // Append the file to the formData object
+        formData.append('file', file);
+        fetch('http://localhost:8080/upload', {
+          method: 'POST',
+          headers: {
+            Authorization: 'Client-ID',
+          },
+          body: formData,
+        })
+          .then((response) => response.text())
+          .then((data) => {
+            img.src = data;
+            sessionStorage.setItem('imageQuestion', data);
+            console.log(data);
+
+          });
         // Remove the existing img element if it exists
         const existingImg = backgroundImage.querySelector('img');
         if (existingImg) {
@@ -72,30 +83,49 @@ const removeBgImage = () => {
 };
 
 
+
 </script>
 
 <template>
   <header class=" media-container style-question">
     <div class="media-detail box-border">
       <div class="media-qs-detail box-border">
-        <div class="media-detail-wrap min-h-[260px] min-w-[200px]"
-             style="">
+        <div class="media-detail-wrap min-h-[260px] min-w-[200px]" style="">
           <div class="mediaInfo">
             <div class="add-qs-image flex flex-col items-center justify-center">
-              <div class="media-library "/>
+              <div class="media-library " />
               <div class="add-qs-image-icon flex w-12 h-12 bg-white rounded-sm items-center justify-center">
-                <button  @click="upLoadImage"><MDBIcon icon="plus" size="2x"/></button>
+                <button v-if="!props.questionImage" @click="upLoadImage">
+                  <MDBIcon icon="plus" size="2x" />
+                </button>
               </div>
             </div>
           </div>
-          <div class="media-action hidden">
+          <div v-if="!props.questionImage" class="media-action hidden">
             <div class="media-action-icon   flex w-9 h-9 bg-white rounded-sm items-center justify-center">
-              <button><MDBIcon icon="trash" size="lg" @click="removeBgImage" /></button>
+              <button>
+                <MDBIcon icon="trash" size="lg" @click="removeBgImage" />
+              </button>
             </div>
           </div>
-          <div class="media-img-wrap hidden ">
-            <div class="media-img ">
+          <div v-else class="media-action">
+            <div class="media-action-icon   flex w-9 h-9 bg-white rounded-sm items-center justify-center">
+              <button>
+                <MDBIcon icon="trash" size="lg" @click="removeBgImage" />
+              </button>
             </div>
+          </div>
+          <div v-if="!props.questionImage" class="media-img-wrap hidden ">
+            <div class="media-img ">
+
+            </div>
+
+          </div>
+          <div v-else class="media-img-wrap  ">
+            <div class="media-img ">
+              <img :src="props.questionImage" alt="question image" class="question-image" />
+            </div>
+
           </div>
 
         </div>
@@ -111,6 +141,7 @@ const removeBgImage = () => {
   -webkit-box-align: stretch;
   align-items: stretch;
 }
+
 .style-question {
   display: flex;
   -webkit-box-align: center;
@@ -118,6 +149,7 @@ const removeBgImage = () => {
   flex: 6 1 0%;
   position: relative;
 }
+
 .media-detail {
   --panel-background-color: rgba(250, 250, 250, 0.7);
   padding: 0px 1rem;
@@ -133,7 +165,8 @@ const removeBgImage = () => {
   justify-content: center;
   position: relative;
 }
-.media-qs-detail{
+
+.media-qs-detail {
   width: 100%;
   height: 100%;
   display: flex;
@@ -144,6 +177,7 @@ const removeBgImage = () => {
   -webkit-box-pack: center;
   justify-content: center;
 }
+
 .media-detail-wrap {
   width: 100%;
   height: 100%;
@@ -162,11 +196,15 @@ const removeBgImage = () => {
   min-height: 9.875rem;
   min-width: 14.8125rem;
 }
-.media-detail-wrap{
-  max-width: 24.375rem;max-height: 16.25rem; --max-width: 24.375rem;  --max-height: 16.25rem;
+
+.media-detail-wrap {
+  max-width: 24.375rem;
+  max-height: 16.25rem;
+  --max-width: 24.375rem;
+  --max-height: 16.25rem;
 }
 
-.mediaInfo{
+.mediaInfo {
   display: flex;
   flex: 0 1 auto;
   -webkit-box-align: center;
@@ -182,13 +220,16 @@ const removeBgImage = () => {
   border-radius: 4px;
   height: 100% !important;
 }
-.media-img-wrap{
+
+.media-img-wrap {
   @apply h-full w-full m-auto absolute inset-1 z-0;
 }
-.media-img{
-  @apply relative h-[99.95%]  w-[99.95%] rounded overflow-hidden ;
+
+.media-img {
+  @apply relative h-[99.95%] w-[99.95%] rounded overflow-hidden;
 }
-.media-img img{
+
+.media-img img {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -196,10 +237,12 @@ const removeBgImage = () => {
   max-width: 100%;
   max-height: 100%;
 }
-.media-action{
+
+.media-action {
   @apply h-12 w-12 absolute right-2 bottom-1 z-10;
 }
-.media-library{
+
+.media-library {
   display: flex;
   background-image: url("src/public-page/image/media-qs.svg");
   background-repeat: no-repeat;
@@ -209,5 +252,10 @@ const removeBgImage = () => {
   filter: brightness(0.5);
   margin-block-end: 8px;
 }
-
+.image-question {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.25rem;
+}
 </style>

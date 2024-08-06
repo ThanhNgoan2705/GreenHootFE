@@ -12,7 +12,7 @@ import { useExamStore } from '@/states/ExamStore';
 import { showConfirmAlert, showWarningAlert,showSuccessAlert } from '@/service/Alert';
 import { useQuestionStore } from '@/states/QuestionStore';
 import router from '@/router';
-
+import { handleRequestListExam } from '@/service/UserService';
 
 const openPopup = ref(false);
 const examTitle = ref('');
@@ -47,12 +47,12 @@ const examStore = useExamStore();
 const questionStore = useQuestionStore();
 
 
-const userId = sessionStorage.getItem('userId');
+const userId = JSON.parse(sessionStorage.getItem("auth-user")as string | '').userId;
 
 const sendUpdateExamRequest= (event:Event)=>{
   event.preventDefault();
   let exam = Exam.create();
-  exam.userId = parseInt(userId);
+  exam.userId = userId;
   exam.title = examTitle.value;
   exam.description = examDescription.value;
   let request = UpdateExamRequest.create();
@@ -63,8 +63,6 @@ const sendUpdateExamRequest= (event:Event)=>{
   WS.send(packet);
 }
 
-
-
 const completeExam = () => {
   showConfirmAlert("Are you sure you want to exit?", () => {
     router.push({name: 'userHome'});
@@ -73,10 +71,10 @@ const completeExam = () => {
   
 };
 const saveExam = () => {
-
   if(questionStore.isUpdateQuestion == true){
     showSuccessAlert("Exam saved successfully.");
     router.push({name: 'userHome'});
+    handleRequestListExam(userId);
   }
  else  {
     showWarningAlert("Please add content and  save the question before saving the exam.");
@@ -84,6 +82,34 @@ const saveExam = () => {
   }
 
 };
+const coverPhoto = ref('');
+const uploadImage = (event: Event) => {
+  event.preventDefault();
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.onchange = (e: any) => {
+    const file = e.target.files[0];
+    console.log(file);
+    // Create an instance of FormData
+    const formData = new FormData();
+    // Append the file to the formData object
+    formData.append('file', file);
+    fetch('http://localhost:8080/upload', {
+      method: 'POST',
+      headers: {
+        Authorization: 'Client-ID',
+      },
+      body: formData,
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        coverPhoto.value = data;
+        console.log(data);
+      });
+  };
+  input.click();
+}
 
 </script>
 <template>
@@ -167,10 +193,11 @@ const saveExam = () => {
                       <PhotoIcon class="mx-auto h-12 w-12 text-gray-300" aria-hidden="true"/>
                       <div class="mt-4 flex text-sm leading-6 text-gray-600">
                         <label for="file-upload"
-                               class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                          class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
                           <span>Upload a file</span>
-                          <input id="file-upload" name="file-upload" type="file" />
-                    
+                          <button @click="uploadImage" class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer">Upload
+                            a file</button> 
+                            <img v-if="coverPhoto" :src="coverPhoto" class="w-1/2 h-auto m-auto" alt="cover photo" />
                         </label>
                         <p class="pl-1">or drag and drop</p>
                       </div>

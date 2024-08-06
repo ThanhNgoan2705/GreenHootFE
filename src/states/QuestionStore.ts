@@ -169,6 +169,7 @@ export const useQuestionStore = defineStore('question', {
         getNextQuestion: (state) => state.nextQuestion,
         getQuestionSelected: (state) => state.question,
         getUpdateQuestionList: (state) => state.updateQuestionList,
+        getIsNewQuestion: (state) => state.isNewQuestion,
     },
 });
 

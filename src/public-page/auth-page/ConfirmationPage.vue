@@ -42,7 +42,7 @@ const onKeyDown = (event: KeyboardEvent, index: number) => {
 
 const onSubmitVerifyEmail = (event: Event) => {
   const otpValue = otp.join('');
-  const email = sessionStorage.getItem('email');
+  const email = sessionStorage.getItem('email') as string;
   console.log(otpValue);
   let requestVerify = ReqVerify.create({ email: email, code: otpValue });
   console.log(requestVerify);
@@ -53,13 +53,12 @@ const onSubmitVerifyEmail = (event: Event) => {
   };
   console.log(packet);
   WS.send(packet);
-  sessionStorage.removeItem('email');
 };
 const onSubmitVerifyChangePassword = (event: Event) => {
   const otpValue = otp.join('');
   const email = sessionStorage.getItem('email');
   console.log(otpValue);
-  const code = parseInt(otpValue);
+  const code = otpValue;
   console.log(code);
   let requestVerifyForgotpass = ReqVerifyForgotPassword.create({ email: email, otp: code });
   console.log(requestVerifyForgotpass);

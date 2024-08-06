@@ -40,6 +40,7 @@ export class PlayHandler extends AbsHandler {
                 let resEndExam = packet.data.resEndExam;
                 const roomScore = resEndExam.resRoomScore;
                 if (roomScore) {
+                    console.log(roomScore);
                     resultStore.setRoomScore(roomScore);
                     resultStore.setUserScores(roomScore.userScores);
                     console.log(roomScore+" day la roomScore");

@@ -435,6 +435,30 @@ export interface Packet {
          */
         getQuestionResponse: GetQuestionResponse;
     } | {
+        oneofKind: "reqLockScreen";
+        /**
+         * @generated from protobuf field: proto.ReqLockScreen reqLockScreen = 69;
+         */
+        reqLockScreen: ReqLockScreen;
+    } | {
+        oneofKind: "resLockScreen";
+        /**
+         * @generated from protobuf field: proto.ResLockScreen resLockScreen = 70;
+         */
+        resLockScreen: ResLockScreen;
+    } | {
+        oneofKind: "reqUnlockScreen";
+        /**
+         * @generated from protobuf field: proto.ReqUnlockScreen reqUnlockScreen = 71;
+         */
+        reqUnlockScreen: ReqUnlockScreen;
+    } | {
+        oneofKind: "resUnlockScreen";
+        /**
+         * @generated from protobuf field: proto.ResUnlockScreen resUnlockScreen = 72;
+         */
+        resUnlockScreen: ResUnlockScreen;
+    } | {
         oneofKind: undefined;
     };
 }
@@ -1390,6 +1414,50 @@ export interface ResGetAllReportByPlayerId {
      */
     reports: Report[];
 }
+/**
+ * @generated from protobuf message proto.ReqLockScreen
+ */
+export interface ReqLockScreen {
+    /**
+     * @generated from protobuf field: int32 userId = 1;
+     */
+    userId: number; // hostId
+    /**
+     * @generated from protobuf field: int32 roomId = 2;
+     */
+    roomId: number;
+}
+/**
+ * @generated from protobuf message proto.ResLockScreen
+ */
+export interface ResLockScreen {
+    /**
+     * @generated from protobuf field: int32 status = 1;
+     */
+    status: number;
+}
+/**
+ * @generated from protobuf message proto.ReqUnlockScreen
+ */
+export interface ReqUnlockScreen {
+    /**
+     * @generated from protobuf field: int32 userId = 1;
+     */
+    userId: number; // hostId
+    /**
+     * @generated from protobuf field: int32 roomId = 2;
+     */
+    roomId: number;
+}
+/**
+ * @generated from protobuf message proto.ResUnlockScreen
+ */
+export interface ResUnlockScreen {
+    /**
+     * @generated from protobuf field: int32 status = 1;
+     */
+    status: number;
+}
 // @generated message type with reflection information, may provide speed optimized methods
 class PacketWrapper$Type extends MessageType<PacketWrapper> {
     constructor() {
@@ -1508,7 +1576,11 @@ class Packet$Type extends MessageType<Packet> {
             { no: 65, name: "resGetAllReportByHostId", kind: "message", oneof: "data", T: () => ResGetAllReportByHostId },
             { no: 66, name: "resGetAllReportByPlayerId", kind: "message", oneof: "data", T: () => ResGetAllReportByPlayerId },
             { no: 67, name: "getQuestionRequest", kind: "message", oneof: "data", T: () => GetQuestionRequest },
-            { no: 68, name: "getQuestionResponse", kind: "message", oneof: "data", T: () => GetQuestionResponse }
+            { no: 68, name: "getQuestionResponse", kind: "message", oneof: "data", T: () => GetQuestionResponse },
+            { no: 69, name: "reqLockScreen", kind: "message", oneof: "data", T: () => ReqLockScreen },
+            { no: 70, name: "resLockScreen", kind: "message", oneof: "data", T: () => ResLockScreen },
+            { no: 71, name: "reqUnlockScreen", kind: "message", oneof: "data", T: () => ReqUnlockScreen },
+            { no: 72, name: "resUnlockScreen", kind: "message", oneof: "data", T: () => ResUnlockScreen }
         ]);
     }
     create(value?: PartialMessage<Packet>): Packet {
@@ -1931,6 +2003,30 @@ class Packet$Type extends MessageType<Packet> {
                         getQuestionResponse: GetQuestionResponse.internalBinaryRead(reader, reader.uint32(), options, (message.data as any).getQuestionResponse)
                     };
                     break;
+                case /* proto.ReqLockScreen reqLockScreen */ 69:
+                    message.data = {
+                        oneofKind: "reqLockScreen",
+                        reqLockScreen: ReqLockScreen.internalBinaryRead(reader, reader.uint32(), options, (message.data as any).reqLockScreen)
+                    };
+                    break;
+                case /* proto.ResLockScreen resLockScreen */ 70:
+                    message.data = {
+                        oneofKind: "resLockScreen",
+                        resLockScreen: ResLockScreen.internalBinaryRead(reader, reader.uint32(), options, (message.data as any).resLockScreen)
+                    };
+                    break;
+                case /* proto.ReqUnlockScreen reqUnlockScreen */ 71:
+                    message.data = {
+                        oneofKind: "reqUnlockScreen",
+                        reqUnlockScreen: ReqUnlockScreen.internalBinaryRead(reader, reader.uint32(), options, (message.data as any).reqUnlockScreen)
+                    };
+                    break;
+                case /* proto.ResUnlockScreen resUnlockScreen */ 72:
+                    message.data = {
+                        oneofKind: "resUnlockScreen",
+                        resUnlockScreen: ResUnlockScreen.internalBinaryRead(reader, reader.uint32(), options, (message.data as any).resUnlockScreen)
+                    };
+                    break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
@@ -2147,6 +2243,18 @@ class Packet$Type extends MessageType<Packet> {
         /* proto.GetQuestionResponse getQuestionResponse = 68; */
         if (message.data.oneofKind === "getQuestionResponse")
             GetQuestionResponse.internalBinaryWrite(message.data.getQuestionResponse, writer.tag(68, WireType.LengthDelimited).fork(), options).join();
+        /* proto.ReqLockScreen reqLockScreen = 69; */
+        if (message.data.oneofKind === "reqLockScreen")
+            ReqLockScreen.internalBinaryWrite(message.data.reqLockScreen, writer.tag(69, WireType.LengthDelimited).fork(), options).join();
+        /* proto.ResLockScreen resLockScreen = 70; */
+        if (message.data.oneofKind === "resLockScreen")
+            ResLockScreen.internalBinaryWrite(message.data.resLockScreen, writer.tag(70, WireType.LengthDelimited).fork(), options).join();
+        /* proto.ReqUnlockScreen reqUnlockScreen = 71; */
+        if (message.data.oneofKind === "reqUnlockScreen")
+            ReqUnlockScreen.internalBinaryWrite(message.data.reqUnlockScreen, writer.tag(71, WireType.LengthDelimited).fork(), options).join();
+        /* proto.ResUnlockScreen resUnlockScreen = 72; */
+        if (message.data.oneofKind === "resUnlockScreen")
+            ResUnlockScreen.internalBinaryWrite(message.data.resUnlockScreen, writer.tag(72, WireType.LengthDelimited).fork(), options).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -6012,3 +6120,207 @@ class ResGetAllReportByPlayerId$Type extends MessageType<ResGetAllReportByPlayer
  * @generated MessageType for protobuf message proto.ResGetAllReportByPlayerId
  */
 export const ResGetAllReportByPlayerId = new ResGetAllReportByPlayerId$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class ReqLockScreen$Type extends MessageType<ReqLockScreen> {
+    constructor() {
+        super("proto.ReqLockScreen", [
+            { no: 1, name: "userId", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "roomId", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+        ]);
+    }
+    create(value?: PartialMessage<ReqLockScreen>): ReqLockScreen {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.userId = 0;
+        message.roomId = 0;
+        if (value !== undefined)
+            reflectionMergePartial<ReqLockScreen>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: ReqLockScreen): ReqLockScreen {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* int32 userId */ 1:
+                    message.userId = reader.int32();
+                    break;
+                case /* int32 roomId */ 2:
+                    message.roomId = reader.int32();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: ReqLockScreen, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* int32 userId = 1; */
+        if (message.userId !== 0)
+            writer.tag(1, WireType.Varint).int32(message.userId);
+        /* int32 roomId = 2; */
+        if (message.roomId !== 0)
+            writer.tag(2, WireType.Varint).int32(message.roomId);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message proto.ReqLockScreen
+ */
+export const ReqLockScreen = new ReqLockScreen$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class ResLockScreen$Type extends MessageType<ResLockScreen> {
+    constructor() {
+        super("proto.ResLockScreen", [
+            { no: 1, name: "status", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+        ]);
+    }
+    create(value?: PartialMessage<ResLockScreen>): ResLockScreen {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.status = 0;
+        if (value !== undefined)
+            reflectionMergePartial<ResLockScreen>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: ResLockScreen): ResLockScreen {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* int32 status */ 1:
+                    message.status = reader.int32();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: ResLockScreen, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* int32 status = 1; */
+        if (message.status !== 0)
+            writer.tag(1, WireType.Varint).int32(message.status);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message proto.ResLockScreen
+ */
+export const ResLockScreen = new ResLockScreen$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class ReqUnlockScreen$Type extends MessageType<ReqUnlockScreen> {
+    constructor() {
+        super("proto.ReqUnlockScreen", [
+            { no: 1, name: "userId", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "roomId", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+        ]);
+    }
+    create(value?: PartialMessage<ReqUnlockScreen>): ReqUnlockScreen {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.userId = 0;
+        message.roomId = 0;
+        if (value !== undefined)
+            reflectionMergePartial<ReqUnlockScreen>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: ReqUnlockScreen): ReqUnlockScreen {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* int32 userId */ 1:
+                    message.userId = reader.int32();
+                    break;
+                case /* int32 roomId */ 2:
+                    message.roomId = reader.int32();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: ReqUnlockScreen, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* int32 userId = 1; */
+        if (message.userId !== 0)
+            writer.tag(1, WireType.Varint).int32(message.userId);
+        /* int32 roomId = 2; */
+        if (message.roomId !== 0)
+            writer.tag(2, WireType.Varint).int32(message.roomId);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message proto.ReqUnlockScreen
+ */
+export const ReqUnlockScreen = new ReqUnlockScreen$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class ResUnlockScreen$Type extends MessageType<ResUnlockScreen> {
+    constructor() {
+        super("proto.ResUnlockScreen", [
+            { no: 1, name: "status", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+        ]);
+    }
+    create(value?: PartialMessage<ResUnlockScreen>): ResUnlockScreen {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.status = 0;
+        if (value !== undefined)
+            reflectionMergePartial<ResUnlockScreen>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: ResUnlockScreen): ResUnlockScreen {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* int32 status */ 1:
+                    message.status = reader.int32();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: ResUnlockScreen, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* int32 status = 1; */
+        if (message.status !== 0)
+            writer.tag(1, WireType.Varint).int32(message.status);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message proto.ResUnlockScreen
+ */
+export const ResUnlockScreen = new ResUnlockScreen$Type();

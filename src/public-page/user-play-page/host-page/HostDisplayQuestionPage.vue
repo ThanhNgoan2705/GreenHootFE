@@ -1,10 +1,10 @@
 <script setup lang="ts">
 
-import {MDBIcon} from "mdb-vue-ui-kit";
+import {MDBIcon, MDBRow} from "mdb-vue-ui-kit";
 import {computed, onMounted, ref, watch, watchEffect} from "vue";
 
 import { useQuestionStore } from "@/states/QuestionStore";
-import { Packet, ReqGetNextQuestion } from "@/proto/Proto";
+import { Packet, ReqGetNextQuestion, ReqLockScreen, ReqUnlockScreen } from "@/proto/Proto";
 import { WS } from "@/socket/WS";
 import { useResultStore } from "@/states/ResultStore";
 const gamePin = JSON.parse(sessionStorage.getItem('roomId') as string);
@@ -12,6 +12,9 @@ const examSessionId = JSON.parse(sessionStorage.getItem('examSessionId') as stri
 const examId = JSON.parse(sessionStorage.getItem('examId') as string);
 const countDownQuestionTime = ref<number | null>(null);
 const animateTrigger = ref(false);
+
+
+
 const answerCardColor = ref([
   {id: '1', bgColor: 'rgb(226,27,60)'},
   {id: '2', bgColor: 'rgb(19,104,206)'},
@@ -50,6 +53,26 @@ const requestNextQuestion = () => {
   // clearInterval(interval.value);
   // countDown();
 }
+const isChecked = ref(false);
+sessionStorage.setItem('lockScreen', JSON.stringify(isChecked));
+const openSettingOption = ref(false);
+onMounted(() => {
+  if (sessionStorage.getItem('lockScreen') === "true") {
+    isChecked.value = true;
+  }else{
+    isChecked.value = false;
+  }
+})
+watch(isChecked, (newVal) => {
+  if (newVal) {
+    sessionStorage.setItem('lockScreen', JSON.stringify(newVal));
+    handleRequestQuestionDisplay(newVal);
+  }
+})
+const settingOption = () => {
+  openSettingOption.value = false;
+}
+
 // const interval = ref(null);
 // const countDown = () => {
 //   clearInterval(interval.value);
@@ -85,11 +108,32 @@ const requestNextQuestion = () => {
 //   }
 // });
 
+const handleRequestQuestionDisplay = (isChecked: boolean) => {
+   if (isChecked) {
+    requestLockQuestion();
+   }
+    else {
+      requestUnlockQuestion();
+    }
+}
 
+const requestLockQuestion = () => {
+ 
+  let reqLockScreen = ReqLockScreen.create();
+  let packet = Packet.create();
+  packet.data = { oneofKind: 'reqLockScreen', reqLockScreen: reqLockScreen };
+  console.log(packet);
+  WS.send(packet);
+}
 
-
+const requestUnlockQuestion = () => {
+  let reqUnLockScreen = ReqUnlockScreen.create();
+  let packet = Packet.create();
+  packet.data = { oneofKind: 'reqUnlockScreen', reqUnlockScreen: reqUnLockScreen };
+  console.log(packet);
+  WS.send(packet);
+}
 </script>
-
 <template>
   <div class="container-fluid waiting-wrapper">
     <div class="header w-full h-[3.5rem]">
@@ -118,7 +162,9 @@ const requestNextQuestion = () => {
                 <span class="text-2xl font-bold m-auto ">{{ questionData.questionText }}</span>
               </div>
               <div class="question-image  items-center w-3/4 h-[calc(100%-4rem)]">
-                <img src="/src/public-page/image/trump.jpg" alt="question" class="max-w-full max-h-full m-auto"/>
+
+                <img v-if="questionData.imageUrl" :src=questionData.imageUrl alt="question" class="max-w-full max-h-full m-auto"/>
+                <img v-else src="/src/public-page/image/trump.jpg" alt="question" class="max-w-full max-h-full m-auto" />
               </div>
             </div>
           </div>
@@ -141,12 +187,35 @@ const requestNextQuestion = () => {
           </div>
           <div class="action-bar-right flex justify-end items-end w-[5rem] ">
             <button class="my-auto "><MDBIcon icon="volume-down" size="lg" class="text-white"/></button>
-            <button class="my-auto mx-3"><MDBIcon icon="cog" size="lg" class="text-white"/></button>
+            <button class="my-auto mx-3 transition duration-0 hover:duration-150"
+            @click="openSettingOption = !openSettingOption"
+            ><MDBIcon icon="cog" size="lg" class="text-white "/></button>
           </div>
         </div>
       </div>
     </main>
-    <div class="setting-option">
+    <div v-if="openSettingOption" class="setting-option">
+      
+      <div class="setting-option-content">
+        <div class="setting-btn ">
+        <button  @click="settingOption()">
+          <MDBIcon icon="times" size="xl" class="text-black mx-3"/>
+        </button>
+      </div>
+          <MDBRow class="list-checkbox">
+                          <div class="form-check" 
+
+                          >
+                            <h5 class="fs-6 m-1">Hide Question and Answers with Players</h5>
+                            <label class="switch">
+                              <input type="checkbox" v-model="isChecked" :aria-checked="isChecked" @click="isChecked = !isChecked,
+                             handleRequestQuestionDisplay(isChecked)">
+                            <span v-if="isChecked" class="slider slider-trans "></span>
+                            <span v-else class="slider"></span>
+                            </label>
+                          </div>
+                        </MDBRow>
+          </div>
     </div>
   </div>
 </template>
@@ -200,4 +269,27 @@ const requestNextQuestion = () => {
     transform: scale(1);
   }
 }
+.setting-option {
+  @apply w-1/4 h-1/4 bg-white bg-opacity-80 fixed bottom-10 right-0 rounded-3xl;
+}
+.setting-option-content {
+  @apply w-full h-full bg-white rounded-l-3xl contrast-125 drop-shadow-2xl ;
+}
+
+.setting-btn {
+  @apply w-full h-[3rem] flex justify-end items-center ;
+}
+.list-checkbox {
+  @apply w-full ms-0 flex flex-col justify-center items-center shadow-sm;
+}
+.form-check {
+  @apply w-full h-full flex justify-between items-center  ps-0 ms-0 border-none rounded-3xl  ;
+}
+.slider {
+  @apply w-[3.25rem] h-[1.65rem] ;
+}
+.slider::before {
+  @apply w-[1.35rem] h-[1.35rem] ;
+}
+
 </style>

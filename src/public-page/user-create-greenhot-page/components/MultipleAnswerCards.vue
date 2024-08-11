@@ -256,8 +256,8 @@ const saveQuestion = (event: Event) => {
   const answers = getListAnswerText();
   question.choices = Array.from(answers).map((answer, index) => {
     if (answer.textContent.trim() === 'Enter your answer here') {
-      answer.textContent = '';
-      return;
+      console.log('No Answer');
+      answer.textContent = 'No Answer';
     }
     let choice = Choice.create();
     if(answer.textContent){

@@ -14,7 +14,9 @@ import { GetAllExamRequest, Packet, ReqRelogin } from "@/proto/Proto";
 import { WS } from "@/socket/WS";
 import { useReportStore } from "@/states/ReportStore";
 
-
+onMounted(() => {
+  sessionStorage.removeItem("lockScreen");
+});
 const token = sessionStorage.getItem("auth-token")as string | '';
 const user = JSON.parse(sessionStorage.getItem("auth-user")as string | '');
 const userId = parseInt(user?.userId);

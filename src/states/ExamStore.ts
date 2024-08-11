@@ -7,7 +7,10 @@ export const useExamStore = defineStore('Exam', {
         exam: {} as Exam,
         ExamQuestions: [] as Question[],
         isCreateNewExam: true,
-        examId : sessionStorage.getItem("examId") as string ? JSON.parse(sessionStorage.getItem("examId") as string || "") : 0,
+
+        examId : sessionStorage.getItem("examId") ? JSON.parse(sessionStorage.getItem("examId") || "") : 0,
+      
+
     }),
     actions: {
         addExam(exam: Exam) {

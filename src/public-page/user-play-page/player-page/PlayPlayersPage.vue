@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MultipleChoiceIcon from "@/assets/icon/MultipleChoiceIcon.vue";
 import { MDBIcon, MDBListGroup, MDBListGroupItem } from "mdb-vue-ui-kit";
-import { computed, ref, watchEffect } from "vue";
+import { computed, onMounted, ref, watch, watchEffect } from "vue";
 
 import { useQuestionStore } from "@/states/QuestionStore";
 import { Packet, ReqCheckQuestionAnswer } from "@/proto/Proto";
@@ -110,8 +110,13 @@ const getScoreByPlayerName = (playerName: string) => {
   });
   return score;
 }
+const isLockQuestion = computed(() => {
+  return questionStore.isLockQuestion;
+});
 
-
+watch(() => isLockQuestion, (newValue) => {
+  console.log("isLockQuestion: ", newValue);
+});
 
 
 
@@ -145,7 +150,10 @@ const getScoreByPlayerName = (playerName: string) => {
             </div>
             <div class="question-content flex w-1/3 ">
               <div class="question-text w-3/4 h-[2rem] bg-blue-50 text-center">
-                <span class="text-2xl font-bold ">{{ questionData.questionText }}</span>
+                <span class="text-2xl font-bold "
+                v-if="!isLockQuestion">
+        
+                {{ questionData.questionText }}</span>
               </div>
               <div class="question-image  items-center w-3/4 h-[calc(100%-3rem)]">
                 <img src="/src/public-page/image/trump.jpg" alt="question" class="max-w-full max-h-full m-auto" />
@@ -177,7 +185,8 @@ const getScoreByPlayerName = (playerName: string) => {
               @click="sendAnswerRequest(choice.choiceId)" class="answer-option w-[48%] h-[4rem] p-2 mx-1 text-start "
               :style="{ backgroundColor: answerCardColor[index].bgColor }">
               <MDBIcon :icon="symbolColor[index as keyof typeof symbolColor]" size="lg" class="text-white mx-2" />
-              <span class="text-2xl font-bold text-white">{{ choice.choiceText }}</span>
+              <span class="text-2xl font-bold text-white"   v-if="!isLockQuestion">{{ choice.choiceText }}</span>
+              <!-- <img v-else :src="choice.imageUrl" alt="answer" class="answerImage" /> -->
             </button>
           </div>
         </div>                                    
@@ -224,6 +233,9 @@ const getScoreByPlayerName = (playerName: string) => {
 
 .answer-show {
   @apply items-center;
+}
+.answerImage{
+  @apply max-w-full max-h-full m-auto;
 }
 
 .answer-option {

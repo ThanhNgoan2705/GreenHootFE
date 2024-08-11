@@ -8,8 +8,7 @@ import { useReportStore } from "@/states/ReportStore";
 import { computed, nextTick, onMounted, onUnmounted, ref, watchEffect } from "vue";
 import ReportCard from "@/public-page/user-public-page/components/greenhot-component/ReportCard.vue";
 import MyDraftCards from "@/public-page/user-public-page/components/greenhot-component/MyDraftCards.vue";
-import { WS } from "@/socket/WS";
-import { Packet, ReqGetAllReportByHostId, ReqGetAllReportByPlayerId } from "@/proto/Proto";
+
 import { getAllExameJoinedReport, getAllHostedReport } from "@/service/UserService";
 
 

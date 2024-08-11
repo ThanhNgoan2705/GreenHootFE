@@ -1,7 +1,7 @@
 import AbsHandler from "@/handler/AbsHandler";
 import type { PacketWrapper } from "@/proto/Proto";
 import router from "@/router";
-import { showSuccessAlert, showSuccessAlertWithReLoad, showToastTopRight, showWarningAlert } from "@/service/Alert";
+import { showSuccessAlert, showToastTopRight, showWarningAlert } from "@/service/Alert";
 import { useExamStore } from "@/states/ExamStore";
 import { useQuestionStore } from "@/states/QuestionStore";
 export class ExamHandler extends AbsHandler {
@@ -58,7 +58,7 @@ export class ExamHandler extends AbsHandler {
             if (packet.data.oneofKind === "getAllExamResponse") {
           
                     console.log("da vao duoc ExamHandler.onMessageHandler:::ResgetAllExam");
-                    let resGetAllExam = packet.data.getAllExamResponse;
+                    const  resGetAllExam = packet.data.getAllExamResponse;
                     console.log(resGetAllExam.exam);
                     const listExam = resGetAllExam.exam;
                     const listExamCurrent = examStore.getExams;

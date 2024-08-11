@@ -15,6 +15,7 @@ export const useQuestionStore = defineStore('question', {
         isNewQuestion: false,
         totalQuestion: 0,
         updateQuestionList: [] as Question[],
+        isLockQuestion: false,
     }),
     actions: {
         addFirstQuestion(firstQuestionId: number, examId: number) {
@@ -160,6 +161,9 @@ export const useQuestionStore = defineStore('question', {
         },
         setTotalQuestion(totalQuestion: number) {
             this.totalQuestion = totalQuestion;
+        },
+        setIsLockQuestion(isLock: boolean) {
+            this.isLockQuestion = isLock;
         }
     },
     getters: {
@@ -170,6 +174,8 @@ export const useQuestionStore = defineStore('question', {
         getQuestionSelected: (state) => state.question,
         getUpdateQuestionList: (state) => state.updateQuestionList,
         getIsNewQuestion: (state) => state.isNewQuestion,
+        getIsLockQuestion: (state) => state.isLockQuestion,
+        
     },
 });
 

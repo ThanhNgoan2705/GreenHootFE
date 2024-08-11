@@ -99,6 +99,21 @@ export class PlayHandler extends AbsHandler {
                 console.log(userScore);
                 // resultStore.setScoreAfterAnswer(userScore.score);
             }
+            if(packet.data.oneofKind === "resLockScreen") {
+                console.log("da vao duoc PlayHandler.onMessageHandler:::ResLockScreen");
+                const resLockScreen = packet.data.resLockScreen;
+                const status = resLockScreen.status;
+                console.log(status);
+                questionStore.setIsLockQuestion(true);
+            }
+            if(packet.data.oneofKind === "resUnlockScreen") {
+                console.log("da vao duoc PlayHandler.onMessageHandler:::ResUnlockScreen");
+            
+                const resUnlockScreen = packet.data.resUnlockScreen;
+                const status = resUnlockScreen.status;
+                console.log(status);
+                questionStore.setIsLockQuestion(false);
+            }
         }
     }
 

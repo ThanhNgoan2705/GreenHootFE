@@ -46,7 +46,7 @@ const userId = user?.userId;
 console.log("userId: ", userId);
 
 const checkReSendAnswer = () => {
-  if (sessionStorage.getItem('player-answer') === "sent answer") {
+  if (sessionStorage.getItem('player-answer')as string | '' === "sent answer") {
     return true;
   }
   return false;

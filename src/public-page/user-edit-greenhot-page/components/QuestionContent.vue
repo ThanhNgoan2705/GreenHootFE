@@ -3,20 +3,15 @@ import { defineProps } from "vue";
 import type { PropType } from "vue";
 import { MDBIcon } from "mdb-vue-ui-kit";
 import MultipleAnswerCards from "../components/MultipleAnswerCards.vue";
-import TrueFalseAnswerCards from "../components/TrueFalseAnswerCards.vue";
-import TypeAnswerCards from "../components/TypeAnswerCards.vue";
 import MediaQuestionOption from "../components/MediaQuestionOption.vue";
-import { type DefineComponent, nextTick, onMounted, onUnmounted, ref, watchEffect } from "vue";
-import { watch } from "vue";
 import MultipleChoiceIcon from "@/assets/icon/MultipleChoiceIcon.vue";
 import TrueFalseIcon from "@/assets/icon/TrueFalseIcon.vue";
 import TypeAnswerIcon from "@/assets/icon/TypeAnswerIcon.vue";
 import PuzzleIcon from "@/assets/icon/PuzzleIcon.vue";
 import QuestionTypeIcon from "@/assets/icon/QuestionTypeIcon.vue";
 import AnswerSelectIcon from "@/assets/icon/AnswerSelectIcon.vue";
-import type {Exam, Question} from "@/proto/Proto";
+import type {Question} from "@/proto/Proto";
 import {useQuestionStore} from "@/states/QuestionStore";
-
 
 
 const isMobile = ref(window.innerWidth <= 767);
@@ -128,10 +123,10 @@ const makeEditable = () => {
     }
 }
 const questionStore = useQuestionStore();
-const selectedQuestion = ref(questionStore.selectQuestion);
-const questionData = ref(questionStore.question);
+let selectedQuestion = ref(questionStore.getSelectedQuestion);
+let questionData = ref(questionStore.question);
 watchEffect(async () => {
-  selectedQuestion.value = questionStore.getSelectedQuestion;
+  selectedQuestion.value  = questionStore.getSelectedQuestion;
   await nextTick();
   // Thực hiện các hành động cần thiết với câu hỏi mới
   console.log("Câu hỏi mới: ", selectedQuestion.value);
@@ -164,8 +159,10 @@ watch(() => props.selectQuestion, (newVal) => {
       </div>
       <MediaQuestionOption :questionImage="questionData.imageUrl" @update:backgroundImage="handleImageUpdate"  />
       <div class="flex flex-col w-full items-center">
-        <MultipleAnswerCards  :items="questionData.choices"
-          :questionTitle="questionTitle" :questionId="questionData.questionId"
+        <MultipleAnswerCards 
+         :items="questionData.choices"
+          :questionTitle="questionTitle" 
+          :questionId="questionData.questionId"
           :question-index="questionData.questionIndex" />
         <!-- <TrueFalseAnswerCards v-if="selectedQuestionType.text === 'True or False'" />
         <TypeAnswerCards v-if="selectedQuestionType.text === 'Type answer'" /> -->

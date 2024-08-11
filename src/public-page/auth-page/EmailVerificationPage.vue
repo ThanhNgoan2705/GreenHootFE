@@ -1,15 +1,8 @@
 <script setup  lang="ts">
-import {
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBCardTitle,
-  MDBInput, MDBBtn, MDBCard, MDBCardBody, MDBCardImg
-} from "mdb-vue-ui-kit";
+import {MDBBtn, MDBCard, MDBCardBody, MDBCardTitle, MDBCol, MDBContainer, MDBInput, MDBRow} from "mdb-vue-ui-kit";
 import {ref} from "vue";
 import TheCommonHeader from "@/components/single-instance-components/public-component/TheCommonHeader.vue";
-import {c} from "vite/dist/node/types.d-aGj9QkWt";
-import { ReqVerify } from "@/proto/Proto";
+import {ReqVerify} from "@/proto/Proto";
 
 const emailInput = ref('');
 const emailIsValid = ref(false);

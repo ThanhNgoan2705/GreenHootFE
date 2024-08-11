@@ -72,7 +72,7 @@ const setActiveLink = (name: string) => {
 };
 const dropdown10 = ref(false);
 const user = useUserStore().user;
-const userToken = sessionStorage.getItem('auth-token');
+const userToken = sessionStorage.getItem('auth-token')as string | '';
 const checkTokenHandler = () => {
   return userToken !== null;
 }

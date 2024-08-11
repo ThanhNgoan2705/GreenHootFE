@@ -1,18 +1,10 @@
 <script setup lang="ts">
-import {
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBCardTitle,
-  MDBBtn, MDBCard, MDBCardBody
-} from "mdb-vue-ui-kit";
+import {MDBBtn, MDBCard, MDBCardBody, MDBCardTitle, MDBCol, MDBContainer, MDBRow} from "mdb-vue-ui-kit";
 
 import TheCommonHeader from "@/components/single-instance-components/public-component/TheCommonHeader.vue";
-import { reactive } from "vue";
-import { ref } from "vue";
-import { Packet, ReqChangePasswordForgot, ReqVerify, ReqVerifyForgotPassword } from "@/proto/Proto";
-import { WS } from "@/socket/WS";
-
+import {reactive, ref} from "vue";
+import {Packet, ReqVerify, ReqVerifyForgotPassword} from "@/proto/Proto";
+import {WS} from "@/socket/WS";
 
 
 const otpLength = 6; // Length of the OTP
@@ -56,7 +48,7 @@ const onSubmitVerifyEmail = (event: Event) => {
 };
 const onSubmitVerifyChangePassword = (event: Event) => {
   const otpValue = otp.join('');
-  const email = sessionStorage.getItem('email');
+  const email = sessionStorage.getItem('email')as string | '';
   console.log(otpValue);
   const code = otpValue;
   console.log(code);

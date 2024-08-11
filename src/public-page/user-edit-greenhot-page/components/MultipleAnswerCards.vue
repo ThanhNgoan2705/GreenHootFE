@@ -1,18 +1,16 @@
 <script setup lang="ts">
 
-import { PropType, computed, nextTick, onMounted, reactive, ref, watch, watchEffect } from 'vue'
-import { MDBIcon } from 'mdb-vue-ui-kit'
-
-import { Choice, Packet, Question, UpdateQuestionRequest } from '@/proto/Proto';
-import { WS } from '@/socket/WS';
-import { useQuestionStore } from '@/states/QuestionStore';
+import {nextTick, onMounted, ref, watch} from 'vue';
+import {MDBIcon} from 'mdb-vue-ui-kit'
+import {Choice, Packet, Question, UpdateQuestionRequest} from '@/proto/Proto';
+import {WS} from '@/socket/WS';
 
 const onClick = ref(false);
 const hasContent = ref(false);
 const hasImage = ref(false);
 const isTrueAnswer = ref(false);
 let savedAnswer = ref<HTMLElement>();
-const correctAnswerIndex = ref(null);
+const correctAnswerIndex = ref(0);
 
 
 const symbol = ref({
@@ -216,6 +214,7 @@ const removeAnswerImage = (index: number) => {
   });
 }
 
+
 const props = defineProps({
   items: {
     type: Array as PropType<Choice[]>,
@@ -262,7 +261,7 @@ const getListAnswerText = () => {
 const saveQuestion = (event: Event) => {
   event.preventDefault();
   let question = Question.create();
-  const examId = sessionStorage.getItem('examId');
+  const examId = sessionStorage.getItem('examId')as string | '';
   question.questionId = props.questionId;
   question.questionText = props.questionTitle;
   question.examId = parseInt(examId);
@@ -271,7 +270,7 @@ const saveQuestion = (event: Event) => {
   const answers = getListAnswerText();
   question.choices = Array.from(answers).map((answer, index) => {
     let choice = Choice.create();
-    choice.choiceText = answer.textContent;
+    choice.choiceText = answer.textContent as string;
     choice.choiceIndex = index + 1;
     choice.isCorrect = correctAnswerIndex.value === index;
     choice.questionId = props.questionId;

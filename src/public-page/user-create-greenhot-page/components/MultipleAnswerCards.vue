@@ -1,13 +1,14 @@
 <script setup lang="ts">
 
-import { nextTick, onMounted, reactive, ref, watch, watchEffect } from 'vue'
+
+
 import { defineProps } from 'vue'
 import type { PropType } from 'vue'
 import { MDBIcon } from 'mdb-vue-ui-kit'
-
 import { Choice, Packet, Question, UpdateQuestionRequest } from '@/proto/Proto';
 import { WS } from '@/socket/WS';
 import { useQuestionStore } from '@/states/QuestionStore';
+import {nextTick, onMounted, ref, watch} from 'vue'
 
 const onClick = ref(false);
 const hasContent = ref(false);
@@ -15,7 +16,7 @@ const hasImage = ref(false);
 const isTrueAnswer = ref(false);
 const hasBGColor = ref(false);
 let savedAnswer = ref<HTMLElement>();
-const correctAnswerIndex = ref(null);
+const correctAnswerIndex = ref(0);
 
 
 const symbol = ref({
@@ -200,6 +201,7 @@ const removeAnswerImage = (index: number) => {
   });
 }
 
+
 const props = defineProps({
   items: {
     type: Array as PropType<Choice[]>,
@@ -218,6 +220,9 @@ const props = defineProps({
     required: true
   }
 })
+console.log(props.items+ 'items')
+console.log(props.questionTitle+ 'questionTitle')
+console.log(props.questionId)
 
 const answerTextRefs = ref<HTMLParagraphElement[]>([]);
 const setAnswerTextRef = (index: number, el: HTMLParagraphElement) => {
@@ -242,7 +247,7 @@ const getListAnswerText = () => {
 const saveQuestion = (event: Event) => {
   event.preventDefault();
   let question = Question.create();
-  const examId = sessionStorage.getItem('examId');
+  const examId = sessionStorage.getItem('examId')as string | '';
   question.questionId = props.questionId;
   question.questionText = props.questionTitle;
   question.examId = parseInt(examId);
@@ -255,7 +260,9 @@ const saveQuestion = (event: Event) => {
       answer.textContent = 'No Answer';
     }
     let choice = Choice.create();
-    choice.choiceText = answer.textContent;
+    if(answer.textContent){
+      choice.choiceText = answer.textContent;
+    }
     choice.choiceIndex = index + 1;
     choice.isCorrect = correctAnswerIndex.value === index;
     choice.questionId = props.questionId;
@@ -269,22 +276,6 @@ const saveQuestion = (event: Event) => {
   sessionStorage.setItem('question', JSON.stringify(question));
 }
 
-// watch(() => props.items, (newItems) => {
-//   for (let i = 0; i < newItems.length; i++) {
-//     if (newItems[i] && (newItems[i].choiceText.trim() !== '' || newItems[i].choiceText.trim() !== 'Enter your answer here')) {
-//       changeBGColor(i);
-//       changeBgColorOnInput(i);
-//       if (newItems[i].isCorrect) {
-//         markTrueAnswer(i);
-//       }
-//     }
-//     else if (newItems[i]) {
-//       newItems[i].choiceText = 'Enter your answer here';
-//       hasContent.value = false;
-//       onClick.value = false;
-//     }
-//   }
-// }, { deep: true });
 </script>
 
 <template>

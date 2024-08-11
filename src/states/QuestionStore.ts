@@ -18,12 +18,14 @@ export const useQuestionStore = defineStore('question', {
         isLockQuestion: false,
     }),
     actions: {
+        addQuestion(question: Question) {
+            this.questions.push(question);
+        },
         addFirstQuestion(firstQuestionId: number, examId: number) {
             if (firstQuestionId) {
                 console.log("co firstQuestionId la " + firstQuestionId)
                 this.activeQuestionId = firstQuestionId;
                 this.selectedQuestionId = firstQuestionId;
-
                 if (this.questions.length === 0) {
                     this.questions.push({
                         questionText: "Start entering your question here",
@@ -67,7 +69,7 @@ export const useQuestionStore = defineStore('question', {
                             }
                         ],
                         questionId: firstQuestionId,
-                        questionIndex: 1,
+                        questionIndex: this.questionIndex,
                         time: 20,
                         examId:examId,
                         status: 1, 
@@ -134,10 +136,6 @@ export const useQuestionStore = defineStore('question', {
         setQuestion(question: Question) {
             this.question = question;
         },
-        setNextQuestion(question: Question) {
-            this.nextQuestion = question;
-        },
-    
         updateQuestion(updatedQuestion: Partial<Question>) {
             const index = this.questions.findIndex((q) => q.questionId === this.activeQuestionId);
             if (index > -1) {
@@ -155,9 +153,6 @@ export const useQuestionStore = defineStore('question', {
         },
         deleteQuestion(questionId: number) {
             this.questions = this.questions.filter((q) => q.questionId !== questionId);
-        },
-        duplicateQuestion(context: any, question: Question) {
-            context.state.questions.push(question);
         },
         setTotalQuestion(totalQuestion: number) {
             this.totalQuestion = totalQuestion;

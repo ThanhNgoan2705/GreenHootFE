@@ -69,6 +69,7 @@ const uploadImage = (event: Event) => {
 </script>
 <template>
   <!--        popup content goes here-->
+   <div  v-if="openPopup" class="popup-wrapper">
   <div v-if="examStore.isCreateNewExam" class="popup">
     <div class="popup-container p-1">
       <div class="greenhoot-sumary">
@@ -135,8 +136,16 @@ const uploadImage = (event: Event) => {
       </div>
     </div>
   </div>
+</div>
 </template>
 <style scoped>
+.popup-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+}
 .popup {
   display: block;
   position: fixed;

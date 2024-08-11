@@ -1,8 +1,7 @@
 <script setup  lang="ts">
 import { useRoomStore } from '@/states/RoomStore';
+const playerName = sessionStorage.getItem('player-name')as string | '';
 import { ref, watchEffect } from 'vue';
-const playerName = sessionStorage.getItem('player-name');
-console.log(playerName);
 const roomstore = useRoomStore();
 let totalPlayer = ref(roomstore.totalPlayer);
 watchEffect(()=>{
